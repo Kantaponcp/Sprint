@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sprint/screens/splashScreen.dart';
+import 'package:sprint/screens/splash_screen.dart';
 
 const displayNumberSize = 64.0;
 const regularTextSize = 12.0;

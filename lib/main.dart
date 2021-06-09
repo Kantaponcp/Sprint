@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sprint/screens/home.dart';
-import 'package:sprint/screens/splashScreen.dart';
+import 'package:sprint/screens/splash_screen.dart';
+import 'package:sprint/screens/test.dart';
 import 'package:sprint/screens/workoutSummary.dart';
 import 'package:sprint/style/text_style.dart';
 

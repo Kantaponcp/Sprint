@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/widget/buildButton_widget.dart';
 
-class SummaryPage extends StatefulWidget {
-  const SummaryPage({Key? key}) : super(key: key);
-
+class Test extends StatefulWidget {
   @override
-  _SummaryPageState createState() => _SummaryPageState();
+  _TestState createState() => _TestState();
 }
 
-class _SummaryPageState extends State<SummaryPage> {
-
+class _TestState extends State<Test> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

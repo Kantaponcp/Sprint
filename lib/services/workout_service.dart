@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:sprint/model/workOut.dart';
+import 'package:sprint/model/workout.dart';
 
-import 'globalVariable.dart';
+import '../model/global_variable.dart';
 
 class WorkOutService {
   Future<void> start() async {
@@ -16,13 +16,13 @@ class WorkOutService {
     loopCalStat();
   }
 
-  Future<void> stop(int _totalWorkOutTime) async {
+  Future<void> stop(int totalWorkOutTime) async {
     workOut.stopTime = DateTime.now();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     workOut.endPoint.latitude = position.latitude;
     workOut.endPoint.longitude = position.longitude;
-    workOut.totalWorkOutTime = _totalWorkOutTime;
+    workOut.totalWorkOutTime = totalWorkOutTime;
     isStopped = true;
   }
 

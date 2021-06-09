@@ -17,21 +17,3 @@ class TextSection extends StatelessWidget {
     );
   }
 }
-
-class TextList {
-  //Main display
-  String timeCountingDisplay = '00:00:00';
-  String timeText = 'TIME';
-  String distanceDisplay = '0.0';
-  String distanceText = 'DISTANCE';
-  String currentSpeedDisplay = '0.0';
-  String currentSpeedText = 'SPEED';
-  String avgSpeedDisplay = '0.0';
-  String avgSpeedText = 'AVG.SPEED';
-  String duration = 'DURATION';
-
-  //unit
-  String distanceUnit = 'km';
-  String speedUnit = 'km/h';
-
-}

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sprint/model/workOut.dart';
-import 'package:sprint/model/timeCounting.dart';
-import 'package:sprint/services/workOut_service.dart';
+import 'package:sprint/model/text_list.dart';
+import 'package:sprint/services/workout_service.dart';
 import 'package:sprint/widget/buildButton_widget.dart';
 import 'package:sprint/widget/text_section.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -12,7 +11,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextList textList = TextList();
 
   final StopWatchTimer _stopWatchTimer = StopWatchTimer();
   final _isHours = true;
@@ -33,13 +31,13 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-                flex: 2,
+                flex: 1,
                 child: Container(
-                  color: Theme.of(context).primaryColor,
+                  // color: Theme.of(context).primaryColor,
                 )),
             //Main section
             Expanded(
-              flex: 8,
+              flex: 7,
               child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
@@ -49,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     Expanded(
-                      flex: 6,
+                      flex: 8,
                       child: Container(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -80,9 +78,9 @@ class _HomePageState extends State<HomePage> {
                               thickness: 3,
                             ),
                             TextSection(
-                              textList.distanceDisplay,
-                              textList.distanceText,
-                              textList.distanceUnit,
+                              TextList().distanceDisplay,
+                              TextList().distanceText,
+                              TextList().distanceUnit,
                             ),
                             Divider(
                               thickness: 3,
@@ -97,9 +95,9 @@ class _HomePageState extends State<HomePage> {
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       TextSection(
-                                        textList.currentSpeedDisplay,
-                                        textList.currentSpeedText,
-                                        textList.speedUnit,
+                                        TextList().currentSpeedDisplay,
+                                        TextList().currentSpeedText,
+                                        TextList().speedUnit,
                                       )
                                     ],
                                   ),
@@ -111,9 +109,9 @@ class _HomePageState extends State<HomePage> {
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       TextSection(
-                                        textList.avgSpeedDisplay,
-                                        textList.avgSpeedText,
-                                        textList.speedUnit,
+                                        TextList().avgSpeedDisplay,
+                                        TextList().avgSpeedText,
+                                        TextList().speedUnit,
                                       )
                                     ],
                                   ),
@@ -128,8 +126,8 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                       flex: 4,
                       child: Container(
-                        width: 300,
-                        height: 300,
+                        width: 400,
+                        height: 600,
                         child: ListView(
                           children: [
                             isPressed
@@ -160,6 +158,7 @@ class _HomePageState extends State<HomePage> {
                                     onLongPress: () {
                                       _stopWatchTimer.onExecute
                                           .add(StopWatchExecute.stop);
+                                      // WorkOutService.stop();
                                       Navigator.of(context)
                                           .pushNamed('/summary');
                                     },
