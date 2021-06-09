@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sprint/screens/home.dart';
+import 'package:sprint/screens/splashScreen.dart';
+import 'package:sprint/screens/workoutSummary.dart';
 import 'package:sprint/style/text_style.dart';
 
 void main() {
@@ -18,11 +20,18 @@ class MyApp extends StatelessWidget {
         textTheme: TextTheme(
           headline1: TimeNumberTextStyle,
           headline2: NumberTextStyle,
-          bodyText1: BodyTextStyle,
+          subtitle1: BodyTextStyle,
           button: ButtonTextStyle,
+          bodyText1: SummaryTextStyle,
+          subtitle2: SplashTextStyle,
         ),
       ),
-      home: HomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => SplashScreen(),
+        '/home': (context) => HomePage(),
+        '/summary': (context) => SummaryPage(),
+      },
     );
   }
 }

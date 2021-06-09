@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -12,62 +13,40 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Timer(Duration(seconds: 3),() => print('Splash done!'));
+    Timer(Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacementNamed('/home');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Container(
-            decoration: BoxDecoration(color: Colors.white),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                  flex: 2,
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 50.0,
-                          child: Image(
-                            image:AssetImage('asset/bicycle_1.png'),
-                            width: 500,height: 500,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 0),
-                        ),
-                      ],
-                    ),
-                  )
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(height: 300,),
+            Container(
+              child: Image.asset(
+                'assets/images/logo.png',
+                height: 160,
+                width: 160,
+                alignment: Alignment.center,
               ),
-              Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20.0),
-                      ),
-                      Text("Sprint",
-                        style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold),)
-                    ],
-                  )
-              )
-            ],
-          )
-        ],
+              //  CircularProgressIndicator(
+              //   valueColor: AlwaysStoppedAnimation<Color>(
+              //       Theme.of(context).primaryColor),
+              // ),
+            ),
+            SizedBox(height: 250,),
+            Container(
+              child: Text(
+                'Sprint',
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

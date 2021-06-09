@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:sprint/model/workOut.dart';
+import 'package:sprint/model/timeCounting.dart';
+import 'package:sprint/services/workOut_service.dart';
+import 'package:sprint/widget/buildButton_widget.dart';
+import 'package:sprint/widget/text_section.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  String timeCountingDisplay = '00:00:00';
-  String timeText = 'TIME';
-  String distanceDisplay = '0.0';
-  String distanceText = 'DISTANCE (km)';
-  String currentSpeedDisplay = '0.0';
-  String currentSpeedText = 'SPEED (km/h)';
-  String avgSpeedDisplay = '0.0';
-  String avgSpeedText = 'AVG.SPEED (km/h)';
+  TextList textList = TextList();
 
   final StopWatchTimer _stopWatchTimer = StopWatchTimer();
   final _isHours = true;
+
+  bool isPressed = false;
 
   @override
   void dispose() {
@@ -32,97 +30,186 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Container(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              height: 600,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                color: Colors.white,
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 6,
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          // Text(timeCountingDisplay, style: Theme.of(context).textTheme.headline1,),
-                          SizedBox(height: 20,),
-                          StreamBuilder<int> (
-                            stream: _stopWatchTimer.rawTime,
-                              initialData: _stopWatchTimer.rawTime.value,
-                              builder: (context, snapshot) {
-                            final value = snapshot.data;
-                            final displayTime = StopWatchTimer.getDisplayTime(value!, hours: _isHours);
-                            return Text(displayTime, style: Theme.of(context).textTheme.headline1,);
-                          }),
-                          Text(timeText, style: Theme.of(context).textTheme.bodyText1,),
-                          Divider(thickness: 3,),
-                          Text(distanceDisplay, style: Theme.of(context).textTheme.headline2,),
-                          Text(distanceText, style: Theme.of(context).textTheme.bodyText1,),
-                          Divider(thickness: 3,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                alignment: Alignment.center,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Text(currentSpeedDisplay, style: Theme.of(context).textTheme.headline2,),
-                                    Text(currentSpeedText, style: Theme.of(context).textTheme.bodyText1,),
-                                  ],
+            Expanded(
+                flex: 2,
+                child: Container(
+                  color: Theme.of(context).primaryColor,
+                )),
+            //Main section
+            Expanded(
+              flex: 8,
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 6,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            // Text(timeCountingDisplay, style: Theme.of(context).textTheme.headline1,),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            StreamBuilder<int>(
+                                stream: _stopWatchTimer.rawTime,
+                                initialData: _stopWatchTimer.rawTime.value,
+                                builder: (context, snapshot) {
+                                  final value = snapshot.data;
+                                  final displayTime =
+                                      StopWatchTimer.getDisplayTime(value!,
+                                          hours: _isHours);
+                                  return Text(
+                                    displayTime,
+                                    style:
+                                        Theme.of(context).textTheme.headline1,
+                                  );
+                                }),
+                            Text(
+                              TextList().timeText,
+                              style: Theme.of(context).textTheme.subtitle1,
+                            ),
+                            Divider(
+                              thickness: 3,
+                            ),
+                            TextSection(
+                              textList.distanceDisplay,
+                              textList.distanceText,
+                              textList.distanceUnit,
+                            ),
+                            Divider(
+                              thickness: 3,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      TextSection(
+                                        textList.currentSpeedDisplay,
+                                        textList.currentSpeedText,
+                                        textList.speedUnit,
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Text(currentSpeedDisplay, style: Theme.of(context).textTheme.headline2,),
-                                    Text(currentSpeedText, style: Theme.of(context).textTheme.bodyText1,),
-                                  ],
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      TextSection(
+                                        textList.avgSpeedDisplay,
+                                        textList.avgSpeedText,
+                                        textList.speedUnit,
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
-                      )
-                    ),
-                  ),
-                  Expanded(
-                    flex: 4,
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: RaisedButton(
-                          onPressed: () {
-                            _stopWatchTimer.onExecute.add(StopWatchExecute.start);
-                          },
-                          shape: circleShape,
-                          color: Theme.of(context).primaryColor,
-                          child: Text('GO', style: Theme.of(context).textTheme.button,),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    //Button Section
+                    Expanded(
+                      flex: 4,
+                      child: Container(
+                        width: 300,
+                        height: 300,
+                        child: ListView(
+                          children: [
+                            isPressed
+                                ? InkWell(
+                                    child: Column(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(Icons.touch_app_outlined),
+                                          color: Colors.black12,
+                                          iconSize: 50,
+                                        ),
+                                        Text(
+                                          'Tap to Pause',
+                                          style:
+                                              TextStyle(color: Colors.black12),
+                                        ),
+                                        Text(
+                                          'Press and Hold to Stop',
+                                          style:
+                                              TextStyle(color: Colors.black12),
+                                        )
+                                      ],
+                                    ),
+                                    onTap: () {
+                                      setState(() {});
+                                    },
+                                    onLongPress: () {
+                                      _stopWatchTimer.onExecute
+                                          .add(StopWatchExecute.stop);
+                                      Navigator.of(context)
+                                          .pushNamed('/summary');
+                                    },
+                                  )
+                                : SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: Visibility(
+                                      visible: isVisible,
+                                      child: BuildButton(
+                                        padding: EdgeInsets.all(5),
+                                        onClicked: () async {
+                                          _stopWatchTimer.onExecute
+                                              .add(StopWatchExecute.start);
+                                          await WorkOutService().start();
+                                          setState(() {
+                                            isVisible = !isVisible;
+                                            isPressed = true;
+                                          });
+                                        },
+                                        shape: CircleBorder(),
+                                        child: Text(
+                                          'GO',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .button,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         ),
-
       ),
     );
   }
 
-  final circleShape = CircleBorder(
-    side: BorderSide(color: Colors.white),
-  );
+  bool isVisible = true;
 
+  Widget pressToPause() {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(),
+    );
+  }
 }

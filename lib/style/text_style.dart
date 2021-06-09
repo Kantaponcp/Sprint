@@ -1,8 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sprint/screens/splashScreen.dart';
 
 const displayNumberSize = 64.0;
-const displayTextSize = 12.0;
+const regularTextSize = 12.0;
 const mediumTextSize = 48.0;
+const smallTextSize = 15.0;
 
 const String fontName = 'Roboto';
 
@@ -23,7 +26,7 @@ const NumberTextStyle = TextStyle(
 const BodyTextStyle = TextStyle(
   fontFamily: fontName,
   fontWeight: FontWeight.w400,
-  fontSize: displayTextSize,
+  fontSize: regularTextSize,
   color: Colors.black,
 );
 
@@ -32,4 +35,18 @@ const ButtonTextStyle = TextStyle(
   fontWeight: FontWeight.w700,
   fontSize: mediumTextSize,
   color: Colors.white,
+);
+
+const SummaryTextStyle = TextStyle(
+  fontFamily: fontName,
+  fontWeight: FontWeight.w700,
+  fontSize: smallTextSize,
+  color: Colors.black,
+);
+
+const SplashTextStyle = TextStyle(
+  fontFamily: fontName,
+  fontWeight: FontWeight.w700,
+  fontSize: smallTextSize,
+  color: Color(0xFFFD7E18),
 );
