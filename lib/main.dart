@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => SplashScreen(),
         '/home': (context) => HomePage(),
         '/summary': (context) => SummaryPage(),
+        '/test': (context) => Test(),
       },
     );
   }

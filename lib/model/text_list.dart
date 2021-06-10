@@ -9,7 +9,7 @@ class TextList {
   String? currentSpeedDisplay = workOut.currentSpeed.toString();
   String currentSpeedNull = '0.0';
   String currentSpeedText = 'SPEED';
-  String avgSpeedDisplay = '0.0';
+  String avgSpeedDisplay = workOut.avgSpeed.toString();
   String avgSpeedText = 'AVG.SPEED';
   String duration = 'DURATION';
 

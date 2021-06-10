@@ -12,7 +12,7 @@ class WorkOut {
   DateTime? startTime;
   DateTime? stopTime;
   String? totalWorkOutTime;
-  double? avgSpeed;
+  int? avgSpeed;
   double? totalDistance;
   int? currentSpeed;
   GeoPoint startPoint;

@@ -4,8 +4,6 @@ import 'package:sprint/model/workout.dart';
 import '../model/global_variable.dart';
 
 class WorkOutService {
-
-
   Future<void> start() async {
     workOut.workoutId = 'workOut01';
     workOut.newObject();
@@ -14,6 +12,8 @@ class WorkOutService {
         desiredAccuracy: LocationAccuracy.high);
     workOut.startPoint.latitude = position.latitude;
     workOut.startPoint.longitude = position.longitude;
+    workOut.currentSpeed = 0;
+    workOut.avgSpeed = 0;
     isStopped = false;
     isPressed = true;
     loopCalStat();
@@ -51,37 +51,36 @@ class WorkOutService {
   Future<void> loopCalStat() async {
     //TODO
     currentSpeed();
-    if(!isStopped) {
+    if (!isStopped) {
       Future.delayed(Duration(seconds: 1), () {
         loopCalStat();
       });
     }
   }
 
-  Future<void> calStat() async{
+  Future<void> calStat() async {
     currentSpeed();
     // avgSpeed();
     // totalDistance();
   }
 
-
-  Future<void> currentSpeed() async{
+  Future<void> currentSpeed() async {
     Geolocator.getPositionStream(
-        forceAndroidLocationManager: true,
-        intervalDuration: Duration(seconds: 3),
-        distanceFilter: 2,
-        desiredAccuracy: LocationAccuracy.bestForNavigation
-    ).listen((position) {
-      workOut.currentSpeed = position.speed.toInt();
+            forceAndroidLocationManager: true,
+            intervalDuration: Duration(seconds: 3),
+            distanceFilter: 2,
+            desiredAccuracy: LocationAccuracy.bestForNavigation)
+        .listen((position) {
+        workOut.currentSpeed = position.speed.toInt();
     });
   }
-  //
-  // Future<void> avgSpeed() async{
-  //   // workOut.avgSpeed = (workOut.totalDistance! / workOut.totalWorkOutTime.);
-  //
-  // }
-  //
-  // Future<void> totalDistance() async{
-  //   workOut.totalDistance = Geolocator.distanceBetween(workOut.startPoint.latitude!,workOut.startPoint.longitude!,workOut.endPoint.latitude!,workOut.endPoint.longitude!);
-  // }
+//
+// Future<void> avgSpeed() async{
+//   // workOut.avgSpeed = (workOut.totalDistance! / workOut.totalWorkOutTime.);
+//
+// }
+//
+// Future<void> totalDistance() async{
+//   workOut.totalDistance = Geolocator.distanceBetween(workOut.startPoint.latitude!,workOut.startPoint.longitude!,workOut.endPoint.latitude!,workOut.endPoint.longitude!);
+// }
 }

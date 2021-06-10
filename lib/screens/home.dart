@@ -1,11 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/workout.dart';
 import 'package:sprint/services/workout_service.dart';
 import 'package:sprint/widget/buildButton_widget.dart';
 import 'package:sprint/widget/text_section.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,23 +14,43 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool isTapped = false;
 
-  final StopWatchTimer _stopWatchTimer = StopWatchTimer();
-  final _isHours = true;
+  late String displayTime;
 
-  bool isPressed = false;
+  late Stopwatch _stopwatch;
+  late Timer _timer;
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    _stopWatchTimer.dispose();
+  void initState() {
+    super.initState();
+    _stopwatch = Stopwatch();
+    _timer = new Timer.periodic(new Duration(milliseconds: 30), (timer) {
+      setState(() {});
+    });
+  }
+
+  String formatTime(int milliseconds) {
+    var secs = milliseconds ~/ 1000;
+    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
+    var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+    var seconds = (secs % 60).toString().padLeft(2, '0');
+    displayTime = "$hours:$minutes:$seconds";
+    return displayTime;
+    // return "$hours:$minutes:$seconds";
+  }
+
+  void handleStartStop() {
+    if (_stopwatch.isRunning) {
+      _stopwatch.stop();
+    } else {
+      _stopwatch.start();
+    }
+    setState(() {}); // re-render the page
   }
 
   @override
   Widget build(BuildContext context) {
-
-    String displayTime = '';
-
     return Scaffold(
       body: Container(
         child: Column(
@@ -38,8 +59,8 @@ class _HomePageState extends State<HomePage> {
             Expanded(
                 flex: 1,
                 child: Container(
-                  // color: Theme.of(context).primaryColor,
-                )),
+                    // color: Theme.of(context).primaryColor,
+                    )),
             //Main section
             Expanded(
               flex: 7,
@@ -61,23 +82,9 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                               height: 20,
                             ),
-                            StreamBuilder<int>(
-                                stream: _stopWatchTimer.rawTime,
-                                initialData: _stopWatchTimer.rawTime.value,
-                                builder: (context, snapshot) {
-                                  final value = snapshot.data;
-                                  displayTime =
-                                      StopWatchTimer.getDisplayTime(value!,
-                                          hours: _isHours);
-                                  return Text(
-                                    displayTime,
-                                    style:
-                                        Theme.of(context).textTheme.headline1,
-                                  );
-                                }),
-                            Text(
+                            timeCountDisplay(
+                              formatTime(_stopwatch.elapsedMilliseconds),
                               TextList().timeText,
-                              style: Theme.of(context).textTheme.subtitle1,
                             ),
                             Divider(
                               thickness: 3,
@@ -133,40 +140,47 @@ class _HomePageState extends State<HomePage> {
                       child: Container(
                         width: 400,
                         height: 600,
+                        alignment: Alignment.center,
                         child: ListView(
                           children: [
                             isPressed
                                 ? InkWell(
-                                    child: Column(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(Icons.touch_app_outlined),
-                                          color: Colors.black12,
-                                          iconSize: 50,
-                                        ),
-                                        Text(
-                                          'Tap to Pause',
-                                          style:
-                                              TextStyle(color: Colors.black12),
-                                        ),
-                                        Text(
-                                          'Press and Hold to Stop',
-                                          style:
-                                              TextStyle(color: Colors.black12),
-                                        )
-                                      ],
+                                    child: Visibility(
+                                      visible: isStopVisible,
+                                      child: Column(
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {},
+                                            icon:
+                                                Icon(Icons.touch_app_outlined),
+                                            color: Colors.black12,
+                                            iconSize: 50,
+                                          ),
+                                          Text(
+                                            'Tap to Pause',
+                                            style: TextStyle(
+                                                color: Colors.black12),
+                                          ),
+                                          Text(
+                                            'Press and Hold to Stop',
+                                            style: TextStyle(
+                                                color: Colors.black12),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                     onTap: () {
                                       setState(() {});
                                     },
                                     onLongPress: () async {
-                                      _stopWatchTimer.onExecute
-                                          .add(StopWatchExecute.stop);
                                       await WorkOutService().stop(displayTime);
                                       print(displayTime);
+                                      _stopwatch.stop();
                                       Navigator.of(context)
                                           .pushNamed('/summary');
+                                      setState(() {
+                                        // isStopVisible = !isStopVisible;
+                                      });
                                     },
                                   )
                                 : SizedBox(
@@ -177,15 +191,13 @@ class _HomePageState extends State<HomePage> {
                                       child: BuildButton(
                                         padding: EdgeInsets.all(5),
                                         onClicked: () async {
-                                          _stopWatchTimer.onExecute
-                                              .add(StopWatchExecute.start);
                                           print(workOut.startPoint.latitude);
                                           print(workOut.startPoint.longitude);
                                           await WorkOutService().start();
+                                          _stopwatch.start();
                                           setState(() {
                                             isVisible = !isVisible;
                                             isPressed = true;
-                                            // await WorkOutService().start();
                                           });
                                         },
                                         shape: CircleBorder(),
@@ -213,11 +225,84 @@ class _HomePageState extends State<HomePage> {
   }
 
   bool isVisible = true;
+  bool isStopVisible = true;
 
-  Widget pressToPause() {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(),
-    );
-  }
+  Widget timeCountDisplay(String number, String text) => Column(
+        children: [
+          Text(
+            number,
+            style: Theme.of(context).textTheme.headline1,
+          ),
+          Text(
+            text,
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+        ],
+      );
+
+// Widget pause() => Expanded(
+//       child: InkWell(
+//         child: ,
+//         children: [
+//           isTapped
+//               ? InkWell(
+//                   child: SizedBox(
+//                     child: IconButton(
+//                       onPressed: () {},
+//                       icon: Icon(Icons.play_arrow),
+//                       color: Colors.black12,
+//                       iconSize: 60,
+//                     ),
+//                   ),
+//                   onTap: () {
+//                     setState(() {
+//                       isVisible = isVisible;
+//                     });
+//                   },
+//                   onLongPress: () async {
+//                     await WorkOutService().stop(displayTime);
+//                     print(displayTime);
+//                     _stopwatch.stop();
+//                     Navigator.of(context).pushNamed('/summary');
+//                     setState(() {});
+//                   },
+//                 )
+//               : InkWell(
+//                   child: Visibility(
+//                     visible: isStopVisible,
+//                     child: Column(
+//                       children: [
+//                         IconButton(
+//                           onPressed: () {},
+//                           icon: Icon(Icons.touch_app_outlined),
+//                           color: Colors.black12,
+//                           iconSize: 50,
+//                         ),
+//                         Text(
+//                           'Tap to Pause',
+//                           style: TextStyle(color: Colors.black12),
+//                         ),
+//                         Text(
+//                           'Press and Hold to Stop',
+//                           style: TextStyle(color: Colors.black12),
+//                         )
+//                       ],
+//                     ),
+//                   ),
+//                   onTap: () {
+//                     setState(() {});
+//                   },
+//                   onLongPress: () async {
+//                     await WorkOutService().stop(displayTime);
+//                     print(displayTime);
+//                     _stopwatch.stop();
+//                     Navigator.of(context).pushNamed('/summary');
+//                     setState(() {
+//                       isStopVisible = !isStopVisible;
+//                     });
+//                   },
+//                 ),
+//         ],
+//       ),
+//     );
 }

@@ -1,4 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:sprint/model/global_variable.dart';
+import 'package:sprint/model/workout.dart';
 
 class TextSection extends StatelessWidget {
   final String number;
@@ -12,8 +16,13 @@ class TextSection extends StatelessWidget {
     return Column(
       children: [
         Text(
-          number, style: Theme.of(context).textTheme.headline2,),
-        Text(text + " (" + unit + ") ", style: Theme.of(context).textTheme.subtitle1,),
+          isPressed ? number : '0',
+          style: Theme.of(context).textTheme.headline2,
+        ),
+        Text(
+          text + " (" + unit + ") ",
+          style: Theme.of(context).textTheme.subtitle1,
+        ),
       ],
     );
   }
