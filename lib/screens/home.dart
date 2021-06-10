@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sprint/model/text_list.dart';
+import 'package:sprint/model/workout.dart';
 import 'package:sprint/services/workout_service.dart';
 import 'package:sprint/widget/buildButton_widget.dart';
 import 'package:sprint/widget/text_section.dart';
@@ -25,6 +27,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    String displayTime = '';
+
     return Scaffold(
       body: Container(
         child: Column(
@@ -61,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                                 initialData: _stopWatchTimer.rawTime.value,
                                 builder: (context, snapshot) {
                                   final value = snapshot.data;
-                                  final displayTime =
+                                  displayTime =
                                       StopWatchTimer.getDisplayTime(value!,
                                           hours: _isHours);
                                   return Text(
@@ -95,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       TextSection(
-                                        TextList().currentSpeedDisplay,
+                                        TextList().currentSpeedDisplay!,
                                         TextList().currentSpeedText,
                                         TextList().speedUnit,
                                       )
@@ -155,10 +160,11 @@ class _HomePageState extends State<HomePage> {
                                     onTap: () {
                                       setState(() {});
                                     },
-                                    onLongPress: () {
+                                    onLongPress: () async {
                                       _stopWatchTimer.onExecute
                                           .add(StopWatchExecute.stop);
-                                      // WorkOutService.stop();
+                                      await WorkOutService().stop(displayTime);
+                                      print(displayTime);
                                       Navigator.of(context)
                                           .pushNamed('/summary');
                                     },
@@ -173,10 +179,13 @@ class _HomePageState extends State<HomePage> {
                                         onClicked: () async {
                                           _stopWatchTimer.onExecute
                                               .add(StopWatchExecute.start);
+                                          print(workOut.startPoint.latitude);
+                                          print(workOut.startPoint.longitude);
                                           await WorkOutService().start();
                                           setState(() {
                                             isVisible = !isVisible;
                                             isPressed = true;
+                                            // await WorkOutService().start();
                                           });
                                         },
                                         shape: CircleBorder(),

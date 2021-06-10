@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sprint/model/text_list.dart';
+import 'package:sprint/model/workout.dart';
 import 'package:sprint/widget/buildButton_widget.dart';
 
 class SummaryPage extends StatefulWidget {
@@ -75,7 +76,7 @@ class _SummaryPageState extends State<SummaryPage> {
                       Icons.schedule,
                     ),
                     TextList().duration,
-                    '01:05:06.50',
+                    TextList().totalWorkOutTime!,
                     TextList().timeUnit,
                   ),
                   Divider(),
@@ -93,7 +94,7 @@ class _SummaryPageState extends State<SummaryPage> {
                       Icons.schedule,
                     ),
                     TextList().avgSpeed,
-                    '20.5',
+                    TextList().summarySpeed!,
                     TextList().speedUnit,
                   ),
                   Divider(),
