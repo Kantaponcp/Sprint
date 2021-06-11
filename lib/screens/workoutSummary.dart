@@ -85,7 +85,7 @@ class _SummaryPageState extends State<SummaryPage> {
                       Icons.schedule,
                     ),
                     TextList().distanceText,
-                    '5.55',
+                    TextList().totalDistance,
                     TextList().speedUnit,
                   ),
                   Divider(),
@@ -107,7 +107,7 @@ class _SummaryPageState extends State<SummaryPage> {
                     child: BuildButton(
                       padding: EdgeInsets.all(15),
                       onClicked: () {
-                        Navigator.of(context).pushNamed('/home');
+                        Navigator.of(context).pushReplacementNamed('/home');
                       },
                       shape: StadiumBorder(),
                       child: workOutTextSection(

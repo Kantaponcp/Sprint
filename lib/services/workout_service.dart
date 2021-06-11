@@ -1,5 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:sprint/model/workout.dart';
+import 'package:sprint/screens/home.dart';
 
 import '../model/global_variable.dart';
 
@@ -50,7 +51,9 @@ class WorkOutService {
   //
   Future<void> loopCalStat() async {
     //TODO
-    currentSpeed();
+    calStat();
+    workOut.previousPoint.latitude = workOut.currentPoint.latitude;
+    workOut.previousPoint.longitude = workOut.currentPoint.longitude;
     if (!isStopped) {
       Future.delayed(Duration(seconds: 1), () {
         loopCalStat();
@@ -60,8 +63,8 @@ class WorkOutService {
 
   Future<void> calStat() async {
     currentSpeed();
-    // avgSpeed();
-    // totalDistance();
+    avgSpeed();
+    totalDistance();
   }
 
   Future<void> currentSpeed() async {
@@ -71,16 +74,27 @@ class WorkOutService {
             distanceFilter: 2,
             desiredAccuracy: LocationAccuracy.bestForNavigation)
         .listen((position) {
-        workOut.currentSpeed = position.speed.toInt();
+      workOut.currentSpeed = position.speed.toInt();
     });
   }
-//
-// Future<void> avgSpeed() async{
-//   // workOut.avgSpeed = (workOut.totalDistance! / workOut.totalWorkOutTime.);
-//
-// }
-//
-// Future<void> totalDistance() async{
-//   workOut.totalDistance = Geolocator.distanceBetween(workOut.startPoint.latitude!,workOut.startPoint.longitude!,workOut.endPoint.latitude!,workOut.endPoint.longitude!);
-// }
+
+  Future<void> avgSpeed() async {
+    // workOut.avgSpeed = (workOut.totalDistance! / workOut.totalWorkOutTime.);
+
+    workOut.avgSpeed = (workOut.totalDistance / 1) as int?;
+  }
+
+  Future<void> totalDistance() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    workOut.currentPoint.latitude = position.latitude;
+    workOut.currentPoint.longitude = position.longitude;
+    workOut.totalDistance = Geolocator.distanceBetween(
+            workOut.startPoint.latitude!,
+            workOut.startPoint.longitude!,
+            workOut.currentPoint.latitude!,
+            workOut.currentPoint.longitude!) /
+        1000;
+    // workOut.totalDistance += workOut.totalDistance;
+  }
 }

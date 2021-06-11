@@ -15,8 +15,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isTapped = false;
+  bool isVisible = true;
+
 
   late String displayTime;
+  late int secTime;
 
   late Stopwatch _stopwatch;
   late Timer _timer;
@@ -25,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _stopwatch = Stopwatch();
+    isVisible = true;
     _timer = new Timer.periodic(new Duration(milliseconds: 30), (timer) {
       setState(() {});
     });
@@ -36,17 +40,9 @@ class _HomePageState extends State<HomePage> {
     var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
     var seconds = (secs % 60).toString().padLeft(2, '0');
     displayTime = "$hours:$minutes:$seconds";
+    secTime = (milliseconds ~/ 1000) % 60;
     return displayTime;
     // return "$hours:$minutes:$seconds";
-  }
-
-  void handleStartStop() {
-    if (_stopwatch.isRunning) {
-      _stopwatch.stop();
-    } else {
-      _stopwatch.start();
-    }
-    setState(() {}); // re-render the page
   }
 
   @override
@@ -145,29 +141,25 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             isPressed
                                 ? InkWell(
-                                    child: Visibility(
-                                      visible: isStopVisible,
-                                      child: Column(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {},
-                                            icon:
-                                                Icon(Icons.touch_app_outlined),
-                                            color: Colors.black12,
-                                            iconSize: 50,
-                                          ),
-                                          Text(
-                                            'Tap to Pause',
-                                            style: TextStyle(
-                                                color: Colors.black12),
-                                          ),
-                                          Text(
-                                            'Press and Hold to Stop',
-                                            style: TextStyle(
-                                                color: Colors.black12),
-                                          )
-                                        ],
-                                      ),
+                                    child: Column(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(Icons.touch_app_outlined),
+                                          color: Colors.black12,
+                                          iconSize: 50,
+                                        ),
+                                        Text(
+                                          'Tap to Pause',
+                                          style:
+                                              TextStyle(color: Colors.black12),
+                                        ),
+                                        Text(
+                                          'Press and Hold to Stop',
+                                          style:
+                                              TextStyle(color: Colors.black12),
+                                        )
+                                      ],
                                     ),
                                     onTap: () {
                                       setState(() {});
@@ -180,6 +172,8 @@ class _HomePageState extends State<HomePage> {
                                           .pushNamed('/summary');
                                       setState(() {
                                         // isStopVisible = !isStopVisible;
+                                        // isVisible = isVisible;
+                                        isPressed = false;
                                       });
                                     },
                                   )
@@ -224,7 +218,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  bool isVisible = true;
   bool isStopVisible = true;
 
   Widget timeCountDisplay(String number, String text) => Column(
