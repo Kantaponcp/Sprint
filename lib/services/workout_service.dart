@@ -5,6 +5,7 @@ import 'package:sprint/screens/home.dart';
 import '../model/global_variable.dart';
 
 class WorkOutService {
+
   Future<void> start() async {
     workOut.workoutId = 'workOut01';
     workOut.newObject();
@@ -54,6 +55,13 @@ class WorkOutService {
     calStat();
     workOut.previousPoint.latitude = workOut.currentPoint.latitude;
     workOut.previousPoint.longitude = workOut.currentPoint.longitude;
+    // workOut.secTime = secTimeForCal;
+    double? avg = workOut.avgSpeed;
+    int? sec = workOut.secTime;
+    double dis = workOut.totalDistance;
+    print('this is sec $sec');
+    print('this is avgSpeed $avg');
+    print('this is distance $dis');
     if (!isStopped) {
       Future.delayed(Duration(seconds: 1), () {
         loopCalStat();
@@ -61,10 +69,17 @@ class WorkOutService {
     }
   }
 
+  // Future<void> loopSecTime(int secTime) async {
+  //   Future.delayed(Duration(seconds: 1), () {
+  //     workOut.secTimeForCal = secTime;
+  //   });
+  // }
+
   Future<void> calStat() async {
     currentSpeed();
     avgSpeed();
     totalDistance();
+    // loopSecTime(wo);
   }
 
   Future<void> currentSpeed() async {
@@ -79,9 +94,8 @@ class WorkOutService {
   }
 
   Future<void> avgSpeed() async {
-    // workOut.avgSpeed = (workOut.totalDistance! / workOut.totalWorkOutTime.);
 
-    workOut.avgSpeed = (workOut.totalDistance / 1) as int?;
+    workOut.avgSpeed = (workOut.totalDistance/workOut.secTime.toDouble()) * 3600;
   }
 
   Future<void> totalDistance() async {

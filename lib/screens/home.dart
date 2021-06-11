@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
     var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
     var seconds = (secs % 60).toString().padLeft(2, '0');
     displayTime = "$hours:$minutes:$seconds";
-    secTime = (milliseconds ~/ 1000) % 60;
+    workOut.secTime = (milliseconds ~/ 1000);
     return displayTime;
     // return "$hours:$minutes:$seconds";
   }
@@ -192,6 +192,7 @@ class _HomePageState extends State<HomePage> {
                                           setState(() {
                                             isVisible = !isVisible;
                                             isPressed = true;
+
                                           });
                                         },
                                         shape: CircleBorder(),

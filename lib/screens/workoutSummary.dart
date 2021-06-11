@@ -5,7 +5,6 @@ import 'package:sprint/model/workout.dart';
 import 'package:sprint/widget/buildButton_widget.dart';
 
 class SummaryPage extends StatefulWidget {
-  const SummaryPage({Key? key}) : super(key: key);
 
   @override
   _SummaryPageState createState() => _SummaryPageState();
@@ -93,8 +92,8 @@ class _SummaryPageState extends State<SummaryPage> {
                     Icon(
                       Icons.schedule,
                     ),
-                    TextList().avgSpeed,
-                    TextList().summarySpeed!,
+                    TextList().sumAvgSpeedText,
+                    TextList().summaryAvgSpeed,
                     TextList().speedUnit,
                   ),
                   Divider(),
