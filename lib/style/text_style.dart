@@ -50,3 +50,10 @@ const SplashTextStyle = TextStyle(
   fontSize: smallTextSize,
   color: Color(0xFFFD7E18),
 );
+
+const SummaryButtonTextStyle = TextStyle(
+  fontFamily: fontName,
+  fontWeight: FontWeight.w700,
+  fontSize: smallTextSize,
+  color: Colors.white,
+);

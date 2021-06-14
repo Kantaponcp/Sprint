@@ -1,6 +1,5 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:sprint/model/workout.dart';
-import 'package:sprint/screens/home.dart';
 
 import '../model/global_variable.dart';
 
@@ -31,32 +30,35 @@ class WorkOutService {
     isStopped = true;
   }
 
-  // Future<void> pause(String totalWorkOutTime) async {
-  //   Position position = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high);
-  //   isStopped = true;
-  //   workOut.stopTime = DateTime.now();
-  //   workOut.endPoint.latitude = position.latitude;
-  //   workOut.endPoint.longitude = position.longitude;
-  //   workOut.totalWorkOutTime = totalWorkOutTime;
-  //   //stop timecounting
-  // }
-  //
-  // Future<void> resume(int _totalWorkOutTime) async {
-  //   Position position = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high);
-  //   isStopped = false;
-  //   loopCalStat();
-  //   //resume timecounting
-  // }
-  //
+  Future<void> pause(String totalWorkOutTime) async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    isStopped = true;
+    workOut.stopTime = DateTime.now();
+    workOut.endPoint.latitude = position.latitude;
+    workOut.endPoint.longitude = position.longitude;
+    workOut.totalWorkOutTime = totalWorkOutTime;
+    workOut.currentSpeed = 0;
+    //stop timecounting
+  }
+
+  Future<void> resume(String _totalWorkOutTime) async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    isStopped = false;
+    workOut.currentPoint.latitude = position.latitude;
+    workOut.currentPoint.longitude = position.longitude;
+    loopCalStat();
+    //resume timecounting
+  }
+
   Future<void> loopCalStat() async {
     //TODO
     calStat();
     workOut.previousPoint.latitude = workOut.currentPoint.latitude;
     workOut.previousPoint.longitude = workOut.currentPoint.longitude;
     // workOut.secTime = secTimeForCal;
-    double? avg = workOut.avgSpeed;
+    int? avg = workOut.avgSpeed;
     int? sec = workOut.secTime;
     double dis = workOut.totalDistance;
     print('this is sec $sec');
@@ -69,12 +71,6 @@ class WorkOutService {
     }
   }
 
-  // Future<void> loopSecTime(int secTime) async {
-  //   Future.delayed(Duration(seconds: 1), () {
-  //     workOut.secTimeForCal = secTime;
-  //   });
-  // }
-
   Future<void> calStat() async {
     currentSpeed();
     avgSpeed();
@@ -83,19 +79,20 @@ class WorkOutService {
   }
 
   Future<void> currentSpeed() async {
-    Geolocator.getPositionStream(
-            forceAndroidLocationManager: true,
-            intervalDuration: Duration(seconds: 3),
-            distanceFilter: 2,
-            desiredAccuracy: LocationAccuracy.bestForNavigation)
-        .listen((position) {
-      workOut.currentSpeed = position.speed.toInt();
-    });
+      Geolocator.getPositionStream(
+          forceAndroidLocationManager: true,
+          intervalDuration: Duration(seconds: 3),
+          distanceFilter: 2,
+          desiredAccuracy: LocationAccuracy.bestForNavigation)
+          .listen((position) {
+        workOut.currentSpeed = position.speed.toInt();
+      });
   }
 
   Future<void> avgSpeed() async {
 
-    workOut.avgSpeed = (workOut.totalDistance/workOut.secTime.toDouble()) * 3600;
+   double avgSpeedResult = (workOut.totalDistance/workOut.secTime.toDouble()) * 3600;
+   workOut.avgSpeed = avgSpeedResult.toInt();
   }
 
   Future<void> totalDistance() async {

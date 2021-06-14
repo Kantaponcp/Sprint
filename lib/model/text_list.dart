@@ -7,9 +7,10 @@ class TextList {
   String distanceDisplay = workOut.totalDistance.toStringAsFixed(2);
   String distanceText = 'DISTANCE';
   String? currentSpeedDisplay = workOut.currentSpeed.toString();
-  String currentSpeedNull = '0.0';
+  String currentSpeedNull = '0';
   String currentSpeedText = 'SPEED';
-  String avgSpeedDisplay = workOut.avgSpeed.toStringAsFixed(2);
+  // String avgSpeedDisplay = workOut.avgSpeed.toStringAsFixed(2);
+  String avgSpeedDisplay = workOut.avgSpeed.toString();
   String avgSpeedText = 'AVG.SPEED';
   String duration = 'DURATION';
 
@@ -19,7 +20,8 @@ class TextList {
   String? totalWorkOutTime = workOut.totalWorkOutTime;
   String? summarySpeed = workOut.currentSpeed.toString();
   String totalDistance = workOut.totalDistance.toStringAsFixed(2);
-  String summaryAvgSpeed = workOut.avgSpeed.toStringAsFixed(2);
+  // String summaryAvgSpeed = workOut.avgSpeed.toStringAsFixed(2);
+  String summaryAvgSpeed = workOut.avgSpeed.toString();
 
   //unit
   String distanceUnit = 'km';

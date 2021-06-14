@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/workout.dart';
+import 'package:sprint/style/text_style.dart';
 import 'package:sprint/widget/buildButton_widget.dart';
 
 class SummaryPage extends StatefulWidget {
@@ -43,9 +45,10 @@ class _SummaryPageState extends State<SummaryPage> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 10),
-                      child: workOutTextSection(
+                      child: Text(
                         TextList().topic,
-                        TextAlign.left,
+                        textAlign: TextAlign.left,
+                        style: SummaryButtonTextStyle,
                       ),
                     )
                   ],
@@ -109,9 +112,10 @@ class _SummaryPageState extends State<SummaryPage> {
                         Navigator.of(context).pushReplacementNamed('/home');
                       },
                       shape: StadiumBorder(),
-                      child: workOutTextSection(
+                      child: Text(
                         'BACK',
-                        TextAlign.center,
+                        textAlign: TextAlign.center,
+                        style: SummaryButtonTextStyle,
                       ),
                     ),
                   ),
