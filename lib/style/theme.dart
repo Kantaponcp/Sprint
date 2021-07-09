@@ -1,25 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprint/style/text_style.dart';
 
 import 'color.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode themeMode = ThemeMode.system;
+  final String key = "theme";
+  late SharedPreferences _prefs;
+  bool _darkTheme = true;
 
-  bool get isDarkMode {
-    if (themeMode == ThemeMode.system) {
-      final brightness = SchedulerBinding.instance!.window.platformBrightness;
-      return brightness == Brightness.dark;
-    } else {
-      return themeMode == ThemeMode.dark;
-    }
+  bool get darkTheme => _darkTheme;
+
+  ThemeProvider() {
+    _darkTheme;
+    _loadFromPrefs();
   }
 
-  void toggleTheme(bool isOn) {
-    themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
+  toggleTheme() {
+    _darkTheme = !_darkTheme;
+    _saveToPrefs();
     notifyListeners();
   }
+
+  _initPrefs() async {
+    if(_prefs == null)
+      _prefs = await SharedPreferences.getInstance();
+  }
+
+  _loadFromPrefs() async {
+    await _initPrefs();
+    _darkTheme = _prefs.getBool(key) ?? true;
+    notifyListeners();
+  }
+
+  _saveToPrefs()async {
+    await _initPrefs();
+    _prefs.setBool(key, _darkTheme);
+  }
+  // ThemeMode themeMode = ThemeMode.system;
+  // late SharedPreferences prefs;
+  //
+  // bool get isDarkMode {
+  //   if (themeMode == ThemeMode.system) {
+  //     final brightness = SchedulerBinding.instance!.window.platformBrightness;
+  //     return brightness == Brightness.dark;
+  //   } else {
+  //     return themeMode == ThemeMode.dark;
+  //   }
+  // }
+  //
+  // void toggleTheme(bool isOn) {
+  //   themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
+  //   notifyListeners();
+  // }
+  //
+  // _initPrefs() async {
+  //   if(prefs == null)
+  //     prefs = await SharedPreferences.getInstance();
+  // }
+  //
+  // _loadFromPrefs() async {
+  //   await _initPrefs();
+  //   isDarkMode
+  // }
+
 }
 
 class SprintThemes {

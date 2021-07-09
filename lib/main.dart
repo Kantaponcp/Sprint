@@ -18,27 +18,74 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   runApp(MyApp());
 }
+//
+// class MyApp extends StatefulWidget {
+//   const MyApp({Key? key}) : super(key: key);
+//
+//   @override
+//   _MyAppState createState() => _MyAppState();
+// }
+
+// class _MyAppState extends State<MyApp> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return ChangeNotifierProvider(
+//       create: (context) => ThemeProvider(),
+//       builder: (context, _) {
+//         final themeProvider = Provider.of<ThemeProvider>(context);
+//
+//         return MaterialApp(
+//           themeMode: themeProvider.themeMode,
+//           darkTheme: SprintThemes.darkTheme,
+//           theme: SprintThemes.lightTheme,
+//           // ThemeData(
+//           // textTheme: TextTheme(
+//           //   headline1: FocusTextStyle,
+//           //   headline2: NumberTextStyle,
+//           //   subtitle1: DescriptionTextStyle,
+//           //   button: ButtonTextStyle,
+//           //   bodyText1: SummaryTextStyle,
+//           //   subtitle2: SplashTextStyle,
+//           //   // ),
+//           // ),
+//           initialRoute: '/',
+//           routes: {
+//             '/': (context) => SplashScreen(),
+//             '/home': (context) => HomePage(),
+//             '/summary': (context) => SummaryPage(),
+//             '/test': (context) => Test(),
+//             '/startWorkout': (context) => StartWorkout(),
+//             '/startCountdown': (context) => StartCountDown(),
+//             '/setting': (context) => SettingPage(),
+//             '/history': (context) => HistoryPage(),
+//             '/workoutMap': (context) => WorkoutMap(),
+//           },
+//         );
+//       },
+//     );
+//   }
+// }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (context) => ThemeProvider(),
-        builder: (context, _) {
-          final themeProvider = Provider.of<ThemeProvider>(context);
-
+      create: (_) => ThemeProvider(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, ThemeProvider provider, child) {
           return MaterialApp(
-            themeMode: themeProvider.themeMode,
-            darkTheme: SprintThemes.darkTheme,
-            theme: SprintThemes.lightTheme,
+            theme: provider.darkTheme ? SprintThemes.darkTheme : SprintThemes.lightTheme,
+            // themeMode: themeProvider.themeMode,
+            // darkTheme: SprintThemes.darkTheme,
+            // theme: SprintThemes.lightTheme,
             // ThemeData(
-              // textTheme: TextTheme(
-              //   headline1: FocusTextStyle,
-              //   headline2: NumberTextStyle,
-              //   subtitle1: DescriptionTextStyle,
-              //   button: ButtonTextStyle,
-              //   bodyText1: SummaryTextStyle,
-              //   subtitle2: SplashTextStyle,
+            // textTheme: TextTheme(
+            //   headline1: FocusTextStyle,
+            //   headline2: NumberTextStyle,
+            //   subtitle1: DescriptionTextStyle,
+            //   button: ButtonTextStyle,
+            //   bodyText1: SummaryTextStyle,
+            //   subtitle2: SplashTextStyle,
             //   // ),
             // ),
             initialRoute: '/',
@@ -55,5 +102,5 @@ class MyApp extends StatelessWidget {
             },
           );
         },
-      );
+      ));
 }

@@ -20,8 +20,7 @@ class StartWorkout extends StatefulWidget {
   _StartWorkoutState createState() => _StartWorkoutState();
 }
 
-class _StartWorkoutState extends State<StartWorkout>
-    with SingleTickerProviderStateMixin {
+class _StartWorkoutState extends State<StartWorkout> {
   bool isPressed = false;
   bool isTapped = false;
   bool isVisible = true;
@@ -39,13 +38,11 @@ class _StartWorkoutState extends State<StartWorkout>
   @override
   void initState() {
     super.initState();
-    // controller.value = 0.0;
-    controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 3));
-    controller.addListener(() {
-      setState(() {});
-    });
-
+    // controller =
+    //     AnimationController(vsync: this, duration: Duration(seconds: 3));
+    // controller.addListener(() {
+    //   setState(() {});
+    // });
     _stopwatch = Stopwatch();
     isVisible = true;
     start();
@@ -155,7 +152,7 @@ class _StartWorkoutState extends State<StartWorkout>
               ),
             ),
             Expanded(
-              flex: 5,
+              flex: 6,
               child: Container(
                 alignment: Alignment.center,
                 child: Column(
@@ -211,7 +208,7 @@ class _StartWorkoutState extends State<StartWorkout>
               ),
             ),
             Expanded(
-              flex: 6,
+              flex: 5,
               child: Container(
                 child: pauseWidget(),
               ),
@@ -233,16 +230,22 @@ class _StartWorkoutState extends State<StartWorkout>
                       Container(
                         alignment: Alignment.center,
                         child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: BuildButton(
-                            padding: EdgeInsets.all(5),
-                            onClicked: () async {
+                          width: width,
+                          height: height,
+                          child: RaisedButton(
+                            onPressed: () async {
                               resume();
                               await WorkOutService().resume(displayTime);
                               isTapped = false;
                             },
-                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(5),
+                            shape: CircleBorder(
+                                side: BorderSide(
+                              color: Theme.of(context).buttonColor,
+                              width: 5,
+                            )),
+                            color: Colors.transparent,
+                            elevation: 0,
                             child: Icon(
                               Icons.play_arrow,
                               color: SprintColors.orange,
@@ -252,51 +255,52 @@ class _StartWorkoutState extends State<StartWorkout>
                         ),
                       ),
                       Container(
-                        child: GestureDetector(
-                          onTapDown: (_) {
-                            controller.forward();
-                            print('2');
-                            if(controller.value == 1) {
-                              print('3');
-                            }
-                          },
-                          onTapUp: (_) async {
-                            if (controller.status == AnimationStatus.forward) {
-                              controller.reverse();
-                              print('1');
-                              print(controller.value);
-                            }
-                            // Navigator.of(context).pushNamed('/summary');
-                            // _stopwatch
-                            //   ..stop()
-                            //   ..reset();
-                            // await WorkOutService().stop(displayTime);
-                          },
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: <Widget>[
-                              Container(
-                                width: width,
-                                height: height,
-                                child: CircularPercentIndicator(
-                                  backgroundWidth: 6,
-                                  radius: width,
-                                  percent: controller.value,
-                                  lineWidth: 10,
-                                  progressColor: SprintColors.red,
-                                  backgroundColor:
-                                      Color(0xFFFF0000).withOpacity(0.4),
-                                  circularStrokeCap: CircularStrokeCap.round,
-                                ),
-                              ),
-                              Icon(
-                                Icons.stop,
-                                color: SprintColors.red,
-                                size: 80,
-                              ),
-                            ],
-                          ),
-                        ),
+                        child: stopButton(),
+                        // GestureDetector(
+                        //   onTapDown: (_) {
+                        //     controller.forward();
+                        //     print('2');
+                        //     if (controller.value == 1) {
+                        //       print('3');
+                        //     }
+                        //   },
+                        //   onTapUp: (_) async {
+                        //     if (controller.status == AnimationStatus.forward) {
+                        //       controller.reverse();
+                        //       print('1');
+                        //       print(controller.value);
+                        //     }
+                        //     // Navigator.of(context).pushNamed('/summary');
+                        //     // _stopwatch
+                        //     //   ..stop()
+                        //     //   ..reset();
+                        //     // await WorkOutService().stop(displayTime);
+                        //   },
+                        //   child: Stack(
+                        //     alignment: Alignment.center,
+                        //     children: <Widget>[
+                        //       Container(
+                        //         width: width,
+                        //         height: height,
+                        //         child: CircularPercentIndicator(
+                        //           backgroundWidth: 6,
+                        //           radius: width,
+                        //           percent: controller.value,
+                        //           lineWidth: 10,
+                        //           progressColor: SprintColors.red,
+                        //           backgroundColor:
+                        //               Color(0xFFFF0000).withOpacity(0.4),
+                        //           circularStrokeCap: CircularStrokeCap.round,
+                        //         ),
+                        //       ),
+                        //       Icon(
+                        //         Icons.stop,
+                        //         color: SprintColors.red,
+                        //         size: 80,
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ),
                     ],
                   ),
@@ -333,53 +337,85 @@ class _StartWorkoutState extends State<StartWorkout>
                         isTapped = true;
                       });
                     },
-                    // onLongPress: () async {
-                    //   await WorkOutService().stop(displayTime);
-                    //   print(displayTime);
-                    //   _stopwatch
-                    //     ..stop()
-                    //     ..reset();
-                    //   Navigator.of(context).pushNamed('/summary');
-                    //   setState(
-                    //         () {
-                    //       // isStopVisible = !isStopVisible;
-                    //       // isVisible = isVisible;
-                    //       isPressed = false;
-                    //     },
-                    //   );
-                    // },
                   ),
                 ),
         ],
       );
 
-// Widget stopButton() {
-//   return GestureDetector(
-//     onTapDown: (_) => controller.forward(),
-//     onTapUp: (_) {
-//       if (controller.status == AnimationStatus.forward) {
-//         controller.reverse();
-//       }
-//     },
-//     child: Stack(
-//       alignment: Alignment.center,
-//       children: <Widget>[
-//         CircularProgressIndicator(
-//           value: 1.0,
-//           valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF0000)),
-//         ),
-//         CircularProgressIndicator(
-//           value: controller.value,
-//           valueColor: AlwaysStoppedAnimation<Color>(SprintColors.red),
-//         ),
-//         Icon(
-//           Icons.stop,
-//           color: Colors.white,
-//           size: 80,
-//         ),
-//       ],
-//     ),
-//   );
-// }
-
+  Widget stopButton() {
+    return SizedBox(
+      width: width,
+      height: height,
+      child: RaisedButton(
+        onPressed: () async {
+          Navigator.of(context).pushNamed('/summary');
+          _stopwatch
+            ..stop()
+            ..reset();
+          await WorkOutService().stop(displayTime);
+        },
+        padding: EdgeInsets.all(5),
+        shape: CircleBorder(
+            side: BorderSide(
+          color: SprintColors.red,
+          width: 5,
+        )),
+        color: Colors.transparent,
+        elevation: 0,
+        child: Icon(
+          Icons.stop,
+          color: SprintColors.red,
+          size: 80,
+        ),
+      ),
+    );
+    //   GestureDetector(
+    //   onTapDown: (_) async {
+    //     controller.forward();
+    //     if (controller.status == AnimationStatus.completed) {
+    //         Navigator.of(context).pushNamed('/summary');
+    //             _stopwatch
+    //               ..stop()
+    //               ..reset();
+    //             await WorkOutService().stop(displayTime);
+    //     }
+    //   },
+    //   onTapUp: (_) {
+    //     if (controller.status == AnimationStatus.forward) {
+    //       controller.reverse();
+    //       print(AnimationStatus)
+    //       ;
+    //     }
+    //   },
+    //   child: Stack(
+    //     alignment: Alignment.center,
+    //     children: <Widget>[
+    //       Container(
+    //         width: width,
+    //         height: height,
+    //         child: CircularProgressIndicator(
+    //           value: 1.0,
+    //           valueColor: AlwaysStoppedAnimation<Color>(
+    //               Color(0xFFFF0000).withOpacity(0.4)),
+    //           strokeWidth: 6,
+    //         ),
+    //       ),
+    //       Container(
+    //         width: width,
+    //         height: height,
+    //         child: CircularProgressIndicator(
+    //           value: controller.value,
+    //           valueColor: AlwaysStoppedAnimation<Color>(SprintColors.red),
+    //           strokeWidth: 10,
+    //         ),
+    //       ),
+    //       Icon(
+    //         Icons.stop,
+    //         color: SprintColors.red,
+    //         size: 80,
+    //       ),
+    //     ],
+    //   ),
+    // );
+  }
 }

@@ -12,13 +12,15 @@ class ChangeThemeSwitch extends StatelessWidget {
 
     return Transform.scale(
       scale: 1.1,
-      child: CupertinoSwitch(
-        value: themeProvider.isDarkMode,
-        activeColor: Theme.of(context).buttonColor,
-        onChanged: (value) {
-          final provider = Provider.of<ThemeProvider>(context, listen: false);
-          provider.toggleTheme(value);
-        }
+      child: Consumer<ThemeProvider>(
+        builder: (context, provider, child) => CupertinoSwitch(
+            value: provider.darkTheme,
+            activeColor: Theme.of(context).buttonColor,
+            onChanged: (value) {
+              // final provider = Provider.of<ThemeProvider>(context, listen: false);
+              // provider.toggleTheme(value);
+              provider.toggleTheme();
+            }),
       ),
     );
   }

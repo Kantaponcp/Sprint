@@ -70,7 +70,7 @@ class _WorkoutMapState extends State<WorkoutMap> {
                             ),
                             Text(
                               'Tap to Pause',
-                              style: TextStyle(color: Colors.white.withOpacity(0.3)),
+                              style: Style.DescriptionTextStyle,
                             ),
                           ],
                         ),

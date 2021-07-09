@@ -52,6 +52,7 @@ class _StartCountDownState extends State<StartCountDown> {
     startTimer();
     Timer(Duration(seconds: 3), () async {
       Navigator.of(context).pushReplacementNamed('/startWorkout');
+      await WorkOutService().start();
     });
   }
 
