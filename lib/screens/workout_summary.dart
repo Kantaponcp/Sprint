@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sprint/model/text_list.dart';
+import 'package:sprint/model/workout.dart';
 import 'package:sprint/style/text_style.dart';
+import 'package:sprint/widget/build_button.dart';
+import 'package:sprint/widget/map.dart';
 
-class Test extends StatefulWidget {
-  const Test({Key? key}) : super(key: key);
-
+class SummaryPage extends StatefulWidget {
   @override
-  _TestState createState() => _TestState();
+  _SummaryPageState createState() => _SummaryPageState();
 }
 
-class _TestState extends State<Test> {
+class _SummaryPageState extends State<SummaryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,8 +39,7 @@ class _TestState extends State<Test> {
                   children: [
                     Container(
                       alignment: Alignment.centerRight,
-                      child: buildHaveIcon(
-                        Icon(Icons.date_range_outlined, color: Colors.white,), 'date'),
+                      child: buildHaveIcon(Icons.date_range_outlined, 'date'),
                     ),
                     Container(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -49,8 +50,7 @@ class _TestState extends State<Test> {
                             'Bangkae, Bangkok',
                             style: Style.SummaryTextStyle,
                           ),
-                          buildHaveIcon(
-                              Icon(Icons.schedule_outlined, color: Colors.white,), 'time'),
+                          buildHaveIcon(Icons.schedule_outlined, 'time'),
                         ],
                       ),
                     ),
@@ -61,7 +61,7 @@ class _TestState extends State<Test> {
             Expanded(
               flex: 3,
               child: Container(
-                color: Colors.orange,
+                child: MapWidget(),
               ),
             ),
             Expanded(
@@ -83,7 +83,7 @@ class _TestState extends State<Test> {
                     buildShowStat(
                         TextList().duration,
                         Icon(Icons.timer_outlined),
-                        '1:30',
+                        TextList().totalWorkOutTime!,
                         TextList().durationUnit),
                   ],
                 ),
@@ -93,7 +93,7 @@ class _TestState extends State<Test> {
               flex: 1,
               child: GestureDetector(
                 onTap: () {
-                    Navigator.pushReplacementNamed(context, '/home');
+                  Navigator.pushReplacementNamed(context, '/home');
                 },
                 child: Container(
                   height: double.infinity,
@@ -103,7 +103,7 @@ class _TestState extends State<Test> {
                   child: Text(
                     'BACK',
                     textAlign: TextAlign.center,
-                    style: Style.SummaryButtonTextStyle,
+                    style: Style.ButtonTextStyle,
                   ),
                 ),
               ),
@@ -131,8 +131,8 @@ class _TestState extends State<Test> {
               height: 40,
               alignment: Alignment.center,
               child: CircleAvatar(
-                backgroundColor: Colors.white.withOpacity(0.3),
-                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).accentColor,
+                foregroundColor: Theme.of(context).iconTheme.color,
                 radius: 50,
                 child: icon,
               ),
@@ -164,7 +164,8 @@ class _TestState extends State<Test> {
           Expanded(
             flex: 2,
             child: Container(
-              alignment: Alignment.bottomRight,
+              alignment: Alignment.bottomLeft,
+              margin: EdgeInsets.symmetric(horizontal: 15),
               child: Text(
                 unit,
                 style: Style.HomeBodyStyle,
@@ -177,21 +178,29 @@ class _TestState extends State<Test> {
     );
   }
 
-  Widget buildHaveIcon( Widget icon, String text,) {
-    return Container(
-      child: Row(
-        children: [
-          SizedBox(
-            width: 15,
-            height: 15,
-            child: icon,
+  Widget buildHaveIcon(
+    IconData icon,
+    String text,
+  ) {
+    return Row(
+      children: [
+        Container(
+          alignment: Alignment.center,
+          child: Icon(
+            icon,
+            color: Theme.of(context).iconTheme.color,
+            size: 25,
           ),
-          Text(
+        ),
+        Container(
+          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+          alignment: Alignment.bottomLeft,
+          child: Text(
             text,
-            style: Style.SummaryTextStyle,
+            style: Style.BodySpecialTextStyle,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

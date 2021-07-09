@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:sprint/model/text_list.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -24,25 +26,36 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Theme.of(context).backgroundColor,
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 300,),
-            Container(
-              child: Image.asset(
-                'assets/images/logo.png',
-                height: 160,
-                width: 160,
-                alignment: Alignment.center,
+            // SizedBox(
+            //   height: 300,
+            // ),
+            Expanded(
+              flex: 9,
+              child: Container(
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  height: 160,
+                  width: 160,
+                  alignment: Alignment.center,
+                ),
+                //  CircularProgressIndicator(
+                //   valueColor: AlwaysStoppedAnimation<Color>(
+                //       Theme.of(context).primaryColor),
+                // ),
               ),
-              //  CircularProgressIndicator(
-              //   valueColor: AlwaysStoppedAnimation<Color>(
-              //       Theme.of(context).primaryColor),
-              // ),
             ),
-            SizedBox(height: 250,),
-            Container(
-              child: Text(
-                'Sprint',
-                style: Theme.of(context).textTheme.subtitle2,
+            // SizedBox(
+            //   height: 220,
+            // ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                child: Text(
+                  'Version '+TextList().version,
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
               ),
             ),
           ],

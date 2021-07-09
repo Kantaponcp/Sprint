@@ -1,12 +1,18 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/workout.dart';
 import 'package:sprint/services/workout_service.dart';
-import 'package:sprint/widget/buildButton_widget.dart';
+import 'package:sprint/style/color.dart';
+import 'package:sprint/style/text_style.dart';
+import 'package:sprint/widget/appBar.dart';
+import 'package:sprint/widget/build_button.dart';
+import 'package:sprint/widget/drawer.dart';
 import 'package:sprint/widget/text_section.dart';
+import 'package:sprint/widget/time_counting.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,184 +20,146 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isTapped = false;
-  bool isVisible = true;
-
-  late String displayTime;
-  late int secTime;
-
-  late Stopwatch _stopwatch;
-  late Timer _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _stopwatch = Stopwatch();
-    isVisible = true;
-  }
-
-  void start() {
-    _timer = new Timer.periodic(new Duration(milliseconds: 30), (timer) {
-      setState(() {});
-    });
-    _stopwatch.start();
-  }
-
-  void pause() {
-    if (_timer != null) {
-      _timer.cancel();
-      _stopwatch.stop();
-    }
-  }
-
-  void resume() {
-    if (displayTime != null) {
-      _timer = Timer.periodic(new Duration(milliseconds: 30), (timer) {
-        setState(() {});
-      });
-      _stopwatch.start();
-    }
-  }
-
-  String formatTime(int milliseconds) {
-    var secs = milliseconds ~/ 1000;
-    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
-    var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
-    var seconds = (secs % 60).toString().padLeft(2, '0');
-    displayTime = "$hours:$minutes:$seconds";
-    workOut.secTime = (milliseconds ~/ 1000);
-    return displayTime;
-    // return "$hours:$minutes:$seconds";
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return new Scaffold(
+      appBar: HomeAppBar(),
+      endDrawer: MainDrawer(),
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-                flex: 1,
-                child: Container(
-                    // color: Theme.of(context).primaryColor,
-                    )),
-            //Main section
-            Expanded(
-              flex: 7,
-              child: Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                  color: Colors.white,
-                ),
+              flex: 6,
+              child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Expanded(
-                      flex: 8,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            // Text(timeCountingDisplay, style: Theme.of(context).textTheme.headline1,),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            timeCountDisplay(
-                              formatTime(_stopwatch.elapsedMilliseconds),
-                              TextList().timeText,
-                            ),
-                            Divider(
-                              thickness: 3,
-                            ),
-                            TextSection(
-                              TextList().distanceDisplay,
-                              TextList().distanceText,
-                              TextList().distanceUnit,
-                            ),
-                            Divider(
-                              thickness: 3,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      TextSection(
-                                        TextList().currentSpeedDisplay!,
-                                        TextList().currentSpeedText,
-                                        TextList().speedUnit,
-                                      )
-                                    ],
-                                  ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        color: Theme.of(context).cardColor,
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Last Workout',
+                                  style: Style.HomeTopicStyle,
+                                  textAlign: TextAlign.left,
                                 ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      TextSection(
-                                        TextList().avgSpeedDisplay,
-                                        TextList().avgSpeedText,
-                                        TextList().speedUnit,
-                                      )
-                                    ],
-                                  ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  '24 Jan 2021',
+                                  style: Style.HomeSmallBodyStyle,
+                                  textAlign: TextAlign.right,
                                 ),
-                              ],
-                            ),
-                          ],
+                              ),
+                              Container(
+                                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Bangkae, Bangkok',
+                                      style: Style.HomeSmallBodyStyle,
+                                    ),
+                                    Text(
+                                      '4:30 PM - 6:00 PM',
+                                      style: Style.HomeSmallBodyStyle,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Expanded(
+                                      flex: 4,
+                                      child: buildShowStat(
+                                          TextList().distanceText,
+                                          Icons.directions_bike_outlined,
+                                          TextList().distanceDisplay,
+                                          TextList().distanceUnit),
+                                    ),
+                                    Expanded(
+                                      flex: 4,
+                                      child: buildShowStat(
+                                          TextList().duration,
+                                          Icons.timer_outlined,
+                                          '1:30',
+                                          TextList().durationUnit),
+                                    ),
+                                    Expanded(
+                                      flex: 4,
+                                      child: buildShowStat(
+                                          TextList().avgSpeedText,
+                                          Icons.av_timer_outlined,
+                                          TextList().avgSpeedDisplay,
+                                          TextList().speedUnit),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                    //Button Section
-                    Expanded(
-                      flex: 4,
+                    Padding(
+                      padding: EdgeInsets.all(10),
                       child: Container(
-                        width: 600,
-                        height: 600,
-                        alignment: Alignment.center,
-                        child: Stack(
-                          children: [
-                            isPressed
-                                ? pauseWidget()
-                                : SizedBox(
-                                    width: 100,
-                                    height: 100,
-                                    child: Visibility(
-                                      visible: isVisible,
-                                      child: BuildButton(
-                                        padding: EdgeInsets.all(5),
-                                        onClicked: () async {
-                                          print(workOut.startPoint.latitude);
-                                          print(workOut.startPoint.longitude);
-                                          await WorkOutService().start();
-                                          start();
-                                          setState(() {
-                                            isVisible = !isVisible;
-                                            isPressed = true;
-                                          });
-                                        },
-                                        shape: CircleBorder(),
-                                        child: Text(
-                                          'GO',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .button,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                          ],
+                        height: 110,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                     ),
                   ],
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 6,
+              child: Container(
+                width: 130,
+                height: 130,
+                margin: EdgeInsets.all(10),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  shape: BoxShape.circle,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/startCountdown');
+                    print('press');
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(5),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 3)),
+                    child: Text(
+                      'GO',
+                      style: Style.ButtonTextStyle,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -201,123 +169,48 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  bool isGestureVisible = true;
-  bool isPauseVisible = true;
-
-  Widget timeCountDisplay(String number, String text) => Column(
-        children: [
-          Text(
+  Widget buildShowStat(
+    String disText,
+    IconData icon,
+    String number,
+    String unit,
+  ) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+          child: Text(
+            disText,
+            style: Style.HomeBodyStyle,
+          ),
+        ),
+        Container(
+          width: 40,
+          height: 40,
+          alignment: Alignment.center,
+          child: CircleAvatar(
+            backgroundColor: Theme.of(context).accentColor,
+            foregroundColor: Theme.of(context).iconTheme.color,
+            radius: 50,
+            child: Icon(icon),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
+          child: Text(
             number,
-            style: Theme.of(context).textTheme.headline1,
+            style: Style.HomeNumberStyle,
           ),
-          Text(
-            text,
-            style: Theme.of(context).textTheme.subtitle1,
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
+          child: Text(
+            unit,
+            style: Style.DescriptionTextStyle,
           ),
-        ],
-      );
-
-  Widget pauseWidget() => Stack(
-        children: [
-          isTapped
-              ? SizedBox(
-                  width: 600,
-                  height: 400,
-                  child: InkWell(
-                    child: Visibility(
-                      visible: isPauseVisible,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.play_arrow,
-                              color: Colors.black12, size: 120),
-                          Text(
-                            'Tap to Resume',
-                            style: TextStyle(color: Colors.black12),
-                          ),
-                          Text(
-                            'Press and Hold to Stop',
-                            style: TextStyle(color: Colors.black12),
-                          ),
-                        ],
-                      ),
-                    ),
-                    onTap: () async {
-                      resume();
-                      await WorkOutService().resume(displayTime);
-                      print('resume');
-                      setState(() {
-                        // isGestureVisible = !isGestureVisible;
-                        isTapped = false;
-                      });
-                    },
-                    onLongPress: () async {
-                      await WorkOutService().stop(displayTime);
-                      print(displayTime);
-                      _stopwatch
-                        ..stop()
-                        ..reset();
-                      Navigator.of(context).pushNamed('/summary');
-                      setState(
-                        () {
-                          // isStopVisible = !isStopVisible;
-                          // isVisible = isVisible;
-                          isPressed = false;
-                        },
-                      );
-                    },
-                  ),
-                )
-              : SizedBox(
-                  width: 600,
-                  height: 400,
-                  child: InkWell(
-                    child: Visibility(
-                      visible: isGestureVisible,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.touch_app_outlined),
-                            color: Colors.black12,
-                            iconSize: 50,
-                          ),
-                          Text(
-                            'Tap to Pause',
-                            style: TextStyle(color: Colors.black12),
-                          ),
-                          Text(
-                            'Press and Hold to Stop',
-                            style: TextStyle(color: Colors.black12),
-                          ),
-                        ],
-                      ),
-                    ),
-                    onTap: () async {
-                      pause();
-                      await WorkOutService().pause(displayTime);
-                      setState(() {
-                        isTapped = true;
-                      });
-                    },
-                    onLongPress: () async {
-                      await WorkOutService().stop(displayTime);
-                      print(displayTime);
-                      _stopwatch
-                        ..stop()
-                        ..reset();
-                      Navigator.of(context).pushNamed('/summary');
-                      setState(
-                        () {
-                          // isStopVisible = !isStopVisible;
-                          // isVisible = isVisible;
-                          isPressed = false;
-                        },
-                      );
-                    },
-                  ),
-                ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
 }

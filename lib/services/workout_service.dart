@@ -58,7 +58,7 @@ class WorkOutService {
     workOut.previousPoint.latitude = workOut.currentPoint.latitude;
     workOut.previousPoint.longitude = workOut.currentPoint.longitude;
     // workOut.secTime = secTimeForCal;
-    int? avg = workOut.avgSpeed;
+    double? avg = workOut.avgSpeed;
     int? sec = workOut.secTime;
     double dis = workOut.totalDistance;
     print('this is sec $sec');
@@ -85,14 +85,14 @@ class WorkOutService {
           distanceFilter: 2,
           desiredAccuracy: LocationAccuracy.bestForNavigation)
           .listen((position) {
-        workOut.currentSpeed = position.speed.toInt();
+        workOut.currentSpeed = position.speed;
       });
   }
 
   Future<void> avgSpeed() async {
 
    double avgSpeedResult = (workOut.totalDistance/workOut.secTime.toDouble()) * 3600;
-   workOut.avgSpeed = avgSpeedResult.toInt();
+   workOut.avgSpeed = avgSpeedResult;
   }
 
   Future<void> totalDistance() async {
@@ -108,4 +108,9 @@ class WorkOutService {
         1000;
     // workOut.totalDistance += workOut.totalDistance;
   }
+
+  Future <void> convertToMile() async {
+    workOut.totalDistanceMiles = (workOut.totalDistance / 1.609344);
+  }
+
 }

@@ -13,9 +13,10 @@ class WorkOut {
   DateTime? stopTime;
   String? totalWorkOutTime;
   int secTime;
-  int avgSpeed;
+  double avgSpeed;
   double totalDistance;
-  int? currentSpeed;
+  double totalDistanceMiles;
+  double currentSpeed;
   GeoPoint startPoint;
   GeoPoint endPoint;
   GeoPoint previousPoint;
@@ -31,7 +32,8 @@ class WorkOut {
     this.secTime = 0,
     this.avgSpeed = 0,
     this.totalDistance = 0.0,
-    this.currentSpeed,
+    this.totalDistanceMiles = 0.0,
+    this.currentSpeed = 0,
     required this.startPoint,
     required this.endPoint,
     required this.previousPoint,
