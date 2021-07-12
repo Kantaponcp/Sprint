@@ -41,7 +41,7 @@ abstract class Style {
   static const HomeSmallBodyStyle = TextStyle(
     fontFamily: RobotoName,
     fontWeight: FontWeight.w400,
-    fontSize: smallTextSize,
+    fontSize: regularTextSize,
     color: HighLightTextColor,
   );
 

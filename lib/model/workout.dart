@@ -1,7 +1,4 @@
 
-
-import 'package:intl/intl.dart';
-
 WorkOut workOut = new WorkOut(startPoint: new GeoPoint(), endPoint: new GeoPoint(), previousPoint: new GeoPoint(), currentPoint: new GeoPoint(),);
 
 // WorkOut workOut = new WorkOut();
@@ -11,7 +8,7 @@ class WorkOut {
   String? workoutId;
   DateTime? startTime;
   DateTime? stopTime;
-  String? totalWorkOutTime;
+  String? totalMovingTime;
   int secTime;
   double avgSpeed;
   double totalDistance;
@@ -21,14 +18,13 @@ class WorkOut {
   GeoPoint endPoint;
   GeoPoint previousPoint;
   GeoPoint currentPoint;
-  // GeoPoint? startPoint;
-  // GeoPoint? endPoint;
+  PolylinePoint? workoutPoint;
 
   WorkOut({
     this.workoutId,
     this.startTime,
     this.stopTime,
-    this.totalWorkOutTime,
+    this.totalMovingTime,
     this.secTime = 0,
     this.avgSpeed = 0,
     this.totalDistance = 0.0,
@@ -38,8 +34,7 @@ class WorkOut {
     required this.endPoint,
     required this.previousPoint,
     required this.currentPoint,
-    // this.startPoint,
-    // this.endPoint,
+    this.workoutPoint
 });
 
   void newObject() {
@@ -58,5 +53,15 @@ class GeoPoint {
   GeoPoint({
     this.latitude,
     this.longitude,
+});
+}
+
+class PolylinePoint {
+  double? latitude;
+  double? longitude;
+
+  PolylinePoint({
+    required this.longitude,
+    required this.latitude,
 });
 }

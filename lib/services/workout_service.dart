@@ -4,20 +4,22 @@ import 'package:sprint/model/workout.dart';
 import '../model/global_variable.dart';
 
 class WorkOutService {
-
   Future<void> start() async {
     workOut.workoutId = 'workOut01';
     workOut.newObject();
     workOut.startTime = DateTime.now();
+    // checkCurrentLocation();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     workOut.startPoint.latitude = position.latitude;
     workOut.startPoint.longitude = position.longitude;
-    workOut.currentSpeed = 0;
-    workOut.avgSpeed = 0;
+    workOut.currentSpeed = 0.0;
+    workOut.avgSpeed = 0.0;
     isStopped = false;
     isPressed = true;
     loopCalStat();
+    print(workOut.startPoint.latitude);
+    print(workOut.startPoint.longitude);
   }
 
   Future<void> stop(String totalWorkOutTime) async {
@@ -26,7 +28,7 @@ class WorkOutService {
         desiredAccuracy: LocationAccuracy.high);
     workOut.endPoint.latitude = position.latitude;
     workOut.endPoint.longitude = position.longitude;
-    workOut.totalWorkOutTime = totalWorkOutTime;
+    workOut.totalMovingTime = totalWorkOutTime;
     isStopped = true;
   }
 
@@ -37,7 +39,7 @@ class WorkOutService {
     workOut.stopTime = DateTime.now();
     workOut.endPoint.latitude = position.latitude;
     workOut.endPoint.longitude = position.longitude;
-    workOut.totalWorkOutTime = totalWorkOutTime;
+    workOut.totalMovingTime = totalWorkOutTime;
     workOut.currentSpeed = 0;
     //stop timecounting
   }
@@ -75,24 +77,29 @@ class WorkOutService {
     currentSpeed();
     avgSpeed();
     totalDistance();
-    // loopSecTime(wo);
+    getListPoint();
+    // checkCurrentLocation();
   }
 
   Future<void> currentSpeed() async {
-      Geolocator.getPositionStream(
-          forceAndroidLocationManager: true,
-          intervalDuration: Duration(seconds: 3),
-          distanceFilter: 2,
-          desiredAccuracy: LocationAccuracy.bestForNavigation)
-          .listen((position) {
-        workOut.currentSpeed = position.speed;
-      });
+    Geolocator.getPositionStream(
+            forceAndroidLocationManager: true,
+            intervalDuration: Duration(seconds: 3),
+            distanceFilter: 2,
+            desiredAccuracy: LocationAccuracy.bestForNavigation)
+        .listen((position) {
+      workOut.currentSpeed = position.speed;
+    });
   }
 
   Future<void> avgSpeed() async {
-
-   double avgSpeedResult = (workOut.totalDistance/workOut.secTime.toDouble()) * 3600;
-   workOut.avgSpeed = avgSpeedResult;
+    if (workOut.totalDistance == 0.0) {
+      workOut.avgSpeed = 0.0;
+    } else {
+      double avgSpeedResult =
+          (workOut.totalDistance / workOut.secTime.toDouble()) * 3600;
+      workOut.avgSpeed = avgSpeedResult;
+    }
   }
 
   Future<void> totalDistance() async {
@@ -100,6 +107,7 @@ class WorkOutService {
         desiredAccuracy: LocationAccuracy.high);
     workOut.currentPoint.latitude = position.latitude;
     workOut.currentPoint.longitude = position.longitude;
+    // checkCurrentLocation();
     workOut.totalDistance = Geolocator.distanceBetween(
             workOut.startPoint.latitude!,
             workOut.startPoint.longitude!,
@@ -109,8 +117,29 @@ class WorkOutService {
     // workOut.totalDistance += workOut.totalDistance;
   }
 
-  Future <void> convertToMile() async {
+  Future<void> convertToMile() async {
     workOut.totalDistanceMiles = (workOut.totalDistance / 1.609344);
   }
 
+  // Future<void> checkCurrentLocation() async{
+  //   Position position = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high);
+  //   workOut.currentPoint.latitude = position.latitude;
+  //   workOut.currentPoint.longitude = position.longitude;
+  // }
+
+  Future<void> checkCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    workOut.currentPoint.latitude = position.latitude;
+    workOut.currentPoint.longitude = position.longitude;
+  }
+
+  Future<void> getListPoint() async {
+    List<PolylinePoint> addedPoint = [];
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    addedPoint.add(PolylinePoint(
+        longitude: position.latitude, latitude: position.longitude));
+  }
 }

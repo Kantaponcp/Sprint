@@ -4,7 +4,7 @@ import 'package:sprint/style/text_style.dart';
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   HomeAppBar({
     Key? key,
-  })  : preferredSize = Size.fromHeight(80),
+  })  : preferredSize = Size.fromHeight(100),
         super(key: key);
 
   final Size preferredSize;
@@ -19,16 +19,18 @@ class _HomeAppBarState extends State<HomeAppBar> {
     return ClipRRect(
       borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
       child: AppBar(
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        title: Text(
-          'SPRINT',
-          style: Style.HomeHeaderStyle,
-        ),
-        flexibleSpace: Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-        ),
+        elevation: 0,
+        iconTheme: IconThemeData(color: Theme.of(context).primaryIconTheme.color, size: 40),
+        // title: Text(
+        //   'SPRINT',
+        //   style: Style.HomeHeaderStyle,
+        // ),
+        // flexibleSpace: Container(
+        //   color: Theme.of(context).primaryColor,
+        //   // width: 200,
+        // ),
         // actions: [
         //   IconButton(
         //     onPressed: () {},

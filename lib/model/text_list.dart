@@ -18,7 +18,9 @@ class TextList {
   //Summary display
   String topic = 'CYCLING';
   String sumAvgSpeedText = 'AVERAGE SPEED';
-  String? totalWorkOutTime = workOut.totalWorkOutTime;
+  String sumMaxSpeedText = 'MAX SPEED';
+  String sumMovingText = 'MOVING TIME';
+  String? totalMovingTime = workOut.totalMovingTime;
   String? summarySpeed = workOut.currentSpeed.toString();
   String totalDistance = workOut.totalDistance.toStringAsFixed(2);
   String totalDistanceMiles = workOut.totalDistanceMiles.toStringAsFixed(2);
@@ -30,11 +32,11 @@ class TextList {
   String fahrenheit = 'Fahrenheit';
 
   //unit
-  String distanceUnit = 'km';
-  String distanceUnitMiles = 'mi';
-  String speedUnit = 'km/h';
+  String distanceUnit = 'Km';
+  String distanceUnitMiles = 'Mi';
+  String speedUnit = 'Km/Hr';
   String timeUnit = ' ';
-  String durationUnit = 'hr';
+  String durationUnit = 'Hr';
   String tempUnitCel = '°C';
   String tempUnitF = '°F';
 

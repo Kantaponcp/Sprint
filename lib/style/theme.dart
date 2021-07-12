@@ -77,7 +77,7 @@ class SprintThemes {
     backgroundColor: SprintColors.black,
     cardColor: SprintColors.navy,
     buttonColor: SprintColors.orange,
-    iconTheme: IconThemeData(
+    primaryIconTheme: IconThemeData(
       color: SprintColors.white,
     ),
     colorScheme: ColorScheme.dark(
@@ -96,7 +96,7 @@ class SprintThemes {
     backgroundColor: SprintColors.white,
     cardColor: SprintColors.lightGrey,
     buttonColor: SprintColors.orange,
-    iconTheme: IconThemeData(
+    primaryIconTheme: IconThemeData(
       color: SprintColors.darkNavy,
     ),
     colorScheme: ColorScheme.light(

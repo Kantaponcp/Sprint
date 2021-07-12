@@ -16,6 +16,15 @@ class WorkoutMap extends StatefulWidget {
 }
 
 class _WorkoutMapState extends State<WorkoutMap> {
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double mapHeight = (MediaQuery.of(context).size.height) / 1.7;

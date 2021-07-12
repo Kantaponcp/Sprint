@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/workout.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/widget/build_button.dart';
 import 'package:sprint/widget/map.dart';
+import 'package:intl/intl.dart';
 
 class SummaryPage extends StatefulWidget {
   @override
@@ -13,6 +15,30 @@ class SummaryPage extends StatefulWidget {
 }
 
 class _SummaryPageState extends State<SummaryPage> {
+  getCurrentDate() {
+    return DateFormat('dd MMM yyyy').format(DateTime.now());
+  }
+
+  getStartTime() {
+    return DateFormat('jm').format(workOut.startTime!);
+  }
+
+  getEndTime() {
+    return DateFormat('jm').format(workOut.stopTime!);
+  }
+
+  getTotalTime() {
+    final startTime = workOut.startTime!;
+    final endTime = workOut.stopTime!;
+    final diff = endTime.difference(startTime).inMilliseconds;
+    var secs = diff ~/ 1000;
+    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
+    var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+    var seconds = (secs % 60).toString().padLeft(2, '0');
+    String? totalTime = '$hours:$minutes:$seconds';
+    return totalTime;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,8 +64,17 @@ class _SummaryPageState extends State<SummaryPage> {
                 child: Column(
                   children: [
                     Container(
-                      alignment: Alignment.centerRight,
-                      child: buildHaveIcon(Icons.date_range_outlined, 'date'),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(),
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: buildHaveIcon(
+                                Icons.date_range_outlined, getCurrentDate()),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -48,9 +83,35 @@ class _SummaryPageState extends State<SummaryPage> {
                         children: [
                           Text(
                             'Bangkae, Bangkok',
-                            style: Style.SummaryTextStyle,
+                            // style: Style.SummaryTextStyle,
+                            style: Style.BodySpecialTextStyle,
                           ),
-                          buildHaveIcon(Icons.schedule_outlined, 'time'),
+                          Container(
+                            alignment: Alignment.center,
+                            child: Container(
+                              alignment: Alignment.centerRight,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.schedule_outlined,
+                                      color: Theme.of(context).iconTheme.color,
+                                      size: 25,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      getStartTime() + ' - ' + getEndTime(),
+                                      style: Style.BodySpecialTextStyle,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -66,26 +127,39 @@ class _SummaryPageState extends State<SummaryPage> {
             ),
             Expanded(
               flex: 5,
-              child: Container(
-                padding: EdgeInsets.fromLTRB(20, 20, 15, 10),
-                child: Column(
-                  children: [
-                    buildShowStat(
-                        TextList().distanceText,
-                        Icon(Icons.directions_bike_outlined),
-                        TextList().distanceDisplay,
-                        TextList().distanceUnit),
-                    buildShowStat(
-                        TextList().avgSpeedText,
-                        Icon(Icons.av_timer_outlined),
-                        TextList().avgSpeedDisplay,
-                        TextList().speedUnit),
-                    buildShowStat(
-                        TextList().duration,
-                        Icon(Icons.timer_outlined),
-                        TextList().totalWorkOutTime!,
-                        TextList().durationUnit),
-                  ],
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
+                  child: Column(
+                    children: [
+                      buildShowStat(
+                          TextList().distanceText,
+                          Icon(Icons.directions_bike_outlined),
+                          TextList().distanceDisplay,
+                          TextList().distanceUnit),
+                      buildShowStat(
+                          TextList().sumAvgSpeedText,
+                          Icon(Icons.shutter_speed_outlined),
+                          TextList().avgSpeedDisplay,
+                          TextList().speedUnit),
+                      buildShowStat(
+                          TextList().sumMaxSpeedText,
+                          Icon(Icons.speed_outlined),
+                          TextList().avgSpeedDisplay,
+                          TextList().speedUnit),
+                      buildShowStat(
+                          TextList().sumMovingText,
+                          Icon(Icons.timer_outlined),
+                          TextList().totalMovingTime!,
+                          TextList().durationUnit),
+                      buildShowStat(
+                          TextList().duration,
+                          Icon(Icons.schedule_outlined),
+                          getTotalTime(),
+                          // '1.30',
+                          TextList().durationUnit),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -165,7 +239,7 @@ class _SummaryPageState extends State<SummaryPage> {
             flex: 2,
             child: Container(
               alignment: Alignment.bottomLeft,
-              margin: EdgeInsets.symmetric(horizontal: 15),
+              margin: EdgeInsets.only(left: 15),
               child: Text(
                 unit,
                 style: Style.HomeBodyStyle,
@@ -194,7 +268,7 @@ class _SummaryPageState extends State<SummaryPage> {
         ),
         Container(
           padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-          alignment: Alignment.bottomLeft,
+          alignment: Alignment.centerLeft,
           child: Text(
             text,
             style: Style.BodySpecialTextStyle,

@@ -25,7 +25,8 @@ class Priority {
 
 class _SettingPageState extends State<SettingPage> {
   bool switchValue = true;
-  List<bool> isSelected = [true, false];
+  List<bool> isOneSelected = [true, false];
+  List<bool> isTwoSelected = [true, false];
 
   String _chosenValue = 'Speed';
 
@@ -148,7 +149,7 @@ class _SettingPageState extends State<SettingPage> {
                               TextList().mile +
                                   ' (' +
                                   TextList().distanceUnitMiles +
-                                  ')'),
+                                  ')', isOneSelected),
                           Container(
                             child: Row(
                               children: [
@@ -172,7 +173,7 @@ class _SettingPageState extends State<SettingPage> {
                               TextList().fahrenheit +
                                   ' (' +
                                   TextList().tempUnitF +
-                                  ')'),
+                                  ')', isTwoSelected),
                         ],
                       ),
                     ),
@@ -213,7 +214,7 @@ class _SettingPageState extends State<SettingPage> {
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value),
+                              child: Text(value, style: Style.BodySmallTextStyle,),
                             );
                           }).toList(),
                           // hint: Text(
@@ -286,7 +287,7 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget buildTab(String tab1, String tab2) {
+  Widget buildTab(String tab1, String tab2, List<bool> isSelected) {
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
       child: Container(

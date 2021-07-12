@@ -6,7 +6,7 @@ import 'package:sprint/screens/setting.dart';
 import 'package:sprint/screens/splash_screen.dart';
 import 'package:sprint/screens/start_countdown.dart';
 import 'package:sprint/screens/test.dart';
-import 'package:sprint/screens/woorkout_map.dart';
+import 'package:sprint/screens/workout_map.dart';
 import 'package:sprint/screens/workout_summary.dart';
 import 'package:sprint/screens/workout_start.dart';
 import 'package:sprint/model/global_variable.dart';

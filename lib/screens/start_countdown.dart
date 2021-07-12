@@ -47,7 +47,7 @@ class _StartCountDownState extends State<StartCountDown> {
   }
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
     startTimer();
     Timer(Duration(seconds: 3), () async {
