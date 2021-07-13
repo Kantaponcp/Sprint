@@ -16,7 +16,7 @@ class SummaryPage extends StatefulWidget {
 
 class _SummaryPageState extends State<SummaryPage> {
   getCurrentDate() {
-    return DateFormat('dd MMM yyyy').format(DateTime.now());
+    return DateFormat('dd MMM yyyy').format(workOut.date!);
   }
 
   getStartTime() {

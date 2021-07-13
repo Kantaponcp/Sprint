@@ -8,6 +8,7 @@ class WorkOut {
   String? workoutId;
   DateTime? startTime;
   DateTime? stopTime;
+  DateTime? date;
   String? totalMovingTime;
   int secTime;
   double avgSpeed;
@@ -24,6 +25,7 @@ class WorkOut {
     this.workoutId,
     this.startTime,
     this.stopTime,
+    this.date,
     this.totalMovingTime,
     this.secTime = 0,
     this.avgSpeed = 0,

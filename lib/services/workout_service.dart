@@ -8,7 +8,7 @@ class WorkOutService {
     workOut.workoutId = 'workOut01';
     workOut.newObject();
     workOut.startTime = DateTime.now();
-    // checkCurrentLocation();
+    workOut.date = DateTime.now();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     workOut.startPoint.latitude = position.latitude;

@@ -57,7 +57,7 @@ class _StartCountDownState extends State<StartCountDown> {
   }
 
   void countdown(int i) {
-    for (i = 1; i < 3; i++) {
+    for (i = 0; i < 3; i++) {
       setState(() {
         print(i);
       });

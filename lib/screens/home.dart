@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/workout.dart';
@@ -17,13 +18,42 @@ import 'package:sprint/widget/time_counting.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
+
 }
 
 class _HomePageState extends State<HomePage> {
+
+  getDuration() {
+    final duration = workOut.secTime;
+    var seconds = duration ~/ 1000;
+    var hours = (seconds ~/ 3600).toString().padLeft(2, '0');
+    var minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
+    if(hours == '00'){
+      String? totalTime = '$minutes';
+      return totalTime;
+    } else {
+      String? totalTime = '$hours:$minutes';
+      return totalTime;
+    }
+  }
+  //
+  // getCurrentDate() {
+  //   return DateFormat('dd MMM yyyy').format(DateTime.now());
+  // }
+  //
+  // getStartTime() {
+  //   return DateFormat('jm').format(workOut.startTime!);
+  // }
+  //
+  // getEndTime() {
+  //   return DateFormat('jm').format(workOut.stopTime!);
+  // }
+
   @override
   Widget build(BuildContext context) {
     final double appbarWidth = MediaQuery.of(context).size.width;
     final double appbarHeight = 100;
+
     return Scaffold(
       endDrawer: MainDrawer(),
       body: Stack(
@@ -126,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                                             style: Style.HomeSmallBodyStyle,
                                           ),
                                           Text(
-                                            '4:30 PM - 6:00 PM',
+                                            '14 PM' + ' - ' + '16 PM',
                                             style: Style.HomeSmallBodyStyle,
                                           ),
                                         ],
@@ -152,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                                             child: buildShowStat(
                                                 TextList().duration,
                                                 Icons.timer_outlined,
-                                                '1:30',
+                                                getDuration(),
                                                 TextList().durationUnit),
                                           ),
                                           Expanded(
