@@ -1,5 +1,8 @@
 
 bool isStopped = false;
 bool isPressed = false;
-bool _light = true;
-
+String chosenValue = 'Speed';
+List<bool> isOneSelected = [true, false];
+List<bool> isTwoSelected = [true, false];
+int tempIndex = 0;
+int distIndex = 0;

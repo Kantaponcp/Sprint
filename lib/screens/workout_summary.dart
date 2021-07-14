@@ -54,7 +54,7 @@ class _SummaryPageState extends State<SummaryPage> {
               child: Container(
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: Text('WORKOUT#4', style: Style.TopicTextStyle),
+                child: Text('WORKOUT#4', style: Style.headline1),
               ),
             ),
             Expanded(
@@ -84,7 +84,7 @@ class _SummaryPageState extends State<SummaryPage> {
                           Text(
                             'Bangkae, Bangkok',
                             // style: Style.SummaryTextStyle,
-                            style: Style.BodySpecialTextStyle,
+                            style: Style.headline3,
                           ),
                           Container(
                             alignment: Alignment.center,
@@ -105,7 +105,7 @@ class _SummaryPageState extends State<SummaryPage> {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       getStartTime() + ' - ' + getEndTime(),
-                                      style: Style.BodySpecialTextStyle,
+                                      style: Style.headline3,
                                     ),
                                   ),
                                 ],
@@ -136,17 +136,17 @@ class _SummaryPageState extends State<SummaryPage> {
                           TextList().distanceText,
                           Icon(Icons.directions_bike_outlined),
                           TextList().distanceDisplay,
-                          TextList().distanceUnit),
+                          TextList().distanceUnitKM),
                       buildShowStat(
                           TextList().sumAvgSpeedText,
                           Icon(Icons.shutter_speed_outlined),
                           TextList().avgSpeedDisplay,
-                          TextList().speedUnit),
+                          TextList().speedUnitKM),
                       buildShowStat(
                           TextList().sumMaxSpeedText,
                           Icon(Icons.speed_outlined),
                           TextList().avgSpeedDisplay,
-                          TextList().speedUnit),
+                          TextList().speedUnitKM),
                       buildShowStat(
                           TextList().sumMovingText,
                           Icon(Icons.timer_outlined),
@@ -177,7 +177,7 @@ class _SummaryPageState extends State<SummaryPage> {
                   child: Text(
                     'BACK',
                     textAlign: TextAlign.center,
-                    style: Style.ButtonTextStyle,
+                    style: Style.button,
                   ),
                 ),
               ),
@@ -219,7 +219,7 @@ class _SummaryPageState extends State<SummaryPage> {
               alignment: Alignment.centerLeft,
               child: Text(
                 disText,
-                style: Style.HomeBodyStyle,
+                style: Style.bodyText1,
                 // textAlign: TextAlign.left,
               ),
             ),
@@ -242,7 +242,7 @@ class _SummaryPageState extends State<SummaryPage> {
               margin: EdgeInsets.only(left: 15),
               child: Text(
                 unit,
-                style: Style.HomeBodyStyle,
+                style: Style.bodyText1,
                 // textAlign: TextAlign.right,
               ),
             ),
@@ -271,7 +271,7 @@ class _SummaryPageState extends State<SummaryPage> {
           alignment: Alignment.centerLeft,
           child: Text(
             text,
-            style: Style.BodySpecialTextStyle,
+            style: Style.headline3,
           ),
         ),
       ],

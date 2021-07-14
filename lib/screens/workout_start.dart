@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/workout.dart';
 import 'package:sprint/services/workout_service.dart';
@@ -32,8 +33,9 @@ class _StartWorkoutState extends State<StartWorkout> {
   late String displayTime;
   late int secTime;
 
+  Duration duration = Duration();
   late Stopwatch _stopwatch;
-  late Timer _timer;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -57,7 +59,7 @@ class _StartWorkoutState extends State<StartWorkout> {
 
   void pause() {
     if (_timer != null) {
-      _timer.cancel();
+      _timer!.cancel();
       _stopwatch.stop();
     }
   }
@@ -69,6 +71,15 @@ class _StartWorkoutState extends State<StartWorkout> {
       });
       _stopwatch.start();
     }
+  }
+
+  void addTime() {
+    final addSeconds = 1;
+
+    setState(() {
+      final seconds = duration.inSeconds + addSeconds;
+      duration = Duration(seconds: seconds);
+    });
   }
 
   String formatTime(int milliseconds) {
@@ -124,7 +135,16 @@ class _StartWorkoutState extends State<StartWorkout> {
                             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
                               '30',
-                              style: Style.HomeTopicStyle,
+                              style: Style.headline2,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: Text(
+                              (tempIndex == 0)
+                                  ? TextList().tempUnitF
+                                  : TextList().tempUnitCel,
+                              style: Style.headline2,
                             ),
                           ),
                         ],
@@ -161,48 +181,215 @@ class _StartWorkoutState extends State<StartWorkout> {
                     SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      child: FocusDisplay(
-                        TextList().currentSpeedDisplay!,
-                        TextList().currentSpeedText,
-                        TextList().speedUnit,
+                    //condition 1-----------------------------------------------
+                    if (chosenValue == 'Speed') ...[
+                      Container(
+                        child: FocusDisplay(
+                          TextList().currentSpeedDisplay!,
+                          TextList().currentSpeedText,
+                          (distIndex == 0)
+                              ? TextList().speedUnitMiles
+                              : TextList().speedUnitKM,
+                        ),
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              TextSection(
-                                TextList().distanceDisplay,
-                                TextList().distanceText,
-                                TextList().distanceUnit,
-                              ),
-                            ],
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                TextSection(
+                                  TextList().distanceDisplay,
+                                  TextList().distanceText,
+                                  (distIndex == 0)
+                                      ? TextList().distanceUnitMiles
+                                      : TextList().distanceUnitKM,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              TextSection(
-                                TextList().avgSpeedDisplay,
-                                TextList().avgSpeedText,
-                                TextList().speedUnit,
-                              )
-                            ],
+                          Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                TextSection(
+                                  TextList().avgSpeedDisplay,
+                                  TextList().avgSpeedText,
+                                  (distIndex == 0)
+                                      ? TextList().speedUnitMiles
+                                      : TextList().speedUnitKM,
+                                )
+                              ],
+                            ),
                           ),
+                        ],
+                      ),
+                      Container(
+                        child: TimeDisplay(
+                          formatTime(_stopwatch.elapsedMilliseconds),
+                          TextList().timeText,
                         ),
-                      ],
-                    ),
-                    TimeDisplay(
-                      formatTime(_stopwatch.elapsedMilliseconds),
-                      TextList().timeText,
-                    ),
+                      ),
+                      //condition 2-----------------------------------------------
+                    ] else if (chosenValue == 'Distance') ...[
+                      Container(
+                        child: FocusDisplay(
+                          TextList().distanceDisplay,
+                          TextList().distanceText,
+                          (distIndex == 0)
+                              ? TextList().distanceUnitMiles
+                              : TextList().distanceUnitKM,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                TextSection(
+                                  TextList().currentSpeedDisplay!,
+                                  TextList().currentSpeedText,
+                                  (distIndex == 0)
+                                      ? TextList().speedUnitMiles
+                                      : TextList().speedUnitKM,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                TextSection(
+                                  TextList().avgSpeedDisplay,
+                                  TextList().avgSpeedText,
+                                  (distIndex == 0)
+                                      ? TextList().speedUnitMiles
+                                      : TextList().speedUnitKM,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        child: TimeDisplay(
+                          formatTime(_stopwatch.elapsedMilliseconds),
+                          TextList().timeText,
+                        ),
+                      ),
+                      //condition 3-----------------------------------------------
+                    ] else if (chosenValue == 'Average Speed') ...[
+                      Container(
+                        child: FocusDisplay(
+                          TextList().avgSpeedDisplay,
+                          TextList().avgSpeedText,
+                          (distIndex == 0)
+                              ? TextList().speedUnitMiles
+                              : TextList().speedUnitKM,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                TextSection(
+                                  TextList().currentSpeedDisplay!,
+                                  TextList().currentSpeedText,
+                                  (distIndex == 0)
+                                      ? TextList().speedUnitMiles
+                                      : TextList().speedUnitKM,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                TextSection(
+                                  TextList().distanceDisplay,
+                                  TextList().distanceText,
+                                  (distIndex == 0)
+                                      ? TextList().distanceUnitMiles
+                                      : TextList().distanceUnitKM,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        child: TimeDisplay(
+                          formatTime(_stopwatch.elapsedMilliseconds),
+                          TextList().timeText,
+                        ),
+                      ),
+                      //condition 4-----------------------------------------------
+                    ] else ...[
+                      Container(
+                        child: FocusTimeDisplay(
+                          formatTime(_stopwatch.elapsedMilliseconds),
+                          TextList().timeText,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                TextSection(
+                                  TextList().currentSpeedDisplay!,
+                                  TextList().currentSpeedText,
+                                  (distIndex == 0)
+                                      ? TextList().speedUnitMiles
+                                      : TextList().speedUnitKM,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                TextSection(
+                                  TextList().avgSpeedDisplay,
+                                  TextList().avgSpeedText,
+                                  (distIndex == 0)
+                                      ? TextList().speedUnitMiles
+                                      : TextList().speedUnitKM,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        child: TextSection(
+                          TextList().distanceDisplay,
+                          TextList().distanceText,
+                          (distIndex == 0)
+                              ? TextList().distanceUnitMiles
+                              : TextList().distanceUnitKM,
+                        ),
+                      ),
+                    ]
                   ],
                 ),
               ),
@@ -218,6 +405,13 @@ class _StartWorkoutState extends State<StartWorkout> {
       ),
     );
   }
+
+  // Widget buildTime() {
+  //   String twodigits(int n) => n.toString().padLeft(2, '0');
+  //   final hours = twodigits(duration.inHours);
+  //   final minutes = twodigits(duration.inMinutes.remainder(60));
+  //   final seconds = twodigits(duration.inMinutes.remainder(60));
+  // }
 
   Widget pauseWidget() => Stack(
         children: [
@@ -325,7 +519,10 @@ class _StartWorkoutState extends State<StartWorkout> {
                           ),
                           Text(
                             'Tap to Pause',
-                            style: Style.DescriptionTextStyle,
+                            style: TextStyle(fontFamily: AntonioName,
+                              fontWeight: FontWeight.w400,
+                              fontSize: regularTextSize,
+                              color: SprintColors.white.withOpacity(0.3),),
                           ),
                         ],
                       ),

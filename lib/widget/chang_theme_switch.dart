@@ -8,7 +8,6 @@ class ChangeThemeSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Transform.scale(
       scale: 1.1,

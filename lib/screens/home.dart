@@ -37,8 +37,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
   //
-  // getCurrentDate() {
-  //   return DateFormat('dd MMM yyyy').format(DateTime.now());
+  // getDate() {
+  //   DateTime? date = workOut.date;
+  //   return DateFormat('dd MMM yyyy').format(date!);
   // }
   //
   // getStartTime() {
@@ -130,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                                       alignment: Alignment.centerLeft,
                                       child: Text(
                                         'Last Workout',
-                                        style: Style.HomeTopicStyle,
+                                        style: Style.headline2,
                                         textAlign: TextAlign.left,
                                       ),
                                     ),
@@ -175,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                                                 TextList().distanceText,
                                                 Icons.directions_bike_outlined,
                                                 TextList().distanceDisplay,
-                                                TextList().distanceUnit),
+                                                TextList().distanceUnitKM),
                                           ),
                                           Expanded(
                                             flex: 4,
@@ -191,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                                                 TextList().avgSpeedText,
                                                 Icons.av_timer_outlined,
                                                 TextList().avgSpeedDisplay,
-                                                TextList().speedUnit),
+                                                TextList().speedUnitKM),
                                           ),
                                         ],
                                       ),
@@ -242,7 +243,7 @@ class _HomePageState extends State<HomePage> {
                               Border.all(color: Colors.white, width: 3)),
                           child: Text(
                             'GO',
-                            style: Style.ButtonTextStyle,
+                            style: Style.button,
                           ),
                         ),
                       ),
@@ -270,7 +271,7 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
           child: Text(
             disText,
-            style: Style.HomeBodyStyle,
+            style: Style.bodyText1,
           ),
         ),
         Container(
@@ -295,7 +296,7 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
           child: Text(
             unit,
-            style: Style.DescriptionTextStyle,
+            style: Style.caption,
           ),
         ),
       ],

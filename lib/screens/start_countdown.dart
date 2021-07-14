@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:sprint/model/global_variable.dart';
+import 'package:sprint/model/weathermodel.dart';
 import 'package:sprint/services/workout_service.dart';
 import 'package:sprint/style/text_style.dart';
 
@@ -53,6 +54,8 @@ class _StartCountDownState extends State<StartCountDown> {
     Timer(Duration(seconds: 3), () async {
       Navigator.of(context).pushReplacementNamed('/startWorkout');
       await WorkOutService().start();
+      var weatherData = await weather.getLocationWeather();
+      WeatherModel().updateUI(weatherData);
     });
   }
 

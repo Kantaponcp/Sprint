@@ -93,7 +93,7 @@ class MyApp extends StatelessWidget {
               '/': (context) => SplashScreen(),
               '/home': (context) => HomePage(),
               '/summary': (context) => SummaryPage(),
-              '/test': (context) => Test(),
+              // '/test': (context) => Test(),
               '/startWorkout': (context) => StartWorkout(),
               '/startCountdown': (context) => StartCountDown(),
               '/setting': (context) => SettingPage(),

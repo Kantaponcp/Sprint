@@ -70,9 +70,10 @@ class _MainDrawerState extends State<MainDrawer> {
       child: ListTile(
         leading: Icon(
           icon,
+          size: 30,
           color: Theme.of(context).iconTheme.color,
         ),
-        title: Text(text, style: Style.SummaryButtonTextStyle),
+        title: Text(text, style: Style.headline2),
         // hoverColor: hoverColor,
         onTap: onClicked,
       ),

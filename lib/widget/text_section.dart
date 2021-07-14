@@ -18,18 +18,20 @@ class TextSection extends StatelessWidget {
       children: [
         Text(
           isPressed ? number : '0.00',
-          style: Style.NumberTextStyle,
+          style: Style.headline1,
         ),
         Container(
+          alignment: Alignment.center,
           child: Row(
             children: [
               Text(
                 text,
-                style: Style.DescriptionTextStyle,
+                style: Style.bodyText1,
               ),
               Text(
                 " (" + unit + ") ",
-                style: Style.DescriptionSmallTextStyle,
+                style: Style.subTitle1,
+                textAlign: TextAlign.center,
               ),
             ],
           ),
@@ -43,7 +45,10 @@ class TimeDisplay extends StatelessWidget {
   final String number;
   final String text;
 
-  TimeDisplay(this.number, this.text,);
+  TimeDisplay(
+    this.number,
+    this.text,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -51,17 +56,16 @@ class TimeDisplay extends StatelessWidget {
       children: [
         Text(
           number,
-          style: Style.NumberTextStyle,
+          style: Style.headline1,
         ),
         Text(
           text,
-          style: Style.DescriptionTextStyle,
+          style: Style.bodyText1,
         ),
       ],
     );
   }
 }
-
 
 class FocusDisplay extends StatelessWidget {
   final String number;
@@ -77,7 +81,7 @@ class FocusDisplay extends StatelessWidget {
       children: [
         Text(
           number,
-          style: Style.FocusTextStyle,
+          style: Style.title,
         ),
         Container(
           child: Row(
@@ -85,14 +89,38 @@ class FocusDisplay extends StatelessWidget {
             children: [
               Text(
                 text,
-                style: Style.FocusDesTextStyle,
+                style: Style.headline4,
               ),
               Text(
                 " (" + unit + ") ",
-                style: Style.DescriptionTextStyle,
+                style: Style.bodyText1,
               ),
             ],
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class FocusTimeDisplay extends StatelessWidget {
+  final String number;
+  final String text;
+
+  FocusTimeDisplay(this.number, this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          number,
+          style: Style.title,
+        ),
+        Text(
+          text,
+          style: Style.headline4,
         ),
       ],
     );

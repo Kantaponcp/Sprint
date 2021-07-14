@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'package:latlong2/latlong.dart';
+import 'package:intl/intl.dart';
 
 WorkOut workOut = new WorkOut(startPoint: new GeoPoint(), endPoint: new GeoPoint(), previousPoint: new GeoPoint(), currentPoint: new GeoPoint(),);
-
+// List<double> mapPointLat = List.empty(growable: true);
+// List<double> mapPointLng = List.empty(growable: true);
+var mapPoint = List<LatLng>.empty(growable: true);
 // WorkOut workOut = new WorkOut();
 
 class WorkOut {
@@ -9,6 +14,7 @@ class WorkOut {
   DateTime? startTime;
   DateTime? stopTime;
   DateTime? date;
+  String? addressName;
   String? totalMovingTime;
   int secTime;
   double avgSpeed;
@@ -26,6 +32,7 @@ class WorkOut {
     this.startTime,
     this.stopTime,
     this.date,
+    this.addressName,
     this.totalMovingTime,
     this.secTime = 0,
     this.avgSpeed = 0,
@@ -41,12 +48,34 @@ class WorkOut {
 
   void newObject() {
     workOut = new WorkOut(startPoint: new GeoPoint(), endPoint: new GeoPoint(), previousPoint: new GeoPoint(), currentPoint: new GeoPoint(),);
-
+    // mapPointLat = new List.empty(growable: true);
+    // mapPointLng = new List.empty(growable: true);
+    mapPoint = new List<LatLng>.empty(growable: true);
     // workOut = new WorkOut();
   }
 
-}
+  static Map<String, dynamic> toMap(WorkOut workout) => {
+    'workoutId': workout.workoutId,
+    'startTime' : workout.startTime,
+    'stopTime' : workout.stopTime,
+    'totalMovingTime' : workout.totalMovingTime,
+    'secTime' : workout.secTime,
+    'avgSpeed' : workout.avgSpeed,
+    'totalDistance' : workout.totalDistance,
+    'totalDistanceMiles' : workout.totalDistanceMiles,
+    'currentSpeed' : workout.currentSpeed,
+    'startPoint' : workout.startPoint,
+    'endPoint' : workout.endPoint,
+    'previousPoint' : workout.previousPoint,
+    'currentPoint' : workout.currentPoint,
+  };
+  static String encode(List<WorkOut> workouts) => json.encode(
+    workouts
+        .map<Map<String, dynamic>>((workout) => WorkOut.toMap(workout))
+        .toList(),
+  );
 
+}
 
 class GeoPoint {
   double? latitude;
@@ -67,3 +96,9 @@ class PolylinePoint {
     required this.latitude,
 });
 }
+
+// List<PolylinePoint> mapPoint = [
+//   PolylinePoint(longitude: workOut.currentPoint.longitude, latitude: workOut.currentPoint.latitude),
+// ];
+
+

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:sprint/model/workout.dart';
 
 class MapWidget extends StatelessWidget {
   const MapWidget({Key? key}) : super(key: key);
@@ -8,18 +9,19 @@ class MapWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    double latitude = 13.654765;
-    double longitude = 100.497950;
+    double? latitude = workOut.startPoint.latitude;
+    double? longitude = workOut.startPoint.longitude;
 
-    var points = <LatLng>[
-      LatLng(latitude, longitude),
-      LatLng(13.672230, 100.506192),
-      LatLng(13.676217, 100.501113),
+    double? markerLatitude = workOut.currentPoint.latitude;
+    double? markerLongitude = workOut.currentPoint.longitude;
+
+    var point = <LatLng>[
+
     ];
 
     return FlutterMap(
       options: new MapOptions(
-        center: new LatLng(latitude, longitude),
+        center: new LatLng(latitude!, longitude!),
         minZoom: 15.0,
       ),
       layers: [
@@ -45,7 +47,7 @@ class MapWidget extends StatelessWidget {
         PolylineLayerOptions(
           polylines: [
             Polyline(
-                points: points,
+                points: mapPoint,
                 strokeWidth: 4.0,
                 color: Colors.purple),
           ],

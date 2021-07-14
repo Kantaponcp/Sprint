@@ -19,9 +19,10 @@ class _HistoryPageState extends State<HistoryPage> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
+        foregroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           'History',
-          style: Style.HomeTopicStyle,
+          style: Style.headline2,
         ),
         actions: [
           Container(
@@ -67,7 +68,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               child: Container(
                                 child: Text(
                                   'CYCLING #5',
-                                  style: Style.BodyMediumTextStyle,
+                                  style: Style.headline2,
                                 ),
                               ),
                             ),
@@ -78,12 +79,12 @@ class _HistoryPageState extends State<HistoryPage> {
                                   children: [
                                     Container(
                                       alignment: Alignment.centerRight,
-                                      child: Text('24 Jan 2021', style: Style.BodySmallTextStyle,),
+                                      child: Text('24 Jan 2021', style: Style.bodyText1,),
                                     ),
                                     Container(
                                       padding: EdgeInsets.only(top: 5),
                                       alignment: Alignment.centerRight,
-                                      child: Text('4:30 PM - 6:00 PM', style: Style.BodySmallTextStyle,),
+                                      child: Text('4:30 PM - 6:00 PM', style: Style.bodyText1,),
                                     ),
                                   ],
                                 ),
@@ -106,7 +107,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               child: buildShowStat(
                                   Icons.directions_bike_outlined,
                                   TextList().distanceDisplay,
-                                  TextList().distanceUnit),
+                                  TextList().distanceUnitKM),
                             ),
                             Expanded(
                               flex: 4,
@@ -118,7 +119,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               child: buildShowStat(
                                   Icons.av_timer_outlined,
                                   TextList().avgSpeedDisplay,
-                                  TextList().speedUnit),
+                                  TextList().speedUnitKM),
                             ),
                           ],
                         ),

@@ -37,6 +37,8 @@ dependencies:
   provider: ^5.0.0
   shared_preferences: ^2.0.6
   percent_indicator: ^3.0.1
+  flutter_svg: ^0.22.0
+  geocoding: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -32,9 +32,10 @@ class TextList {
   String fahrenheit = 'Fahrenheit';
 
   //unit
-  String distanceUnit = 'Km';
+  String distanceUnitKM = 'Km';
   String distanceUnitMiles = 'Mi';
-  String speedUnit = 'Km/Hr';
+  String speedUnitKM = 'Km/Hr';
+  String speedUnitMiles = 'Mi/Hr';
   String timeUnit = ' ';
   String durationUnit = 'Hr';
   String tempUnitCel = '°C';

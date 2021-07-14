@@ -19,10 +19,60 @@ const String AntonioName = 'Antonio';
 
 abstract class Style {
 //Home
-  static const HomeTopicStyle = TextStyle(
-    fontFamily: AntonioName,
+  static const title = TextStyle(
+      fontWeight: FontWeight.w700,
+      fontSize: 100
+  );
+
+  static const headline1 = TextStyle(
+      fontWeight: FontWeight.w700,
+      fontSize: bigTextSize,
+  );
+
+  static const headline2 = TextStyle(
+      fontWeight: FontWeight.w700,
+      fontSize: mediumTextSize,
+  );
+
+  static const headline3 = TextStyle(
+      fontWeight: FontWeight.w700,
+      fontSize: 20,
+  );
+
+  static const headline4 = TextStyle(
     fontWeight: FontWeight.w700,
-    fontSize: mediumTextSize,
+    fontSize: 18,
+  );
+
+  static const bodyText1 = TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: regularTextSize,
+  );
+
+  // static const bodyText2 = TextStyle(
+  //   fontWeight: FontWeight.w700,
+  //   fontSize: 20,
+  // );
+
+  static const subTitle1 = TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: smallTextSize,
+  );
+
+  // static const subTitle2 = TextStyle(
+  //   fontWeight: FontWeight.w700,
+  //   fontSize: 20,
+  // );
+
+  static const button = TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: bigTextSize,
+    color: TextColor,
+  );
+
+  static const caption = TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: smallTextSize,
   );
 
   static const HomeHeaderStyle = TextStyle(
@@ -32,15 +82,9 @@ abstract class Style {
     color: TextColor,
   );
 
-  static const HomeBodyStyle = TextStyle(
+  static const HomeSmallBodyStyle = TextStyle(
     fontFamily: AntonioName,
     fontWeight: FontWeight.w700,
-    fontSize: regularTextSize,
-  );
-
-  static const HomeSmallBodyStyle = TextStyle(
-    fontFamily: RobotoName,
-    fontWeight: FontWeight.w400,
     fontSize: regularTextSize,
     color: HighLightTextColor,
   );
@@ -52,71 +96,11 @@ abstract class Style {
     color: HighLightTextColor,
   );
 
-  static const HomeNumber2Style = TextStyle(
-    fontFamily: AntonioName,
-    fontWeight: FontWeight.w700,
-    fontSize: 20,
-    color: HighLightTextColor,
-  );
-
-//
-
   static const TempAppBarStyle = TextStyle(
     fontFamily: AntonioName,
     fontWeight: FontWeight.w700,
     fontSize: mediumTextSize,
     color: TextColor2,
-  );
-
-  static const FocusTextStyle = TextStyle(
-    fontFamily: AntonioName,
-    fontWeight: FontWeight.w700,
-    fontSize: focusNumberSize,
-  );
-
-  static const FocusDesTextStyle = TextStyle(
-    fontFamily: RobotoName,
-    fontWeight: FontWeight.w400,
-    fontSize: 18,
-  );
-
-  static const NumberTextStyle = TextStyle(
-    fontFamily: AntonioName,
-    fontWeight: FontWeight.w700,
-    fontSize: bigTextSize,
-  );
-
-  static const TopicTextStyle = TextStyle(
-    fontFamily: AntonioName,
-    fontWeight: FontWeight.w700,
-    fontSize: bigTextSize,
-    // color: TextColor,
-  );
-
-  static const DescriptionTextStyle = TextStyle(
-    fontFamily: RobotoName,
-    fontWeight: FontWeight.w400,
-    fontSize: smallTextSize,
-  );
-
-  static const DescriptionSmallTextStyle = TextStyle(
-    fontFamily: RobotoName,
-    fontWeight: FontWeight.w400,
-    fontSize: 10,
-  );
-
-  static const ButtonTextStyle = TextStyle(
-    fontFamily: AntonioName,
-    fontWeight: FontWeight.w700,
-    fontSize: bigTextSize,
-    color: TextColor,
-  );
-
-  static const SplashTextStyle = TextStyle(
-    fontFamily: RobotoName,
-    fontWeight: FontWeight.w700,
-    fontSize: regularTextSize,
-    color: HighLightTextColor,
   );
 
   static const CountTimeTextStyle = TextStyle(
@@ -126,47 +110,17 @@ abstract class Style {
     color: HighLightTextColor,
   );
 
-  static const SummaryTextStyle = TextStyle(
-    fontFamily: AntonioName,
-    fontWeight: FontWeight.w700,
-    fontSize: regularTextSize,
-  );
-
-  static const BodySpecialTextStyle = TextStyle(
-    fontFamily: AntonioName,
-    fontWeight: FontWeight.w700,
-    fontSize: 20,
-  );
-
-  static const BodyMediumTextStyle = TextStyle(
-    fontFamily: AntonioName,
-    fontWeight: FontWeight.w700,
-    fontSize: mediumTextSize,
-  );
-
-  static const BodyTextStyle = TextStyle(
-    fontFamily: AntonioName,
-    fontWeight: FontWeight.w700,
-    fontSize: regularTextSize,
-  );
-
-  static const BodySmallTextStyle = TextStyle(
-    fontFamily: AntonioName,
-    fontWeight: FontWeight.w700,
-    fontSize: smallTextSize,
-  );
-
   static const HistorySmallTextStyle = TextStyle(
-    fontFamily: RobotoName,
-    fontWeight: FontWeight.w400,
+    fontFamily: AntonioName,
+    fontWeight: FontWeight.w700,
     fontSize: smallTextSize,
     color: HighLightTextColor,
   );
 
-  static const SummaryButtonTextStyle = TextStyle(
+  static const SplashScreenTextStyle = TextStyle(
     fontFamily: AntonioName,
     fontWeight: FontWeight.w700,
-    fontSize: mediumTextSize,
+    fontSize: smallTextSize,
+    color: HighLightTextColor,
   );
 }
-

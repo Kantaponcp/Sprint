@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sprint/model/text_list.dart';
+import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/style/color.dart';
 import 'package:sprint/style/theme.dart';
 import 'package:sprint/style/text_style.dart';
@@ -25,10 +27,6 @@ class Priority {
 
 class _SettingPageState extends State<SettingPage> {
   bool switchValue = true;
-  List<bool> isOneSelected = [true, false];
-  List<bool> isTwoSelected = [true, false];
-
-  String _chosenValue = 'Speed';
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +36,10 @@ class _SettingPageState extends State<SettingPage> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
+        foregroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           'Settings',
-          style: Style.HomeTopicStyle,
+          style: Style.headline2,
         ),
         actions: [
           Container(
@@ -75,7 +74,7 @@ class _SettingPageState extends State<SettingPage> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Display',
-                        style: Style.BodySpecialTextStyle,
+                        style: Style.headline3,
                       ),
                     ),
                     Container(
@@ -92,7 +91,7 @@ class _SettingPageState extends State<SettingPage> {
                               alignment: Alignment.centerRight,
                               child: Text(
                                 'On',
-                                style: Style.BodyTextStyle,
+                                style: Style.bodyText1,
                               ),
                             ),
                           ),
@@ -119,7 +118,7 @@ class _SettingPageState extends State<SettingPage> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Unit',
-                        style: Style.BodySpecialTextStyle,
+                        style: Style.headline3,
                       ),
                     ),
                     Container(
@@ -144,12 +143,12 @@ class _SettingPageState extends State<SettingPage> {
                           buildTab(
                               TextList().kilometer +
                                   ' (' +
-                                  TextList().distanceUnit +
+                                  TextList().distanceUnitKM +
                                   ')',
                               TextList().mile +
                                   ' (' +
                                   TextList().distanceUnitMiles +
-                                  ')', isOneSelected),
+                                  ')', isOneSelected, distIndex),
                           Container(
                             child: Row(
                               children: [
@@ -173,7 +172,7 @@ class _SettingPageState extends State<SettingPage> {
                               TextList().fahrenheit +
                                   ' (' +
                                   TextList().tempUnitF +
-                                  ')', isTwoSelected),
+                                  ')', isTwoSelected, tempIndex),
                         ],
                       ),
                     ),
@@ -191,7 +190,7 @@ class _SettingPageState extends State<SettingPage> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Priority',
-                        style: Style.BodySpecialTextStyle,
+                        style: Style.headline3,
                       ),
                     ),
                     Container(
@@ -203,18 +202,18 @@ class _SettingPageState extends State<SettingPage> {
                           color: Theme.of(context).accentColor),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          value: _chosenValue,
+                          value: chosenValue,
                           //elevation: 5,
-                          style: Style.BodySmallTextStyle,
+                          style: Style.bodyText1,
                           items: <String>[
                             'Speed',
                             'Distance',
                             'Average Speed',
                             'Time',
-                          ].map<DropdownMenuItem<String>>((String value) {
+                          ].map<DropdownMenuItem<String>>((String priorityValue) {
                             return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value, style: Style.BodySmallTextStyle,),
+                              value: priorityValue,
+                              child: Text(priorityValue, style: Style.bodyText1,),
                             );
                           }).toList(),
                           // hint: Text(
@@ -224,9 +223,9 @@ class _SettingPageState extends State<SettingPage> {
                           //       fontSize: 16,
                           //       fontWeight: FontWeight.w600),
                           // ),
-                          onChanged: (String? value) {
+                          onChanged: (String? priorityValue) {
                             setState(() {
-                              _chosenValue = value!;
+                              chosenValue = priorityValue!;
                             });
                           },
                           dropdownColor: Theme.of(context).accentColor,
@@ -279,7 +278,7 @@ class _SettingPageState extends State<SettingPage> {
             padding: EdgeInsets.only(left: 10),
             child: Text(
               text,
-              style: Style.BodyTextStyle,
+              style: Style.bodyText1,
             ),
           ),
         ),
@@ -287,7 +286,7 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget buildTab(String tab1, String tab2, List<bool> isSelected) {
+  Widget buildTab(String tab1, String tab2, List<bool> isSelected, int newIndex) {
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
       child: Container(
@@ -333,7 +332,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
               ),
             ],
-            onPressed: (int newIndex) {
+            onPressed: (newIndex) {
               setState(() {
                 for (int index = 0; index < isSelected.length; index++) {
                   if (index == newIndex) {

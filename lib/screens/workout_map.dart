@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/services/workout_service.dart';
+import 'package:sprint/style/color.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/widget/build_button.dart';
 import 'package:sprint/widget/map.dart';
@@ -58,7 +59,7 @@ class _WorkoutMapState extends State<WorkoutMap> {
                     child: FocusDisplay(
                       TextList().currentSpeedDisplay!,
                       TextList().currentSpeedText,
-                      TextList().speedUnit,
+                      TextList().speedUnitKM,
                     ),
                   ),
                 ),
@@ -79,7 +80,10 @@ class _WorkoutMapState extends State<WorkoutMap> {
                             ),
                             Text(
                               'Tap to Pause',
-                              style: Style.DescriptionTextStyle,
+                              style: TextStyle(fontFamily: AntonioName,
+                                fontWeight: FontWeight.w400,
+                                fontSize: regularTextSize,
+                                color: SprintColors.white.withOpacity(0.3),),
                             ),
                           ],
                         ),

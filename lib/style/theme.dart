@@ -24,8 +24,7 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   _initPrefs() async {
-    if(_prefs == null)
-      _prefs = await SharedPreferences.getInstance();
+    if (_prefs == null) _prefs = await SharedPreferences.getInstance();
   }
 
   _loadFromPrefs() async {
@@ -34,36 +33,36 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  _saveToPrefs()async {
+  _saveToPrefs() async {
     await _initPrefs();
     _prefs.setBool(key, _darkTheme);
   }
-  // ThemeMode themeMode = ThemeMode.system;
-  // late SharedPreferences prefs;
-  //
-  // bool get isDarkMode {
-  //   if (themeMode == ThemeMode.system) {
-  //     final brightness = SchedulerBinding.instance!.window.platformBrightness;
-  //     return brightness == Brightness.dark;
-  //   } else {
-  //     return themeMode == ThemeMode.dark;
-  //   }
-  // }
-  //
-  // void toggleTheme(bool isOn) {
-  //   themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
-  //   notifyListeners();
-  // }
-  //
-  // _initPrefs() async {
-  //   if(prefs == null)
-  //     prefs = await SharedPreferences.getInstance();
-  // }
-  //
-  // _loadFromPrefs() async {
-  //   await _initPrefs();
-  //   isDarkMode
-  // }
+// ThemeMode themeMode = ThemeMode.system;
+// late SharedPreferences prefs;
+//
+// bool get isDarkMode {
+//   if (themeMode == ThemeMode.system) {
+//     final brightness = SchedulerBinding.instance!.window.platformBrightness;
+//     return brightness == Brightness.dark;
+//   } else {
+//     return themeMode == ThemeMode.dark;
+//   }
+// }
+//
+// void toggleTheme(bool isOn) {
+//   themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
+//   notifyListeners();
+// }
+//
+// _initPrefs() async {
+//   if(prefs == null)
+//     prefs = await SharedPreferences.getInstance();
+// }
+//
+// _loadFromPrefs() async {
+//   await _initPrefs();
+//   isDarkMode
+// }
 
 }
 
@@ -99,6 +98,7 @@ class SprintThemes {
     primaryIconTheme: IconThemeData(
       color: SprintColors.darkNavy,
     ),
+    textSelectionColor: SprintColors.darkNavy,
     colorScheme: ColorScheme.light(
       primary: SprintColors.darkNavy,
       secondary: SprintColors.orange,

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sprint/model/text_list.dart';
+import 'package:sprint/style/text_style.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -54,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Container(
                 child: Text(
                   'Version '+TextList().version,
-                  style: Theme.of(context).textTheme.subtitle2,
+                  style: Style.SplashScreenTextStyle,
                 ),
               ),
             ),

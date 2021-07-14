@@ -1,7 +1,8 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:sprint/model/workout.dart';
-
+import 'package:latlong2/latlong.dart';
 import '../model/global_variable.dart';
+import 'package:geocoding/geocoding.dart';
 
 class WorkOutService {
   Future<void> start() async {
@@ -136,10 +137,17 @@ class WorkOutService {
   }
 
   Future<void> getListPoint() async {
-    List<PolylinePoint> addedPoint = [];
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    addedPoint.add(PolylinePoint(
-        longitude: position.latitude, latitude: position.longitude));
+    mapPoint.add(LatLng(position.latitude, position.longitude));
+    // print(mapPointLat.length);
+    // print(mapPointLng.length);
+    print(mapPoint.length);
+  }
+
+  Future<void> getAddressName() async{
+    List<Placemark> placemarks = await placemarkFromCoordinates(workOut.currentPoint.latitude as double,workOut.currentPoint.longitude as double);
+    Placemark place = placemarks[0];
+    workOut.addressName = "${place.locality},${place.country}";
   }
 }
