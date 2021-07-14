@@ -39,6 +39,7 @@ dependencies:
   percent_indicator: ^3.0.1
   flutter_svg: ^0.22.0
   geocoding: ^2.0.0
+  flutter_settings_screens: ^0.2.2+1
 
 dev_dependencies:
   flutter_test:

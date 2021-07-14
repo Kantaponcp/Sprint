@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,10 +8,10 @@ import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/style/color.dart';
 import 'package:sprint/style/theme.dart';
 import 'package:sprint/style/text_style.dart';
-import 'package:sprint/widget/chang_theme_switch.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
 class SettingPage extends StatefulWidget {
-  const SettingPage({Key? key}) : super(key: key);
+  const SettingPage({Key key}) : super(key: key);
 
   @override
   _SettingPageState createState() => _SettingPageState();
@@ -39,7 +41,11 @@ class _SettingPageState extends State<SettingPage> {
         foregroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           'Settings',
-          style: Style.headline2,
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: mediumTextSize,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         actions: [
           Container(
@@ -80,25 +86,14 @@ class _SettingPageState extends State<SettingPage> {
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Expanded(
-                            flex: 7,
-                            child: buildOption(Icons.dark_mode, 'Dark Mode'),
-                          ),
-                          Expanded(
-                            flex: 1,
+                            flex: 12,
                             child: Container(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'On',
-                                style: Style.bodyText1,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Container(
-                              child: ChangeThemeSwitch(),
+                              margin: EdgeInsets.only(bottom: 10),
+                              alignment: Alignment.center,
+                              child: changeThemeSwitch(),
                             ),
                           ),
                         ],
@@ -148,7 +143,9 @@ class _SettingPageState extends State<SettingPage> {
                               TextList().mile +
                                   ' (' +
                                   TextList().distanceUnitMiles +
-                                  ')', isOneSelected, distIndex),
+                                  ')',
+                              isOneSelected,
+                              distIndex),
                           Container(
                             child: Row(
                               children: [
@@ -172,7 +169,9 @@ class _SettingPageState extends State<SettingPage> {
                               TextList().fahrenheit +
                                   ' (' +
                                   TextList().tempUnitF +
-                                  ')', isTwoSelected, tempIndex),
+                                  ')',
+                              isTwoSelected,
+                              tempIndex),
                         ],
                       ),
                     ),
@@ -204,16 +203,28 @@ class _SettingPageState extends State<SettingPage> {
                         child: DropdownButton<String>(
                           value: chosenValue,
                           //elevation: 5,
-                          style: Style.bodyText1,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: regularTextSize,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                           items: <String>[
                             'Speed',
                             'Distance',
                             'Average Speed',
                             'Time',
-                          ].map<DropdownMenuItem<String>>((String priorityValue) {
+                          ].map<DropdownMenuItem<String>>(
+                              (String priorityValue) {
                             return DropdownMenuItem<String>(
                               value: priorityValue,
-                              child: Text(priorityValue, style: Style.bodyText1,),
+                              child: Text(
+                                priorityValue,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: regularTextSize,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
                             );
                           }).toList(),
                           // hint: Text(
@@ -223,9 +234,9 @@ class _SettingPageState extends State<SettingPage> {
                           //       fontSize: 16,
                           //       fontWeight: FontWeight.w600),
                           // ),
-                          onChanged: (String? priorityValue) {
+                          onChanged: (String priorityValue) {
                             setState(() {
-                              chosenValue = priorityValue!;
+                              chosenValue = priorityValue;
                             });
                           },
                           dropdownColor: Theme.of(context).accentColor,
@@ -242,17 +253,25 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  // Widget buildIOSSwitch() => Transform.scale(
-  //       scale: 1.1,
-  //       child: CupertinoSwitch(
-  //         value: _light,
-  //         activeColor: Theme.of(context).buttonColor,
-  //         onChanged: (switchValue) {
-  //             setState(() {
-  //               _light = switchValue;
-  //             });}
-  //       ),
-  //     );
+  Widget changeThemeSwitch() {
+    return SwitchSettingsTile(
+      title: 'Dark Mode',
+      leading: Container(
+        width: 40,
+        height: 40,
+        alignment: Alignment.centerRight,
+        margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
+        child: CircleAvatar(
+          backgroundColor: Theme.of(context).accentColor,
+          foregroundColor: Theme.of(context).iconTheme.color,
+          radius: 50,
+          child: Icon(Icons.dark_mode),
+        ),
+      ),
+      settingKey: keyDarkMode,
+      onChange: (_) {},
+    );
+  }
 
   Widget buildOption(IconData icon, String text) {
     return Row(
@@ -286,7 +305,8 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget buildTab(String tab1, String tab2, List<bool> isSelected, int newIndex) {
+  Widget buildTab(
+      String tab1, String tab2, List<bool> isSelected, int checkIndex) {
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
       child: Container(
@@ -332,11 +352,15 @@ class _SettingPageState extends State<SettingPage> {
                 ),
               ),
             ],
-            onPressed: (newIndex) {
+            onPressed: (int newIndex) {
               setState(() {
                 for (int index = 0; index < isSelected.length; index++) {
                   if (index == newIndex) {
                     isSelected[index] = true;
+                    setState(() {
+                      checkIndex = newIndex;
+                    });
+                    print(checkIndex);
                   } else {
                     isSelected[index] = false;
                   }

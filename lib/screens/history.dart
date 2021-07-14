@@ -22,7 +22,11 @@ class _HistoryPageState extends State<HistoryPage> {
         foregroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           'History',
-          style: Style.headline2,
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: mediumTextSize,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         actions: [
           Container(

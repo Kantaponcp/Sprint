@@ -210,6 +210,7 @@ class _HomePageState extends State<HomePage> {
                                 color: Theme.of(context).primaryColor,
                                 borderRadius: BorderRadius.circular(20),
                               ),
+                              child: Text(''),
                             ),
                           ),
                         ],
@@ -231,6 +232,8 @@ class _HomePageState extends State<HomePage> {
                         onTap: () async {
                           Navigator.of(context).pushNamed('/startCountdown');
                           print('press');
+                          print(distIndex);
+                          print(tempIndex);
                           // await WorkOutService().checkCurrentLocation();
                         },
                         child: Container(

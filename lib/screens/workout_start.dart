@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/text_list.dart';
+import 'package:sprint/model/weathermodel.dart';
 import 'package:sprint/model/workout.dart';
 import 'package:sprint/services/workout_service.dart';
 import 'package:sprint/style/color.dart';
@@ -134,7 +135,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
-                              '30',
+                              WeatherModel().tempDisplay,
                               style: Style.headline2,
                             ),
                           ),
@@ -142,8 +143,8 @@ class _StartWorkoutState extends State<StartWorkout> {
                             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
                               (tempIndex == 0)
-                                  ? TextList().tempUnitF
-                                  : TextList().tempUnitCel,
+                                  ? TextList().tempUnitCel
+                                  : TextList().tempUnitF,
                               style: Style.headline2,
                             ),
                           ),
@@ -188,8 +189,8 @@ class _StartWorkoutState extends State<StartWorkout> {
                           TextList().currentSpeedDisplay!,
                           TextList().currentSpeedText,
                           (distIndex == 0)
-                              ? TextList().speedUnitMiles
-                              : TextList().speedUnitKM,
+                              ? TextList().speedUnitKM
+                              : TextList().speedUnitMiles,
                         ),
                       ),
                       Row(
@@ -204,8 +205,8 @@ class _StartWorkoutState extends State<StartWorkout> {
                                   TextList().distanceDisplay,
                                   TextList().distanceText,
                                   (distIndex == 0)
-                                      ? TextList().distanceUnitMiles
-                                      : TextList().distanceUnitKM,
+                                      ? TextList().distanceUnitKM
+                                      : TextList().distanceUnitMiles,
                                 ),
                               ],
                             ),
@@ -219,8 +220,8 @@ class _StartWorkoutState extends State<StartWorkout> {
                                   TextList().avgSpeedDisplay,
                                   TextList().avgSpeedText,
                                   (distIndex == 0)
-                                      ? TextList().speedUnitMiles
-                                      : TextList().speedUnitKM,
+                                      ? TextList().speedUnitKM
+                                      : TextList().speedUnitMiles,
                                 )
                               ],
                             ),

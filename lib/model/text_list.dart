@@ -20,6 +20,7 @@ class TextList {
   String sumAvgSpeedText = 'AVERAGE SPEED';
   String sumMaxSpeedText = 'MAX SPEED';
   String sumMovingText = 'MOVING TIME';
+  String addressName = workOut.addressName ?? 'NO ADDRESS';
   String? totalMovingTime = workOut.totalMovingTime;
   String? summarySpeed = workOut.currentSpeed.toString();
   String totalDistance = workOut.totalDistance.toStringAsFixed(2);

@@ -76,14 +76,22 @@ class SprintThemes {
     backgroundColor: SprintColors.black,
     cardColor: SprintColors.navy,
     buttonColor: SprintColors.orange,
+    canvasColor: SprintColors.black,
+
+    switchTheme: SwitchThemeData(
+
+    ),
     primaryIconTheme: IconThemeData(
       color: SprintColors.white,
     ),
     colorScheme: ColorScheme.dark(
-        primary: SprintColors.white,
-        secondary: SprintColors.orange,
-        onPrimary: SprintColors.white,
-        onSurface: SprintColors.white),
+      primary: SprintColors.white,
+      secondary: SprintColors.orange,
+      onPrimary: SprintColors.white,
+      onSurface: SprintColors.white,
+      onError: SprintColors.white,
+      onBackground: SprintColors.white,
+    ),
   );
 
   static final lightTheme = ThemeData(
@@ -105,6 +113,7 @@ class SprintThemes {
       onPrimary: SprintColors.darkNavy,
       onSurface: SprintColors.darkNavy,
       onError: SprintColors.darkNavy,
+      onBackground: SprintColors.darkNavy,
     ),
   );
 }

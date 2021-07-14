@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint/screens/history.dart';
@@ -13,11 +14,57 @@ import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/style/color.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/style/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:sprint/widget/chang_theme_switch.dart';
 
-void main() {
+Future main() async {
+
+  await Settings.init(cacheProvider: SharePreferenceCache());
+
   runApp(MyApp());
 }
+
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) => ValueChangeObserver<bool>(
+      cacheKey: keyDarkMode,
+      defaultValue: true,
+      builder: (_, isDarkMode, __) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: isDarkMode ? SprintThemes.darkTheme : SprintThemes.lightTheme,
+            // themeMode: themeProvider.themeMode,
+            // darkTheme: SprintThemes.darkTheme,
+            // theme: SprintThemes.lightTheme,
+            // ThemeData(
+            // textTheme: TextTheme(
+            //   headline1: FocusTextStyle,
+            //   headline2: NumberTextStyle,
+            //   subtitle1: DescriptionTextStyle,
+            //   button: ButtonTextStyle,
+            //   bodyText1: SummaryTextStyle,
+            //   subtitle2: SplashTextStyle,
+            //   // ),
+            // ),
+            initialRoute: '/',
+            routes: {
+              '/': (context) => SplashScreen(),
+              '/home': (context) => HomePage(),
+              '/summary': (context) => SummaryPage(),
+              // '/test': (context) => Test(),
+              '/startWorkout': (context) => StartWorkout(),
+              '/startCountdown': (context) => StartCountDown(),
+              '/setting': (context) => SettingPage(),
+              '/history': (context) => HistoryPage(),
+              '/workoutMap': (context) => WorkoutMap(),
+            },
+          );
+        },
+      );
+}
+
+
 //
 // class MyApp extends StatefulWidget {
 //   const MyApp({Key? key}) : super(key: key);
@@ -65,42 +112,3 @@ void main() {
 //     );
 //   }
 // }
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
-      child: Consumer<ThemeProvider>(
-        builder: (context, ThemeProvider provider, child) {
-          return MaterialApp(
-            theme: provider.darkTheme ? SprintThemes.darkTheme : SprintThemes.lightTheme,
-            // themeMode: themeProvider.themeMode,
-            // darkTheme: SprintThemes.darkTheme,
-            // theme: SprintThemes.lightTheme,
-            // ThemeData(
-            // textTheme: TextTheme(
-            //   headline1: FocusTextStyle,
-            //   headline2: NumberTextStyle,
-            //   subtitle1: DescriptionTextStyle,
-            //   button: ButtonTextStyle,
-            //   bodyText1: SummaryTextStyle,
-            //   subtitle2: SplashTextStyle,
-            //   // ),
-            // ),
-            initialRoute: '/',
-            routes: {
-              '/': (context) => SplashScreen(),
-              '/home': (context) => HomePage(),
-              '/summary': (context) => SummaryPage(),
-              // '/test': (context) => Test(),
-              '/startWorkout': (context) => StartWorkout(),
-              '/startCountdown': (context) => StartCountDown(),
-              '/setting': (context) => SettingPage(),
-              '/history': (context) => HistoryPage(),
-              '/workoutMap': (context) => WorkoutMap(),
-            },
-          );
-        },
-      ));
-}

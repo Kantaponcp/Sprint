@@ -82,8 +82,8 @@ class _SummaryPageState extends State<SummaryPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Bangkae, Bangkok',
-                            // style: Style.SummaryTextStyle,
+                            TextList().addressName,
+                            // 'Bangkae, Bangkok',
                             style: Style.headline3,
                           ),
                           Container(

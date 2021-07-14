@@ -148,6 +148,7 @@ class WorkOutService {
   Future<void> getAddressName() async{
     List<Placemark> placemarks = await placemarkFromCoordinates(workOut.currentPoint.latitude as double,workOut.currentPoint.longitude as double);
     Placemark place = placemarks[0];
-    workOut.addressName = "${place.locality},${place.country}";
+    // workOut.addressName = "${place.locality},${place.country}";
+    workOut.addressName = place.country;
   }
 }

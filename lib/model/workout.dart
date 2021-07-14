@@ -3,8 +3,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:intl/intl.dart';
 
 WorkOut workOut = new WorkOut(startPoint: new GeoPoint(), endPoint: new GeoPoint(), previousPoint: new GeoPoint(), currentPoint: new GeoPoint(),);
-// List<double> mapPointLat = List.empty(growable: true);
-// List<double> mapPointLng = List.empty(growable: true);
 var mapPoint = List<LatLng>.empty(growable: true);
 // WorkOut workOut = new WorkOut();
 
@@ -48,8 +46,6 @@ class WorkOut {
 
   void newObject() {
     workOut = new WorkOut(startPoint: new GeoPoint(), endPoint: new GeoPoint(), previousPoint: new GeoPoint(), currentPoint: new GeoPoint(),);
-    // mapPointLat = new List.empty(growable: true);
-    // mapPointLng = new List.empty(growable: true);
     mapPoint = new List<LatLng>.empty(growable: true);
     // workOut = new WorkOut();
   }
