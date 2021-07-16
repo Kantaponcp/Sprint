@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/global_variable.dart';
+import 'package:sprint/model/workout.dart';
 import 'package:sprint/style/color.dart';
 import 'package:sprint/style/theme.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sprint/utils/user_setting.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key key}) : super(key: key);
@@ -28,11 +30,15 @@ class Priority {
   );
 }
 
-
 class _SettingPageState extends State<SettingPage> {
   bool switchValue = true;
+  Setting setting;
 
-  static SharedPreferences _preferences;
+  @override
+  void initState() {
+    super.initState();
+      setting = SettingPreferences.getSetting();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +70,7 @@ class _SettingPageState extends State<SettingPage> {
               child: IconButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed('/home');
+                  SettingPreferences.setSetting(setting);
                   print(isKM);
                   print(isCel);
                 },
@@ -94,6 +101,17 @@ class _SettingPageState extends State<SettingPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          // Expanded(
+                          //     flex: 6,
+                          //     child: buildOption(
+                          //         settings.isDarkMode
+                          //             ? Icons.light_mode_outlined
+                          //             : Icons.dark_mode,
+                          //         'Dark Mode')),
+                          // Expanded(
+                          //   flex: 1,
+                          //   child: Text(settings.isDarkMode ? 'Off' : 'On'),
+                          // ),
                           Expanded(
                             flex: 12,
                             child: Container(
@@ -151,7 +169,7 @@ class _SettingPageState extends State<SettingPage> {
                                   TextList().distanceUnitMiles +
                                   ')',
                               isOneSelected,
-                              isKM),
+                              'tapOne'),
                           Container(
                             child: Row(
                               children: [
@@ -177,7 +195,7 @@ class _SettingPageState extends State<SettingPage> {
                                   TextList().tempUnitF +
                                   ')',
                               isTwoSelected,
-                              isCel),
+                              'tapTwo'),
                         ],
                       ),
                     ),
@@ -207,7 +225,7 @@ class _SettingPageState extends State<SettingPage> {
                           color: Theme.of(context).accentColor),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          value: chosenValue,
+                          value: setting.priority,
                           //elevation: 5,
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
@@ -226,6 +244,7 @@ class _SettingPageState extends State<SettingPage> {
                               child: Text(
                                 priorityValue,
                                 style: TextStyle(
+                                  fontFamily: AntonioName,
                                   fontWeight: FontWeight.w700,
                                   fontSize: regularTextSize,
                                   color: Theme.of(context).colorScheme.primary,
@@ -234,15 +253,18 @@ class _SettingPageState extends State<SettingPage> {
                             );
                           }).toList(),
                           // hint: Text(
-                          //   "Please choose a langauage",
+                          //   "Please choose a priority display",
                           //   style: TextStyle(
-                          //       color: Colors.black,
-                          //       fontSize: 16,
-                          //       fontWeight: FontWeight.w600),
+                          //     fontWeight: FontWeight.w700,
+                          //     fontSize: regularTextSize,
+                          //     color: Theme.of(context).colorScheme.primary,
+                          //   ),
                           // ),
-                          onChanged: (String priorityValue) {
+                          onChanged: (priority) {
+                            setting = setting.copy(priority: priority);
                             setState(() {
-                              chosenValue = priorityValue;
+                              chosenValue = setting.priority;
+                              // SettingPreferences.setSetting(settings);
                             });
                           },
                           dropdownColor: Theme.of(context).accentColor,
@@ -311,8 +333,11 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  List<bool> isOneSelected = [true, false];
+  List<bool> isTwoSelected = [true, false];
+
   Widget buildTab(
-      String tab1, String tab2, List<bool> isSelected, bool checkCondition) {
+      String tab1, String tab2, List<bool> isSelected, String tap) {
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
       child: Container(
@@ -330,6 +355,7 @@ class _SettingPageState extends State<SettingPage> {
             // color: Colors.white,
             fillColor: SprintColors.white,
             disabledColor: Theme.of(context).accentColor,
+
             children: <Widget>[
               Container(
                 alignment: Alignment.center,
@@ -360,23 +386,25 @@ class _SettingPageState extends State<SettingPage> {
             ],
             onPressed: (int newIndex) {
               setState(() {
-                for (int index = 0; index < isSelected.length; index++) {
-                  if (index == newIndex) {
-                    isSelected[index] = true;
-                    // checkIndex = newIndex;
-                  } else {
-                    isSelected[index] = false;
-                  }
+                // for (int index = 0; index < isSelected.length; index++) {
+                //   if (index == newIndex) {
+                //     // checkIndex = newIndex;
+                //   } else {
+                //     isSelected[index] = false;
+                //   }
+                // }
+                if(isSelected[0]){
+                  isSelected[0] = false;
+                  isSelected[1] = true;
+                }else{
+                  isSelected[0] = true;
+                  isSelected[1] = false;
                 }
               });
-
             },
           ),
         ),
       ),
     );
   }
-
-  static Future init() async => _preferences = await SharedPreferences.getInstance();
-
 }

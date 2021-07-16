@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/style/text_style.dart';
-import 'package:sprint/widget/time_counting.dart';
+import 'package:sprint/model/weathermodel.dart';
 
 class WorkoutAppBar extends StatefulWidget implements PreferredSizeWidget{
   WorkoutAppBar({

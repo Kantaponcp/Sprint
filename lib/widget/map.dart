@@ -16,7 +16,6 @@ class MapWidget extends StatelessWidget {
     double? markerLongitude = workOut.currentPoint.longitude;
 
     var point = <LatLng>[
-
     ];
 
     return FlutterMap(

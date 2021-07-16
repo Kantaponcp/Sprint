@@ -23,6 +23,7 @@ class TextList {
   String addressName = workOut.addressName ?? 'NO ADDRESS';
   String? totalMovingTime = workOut.totalMovingTime;
   String? summarySpeed = workOut.currentSpeed.toString();
+  String summaryMaxSpeed = workOut.maxSpeed.toStringAsFixed(2);
   String totalDistance = workOut.totalDistance.toStringAsFixed(2);
   String totalDistanceMiles = workOut.totalDistanceMiles.toStringAsFixed(2);
   String summaryAvgSpeed = workOut.avgSpeed.toStringAsFixed(2);

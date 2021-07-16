@@ -44,12 +44,19 @@ class WorkOutService {
     //stop timecounting
   }
 
+  double pauseDistance = 0;
+
   Future<void> resume(String _totalWorkOutTime) async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     isStopped = false;
     workOut.previousPoint.latitude = position.latitude;
     workOut.previousPoint.longitude = position.longitude;
+    pauseDistance = Geolocator.distanceBetween(
+        workOut.endPoint.latitude!,
+        workOut.endPoint.longitude!,
+        workOut.previousPoint.latitude!,
+        workOut.previousPoint.longitude!)/1000;
     loopCalStat();
     //resume timecounting
   }
@@ -63,9 +70,19 @@ class WorkOutService {
     double? avg = workOut.avgSpeed;
     int? sec = workOut.secTime;
     double dis = workOut.totalDistance;
+    double dism = workOut.totalDistanceMiles;
+    double s = workOut.currentSpeed;
+    double mis = workOut.currentSpeedMiles;
+    double ms = workOut.maxSpeed;
     print('this is sec $sec');
     print('this is avgSpeed $avg');
     print('this is distance $dis');
+    print('this is distance Miles $dism');
+    print('this is pause distance $pauseDistance');
+    print('this is currentSpeed $s');
+    print('this is milesSpeed $mis');
+    print('this is maxSpeed $ms');
+
     if (!isStopped) {
       Future.delayed(Duration(seconds: 1), () {
         loopCalStat();
@@ -76,6 +93,7 @@ class WorkOutService {
   Future<void> calStat() async {
     currentSpeed();
     avgSpeed();
+    maxSpeed();
     totalDistance();
     getListPoint();
     getAddressName();
@@ -84,12 +102,13 @@ class WorkOutService {
 
   Future<void> currentSpeed() async {
     Geolocator.getPositionStream(
-            forceAndroidLocationManager: true,
-            intervalDuration: Duration(seconds: 3),
-            distanceFilter: 2,
-            desiredAccuracy: LocationAccuracy.bestForNavigation)
+        forceAndroidLocationManager: true,
+        intervalDuration: Duration(seconds: 3),
+        distanceFilter: 2,
+        desiredAccuracy: LocationAccuracy.bestForNavigation)
         .listen((position) {
-      workOut.currentSpeed = position.speed;
+      workOut.currentSpeed = ((position.speed *18)/5);
+      workOut.currentSpeedMiles = position.speed *2.2369362920544;
     });
   }
 
@@ -103,6 +122,14 @@ class WorkOutService {
     }
   }
 
+  Future<void> maxSpeed() async{
+    if(workOut.currentSpeed >= workOut.maxSpeed){
+      workOut.maxSpeed = workOut.currentSpeed;
+    }else{
+      workOut.maxSpeed = workOut.maxSpeed;
+    }
+  }
+
   Future<void> totalDistance() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -110,24 +137,16 @@ class WorkOutService {
     workOut.currentPoint.longitude = position.longitude;
     // checkCurrentLocation();
     workOut.totalDistance += Geolocator.distanceBetween(
-            workOut.previousPoint.latitude!,
-            workOut.previousPoint.longitude!,
-            workOut.currentPoint.latitude!,
-            workOut.currentPoint.longitude!) /
+        workOut.previousPoint.latitude!,
+        workOut.previousPoint.longitude!,
+        workOut.currentPoint.latitude!,
+        workOut.currentPoint.longitude!) /
         1000;
+    workOut.totalDistance = workOut.totalDistance - pauseDistance;
     // workOut.totalDistance += workOut.totalDistance;
-  }
-
-  Future<void> convertDistToMile() async {
     workOut.totalDistanceMiles = (workOut.totalDistance / 1.609344);
+    pauseDistance = 0;
   }
-
-  // Future<void> checkCurrentLocation() async{
-  //   Position position = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high);
-  //   workOut.currentPoint.latitude = position.latitude;
-  //   workOut.currentPoint.longitude = position.longitude;
-  // }
 
   Future<void> checkCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
@@ -153,4 +172,5 @@ class WorkOutService {
     }
     // workOut.addressName = place.country;
   }
+
 }

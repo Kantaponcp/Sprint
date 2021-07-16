@@ -145,7 +145,7 @@ class _SummaryPageState extends State<SummaryPage> {
                       buildShowStat(
                           TextList().sumMaxSpeedText,
                           Icon(Icons.speed_outlined),
-                          TextList().avgSpeedDisplay,
+                          TextList().summaryMaxSpeed,
                           TextList().speedUnitKM),
                       buildShowStat(
                           TextList().sumMovingText,

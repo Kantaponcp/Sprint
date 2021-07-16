@@ -3,6 +3,34 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+WeatherModel weather = WeatherModel();
+int temperature = 0;
+String tempDisplay = '';
+int temperatureFahrenheit = 0;
+String cityName = '';
+String weatherMessage = '';
+double newHeight = 0;
+String weatherPNG = 'http://openweathermap.org/img/wn/03d@2x.png';
+late SvgPicture svgBG;
+
+void updateUI(dynamic weatherData) {
+  if (weatherData == null) {
+    //temperature = 0;
+    tempDisplay = '--';
+    weatherPNG = 'http://openweathermap.org/img/wn/03d@2x.png';
+    //cityName = 'There is an error.';
+    // svgBG = SvgPicture.asset('images/404-error.svg');
+    return;
+  }
+  var temp = weatherData['main']['temp'];
+  temperature = temp.toInt();
+  temperatureFahrenheit = ((temperature * 1.8) + 32).toInt();
+  tempDisplay = temperature.toString();
+  var condition = weatherData['weather'][0]['id'];
+  weatherPNG = weather.getWeatherPNGNetwork(condition);
+  //cityName = weatherData['name'];
+}
+
 class WeatherModel {
   static const apiKey = 'da65a29869521910526be4537007df13';
   static const openWeatherMapURL = 'https://api.openweathermap.org/data/2.5/weather';

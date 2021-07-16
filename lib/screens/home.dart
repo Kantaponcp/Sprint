@@ -42,7 +42,8 @@ class _HomePageState extends State<HomePage> {
     final double appbarWidth = MediaQuery.of(context).size.width;
     final double appbarHeight = 100;
 
-    return Scaffold(
+    return SafeArea(child:
+      Scaffold(
       endDrawer: MainDrawer(),
       body: Stack(
         children: [
@@ -243,7 +244,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
-      ),
+      ),),
     );
   }
 

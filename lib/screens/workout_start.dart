@@ -58,23 +58,13 @@ class _StartWorkoutState extends State<StartWorkout> {
     }
   }
 
-  // String formatTime(int milliseconds) {
-  //   var secs = milliseconds ~/ 1000;
-  //   var hours = (secs ~/ 3600).toString().padLeft(2, '0');
-  //   var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
-  //   var seconds = (secs % 60).toString().padLeft(2, '0');
-  //   displayTime = "$hours:$minutes:$seconds";
-  //   workOut.secTime = (milliseconds ~/ 1000);
-  //   return displayTime;
-  //   // return "$hours:$minutes:$seconds";
-  // }
-
   final double width = 130.0;
   final double height = 130.0;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(child:
+      Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
         child: Column(
@@ -387,7 +377,7 @@ class _StartWorkoutState extends State<StartWorkout> {
             )
           ],
         ),
-      ),
+      ),),
     );
   }
 

@@ -1,8 +1,4 @@
 import 'dart:async';
-import 'package:sprint/model/weathermodel.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/workout.dart';
 
 bool isVisible = true;
@@ -31,29 +27,5 @@ String formatTime(int milliseconds) {
   // return "$hours:$minutes:$seconds";
 }
 
-WeatherModel weather = WeatherModel();
-int temperature = 0;
-String tempDisplay = '';
-String cityName = '';
-String weatherMessage = '';
-double newHeight = 0;
-String weatherPNG = 'http://openweathermap.org/img/wn/03d@2x.png';
-late SvgPicture svgBG;
 
-void updateUI(dynamic weatherData) {
-  if (weatherData == null) {
-    //temperature = 0;
-    tempDisplay = '--';
-    weatherPNG = 'http://openweathermap.org/img/wn/03d@2x.png';
-    //cityName = 'There is an error.';
-    // svgBG = SvgPicture.asset('images/404-error.svg');
-    return;
-  }
-  var temp = weatherData['main']['temp'];
-  temperature = temp.toInt();
-  tempDisplay = temperature.toString();
-  var condition = weatherData['weather'][0]['id'];
-  weatherPNG = weather.getWeatherPNGNetwork(condition);
-  //cityName = weatherData['name'];
-}
 
