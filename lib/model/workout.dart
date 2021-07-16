@@ -4,11 +4,11 @@ import 'package:intl/intl.dart';
 
 WorkOut workOut = new WorkOut(startPoint: new GeoPoint(), endPoint: new GeoPoint(), previousPoint: new GeoPoint(), currentPoint: new GeoPoint(),);
 var mapPoint = List<LatLng>.empty(growable: true);
+var listWorkOut = List<WorkOut>.empty(growable: true);
 // WorkOut workOut = new WorkOut();
 
 class WorkOut {
-
-  String? workoutId;
+  int? workOutId;
   DateTime? startTime;
   DateTime? stopTime;
   DateTime? date;
@@ -26,7 +26,7 @@ class WorkOut {
   PolylinePoint? workoutPoint;
 
   WorkOut({
-    this.workoutId,
+    this.workOutId,
     this.startTime,
     this.stopTime,
     this.date,
@@ -47,29 +47,32 @@ class WorkOut {
   void newObject() {
     workOut = new WorkOut(startPoint: new GeoPoint(), endPoint: new GeoPoint(), previousPoint: new GeoPoint(), currentPoint: new GeoPoint(),);
     mapPoint = new List<LatLng>.empty(growable: true);
+    listWorkOut.add(workOut);
+    for(int i=0; i<listWorkOut.length;i++){
+    }
     // workOut = new WorkOut();
   }
 
-  static Map<String, dynamic> toMap(WorkOut workout) => {
-    'workoutId': workout.workoutId,
-    'startTime' : workout.startTime,
-    'stopTime' : workout.stopTime,
-    'totalMovingTime' : workout.totalMovingTime,
-    'secTime' : workout.secTime,
-    'avgSpeed' : workout.avgSpeed,
-    'totalDistance' : workout.totalDistance,
-    'totalDistanceMiles' : workout.totalDistanceMiles,
-    'currentSpeed' : workout.currentSpeed,
-    'startPoint' : workout.startPoint,
-    'endPoint' : workout.endPoint,
-    'previousPoint' : workout.previousPoint,
-    'currentPoint' : workout.currentPoint,
-  };
-  static String encode(List<WorkOut> workouts) => json.encode(
-    workouts
-        .map<Map<String, dynamic>>((workout) => WorkOut.toMap(workout))
-        .toList(),
-  );
+  // static Map<String, dynamic> toMap(WorkOut workout) => {
+  //   'workoutId': workout.workoutId,
+  //   'startTime' : workout.startTime,
+  //   'stopTime' : workout.stopTime,
+  //   'totalMovingTime' : workout.totalMovingTime,
+  //   'secTime' : workout.secTime,
+  //   'avgSpeed' : workout.avgSpeed,
+  //   'totalDistance' : workout.totalDistance,
+  //   'totalDistanceMiles' : workout.totalDistanceMiles,
+  //   'currentSpeed' : workout.currentSpeed,
+  //   'startPoint' : workout.startPoint,
+  //   'endPoint' : workout.endPoint,
+  //   'previousPoint' : workout.previousPoint,
+  //   'currentPoint' : workout.currentPoint,
+  // };
+  // static String encode(List<WorkOut> workouts) => json.encode(
+  //   workouts
+  //       .map<Map<String, dynamic>>((workout) => WorkOut.toMap(workout))
+  //       .toList(),
+  // );
 
 }
 

@@ -9,6 +9,7 @@ import 'package:sprint/style/color.dart';
 import 'package:sprint/style/theme.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key key}) : super(key: key);
@@ -27,8 +28,11 @@ class Priority {
   );
 }
 
+
 class _SettingPageState extends State<SettingPage> {
   bool switchValue = true;
+
+  static SharedPreferences _preferences;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +64,8 @@ class _SettingPageState extends State<SettingPage> {
               child: IconButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed('/home');
+                  print(isKM);
+                  print(isCel);
                 },
                 icon: Icon(Icons.close),
               ),
@@ -145,7 +151,7 @@ class _SettingPageState extends State<SettingPage> {
                                   TextList().distanceUnitMiles +
                                   ')',
                               isOneSelected,
-                              distIndex),
+                              isKM),
                           Container(
                             child: Row(
                               children: [
@@ -171,7 +177,7 @@ class _SettingPageState extends State<SettingPage> {
                                   TextList().tempUnitF +
                                   ')',
                               isTwoSelected,
-                              tempIndex),
+                              isCel),
                         ],
                       ),
                     ),
@@ -306,7 +312,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget buildTab(
-      String tab1, String tab2, List<bool> isSelected, int checkIndex) {
+      String tab1, String tab2, List<bool> isSelected, bool checkCondition) {
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
       child: Container(
@@ -357,19 +363,20 @@ class _SettingPageState extends State<SettingPage> {
                 for (int index = 0; index < isSelected.length; index++) {
                   if (index == newIndex) {
                     isSelected[index] = true;
-                    setState(() {
-                      checkIndex = newIndex;
-                    });
-                    print(checkIndex);
+                    // checkIndex = newIndex;
                   } else {
                     isSelected[index] = false;
                   }
                 }
               });
+
             },
           ),
         ),
       ),
     );
   }
+
+  static Future init() async => _preferences = await SharedPreferences.getInstance();
+
 }

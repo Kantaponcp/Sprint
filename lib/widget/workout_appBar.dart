@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sprint/model/global_variable.dart';
+import 'package:sprint/model/text_list.dart';
 import 'package:sprint/style/text_style.dart';
+import 'package:sprint/widget/time_counting.dart';
 
 class WorkoutAppBar extends StatefulWidget implements PreferredSizeWidget{
   WorkoutAppBar({
@@ -43,7 +46,16 @@ class _WorkoutAppBarState extends State<WorkoutAppBar> {
             Padding(
               padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
               child: Text(
-                '30',
+                tempDisplay,
+                style: Style.TempAppBarStyle,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+              child: Text(
+                (tempIndex == 0)
+                    ? TextList().tempUnitCel
+                    : TextList().tempUnitF,
                 style: Style.TempAppBarStyle,
               ),
             ),
@@ -63,6 +75,9 @@ class _WorkoutAppBarState extends State<WorkoutAppBar> {
             child: IconButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                if(chosenValue == 'Time') {
+                  dispose();
+                }
               },
               icon: Icon(Icons.close),
             ),

@@ -15,14 +15,15 @@ class TextSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           isPressed ? number : '0.00',
           style: Style.headline1,
         ),
         Container(
-          alignment: Alignment.center,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 text,

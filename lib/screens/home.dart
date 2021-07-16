@@ -23,20 +23,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  getDuration() {
-    final duration = workOut.secTime;
-    var seconds = duration ~/ 1000;
-    var hours = (seconds ~/ 3600).toString().padLeft(2, '0');
-    var minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
-    if(hours == '00'){
-      String? totalTime = '$minutes';
-      return totalTime;
-    } else {
-      String? totalTime = '$hours:$minutes';
-      return totalTime;
-    }
-  }
-  //
+
   // getDate() {
   //   DateTime? date = workOut.date;
   //   return DateFormat('dd MMM yyyy').format(date!);
@@ -175,15 +162,15 @@ class _HomePageState extends State<HomePage> {
                                             child: buildShowStat(
                                                 TextList().distanceText,
                                                 Icons.directions_bike_outlined,
-                                                TextList().distanceDisplay,
+                                                listWorkOut.isEmpty? '0.00' : '1.85',
                                                 TextList().distanceUnitKM),
                                           ),
                                           Expanded(
                                             flex: 4,
                                             child: buildShowStat(
-                                                TextList().duration,
+                                                 TextList().duration,
                                                 Icons.timer_outlined,
-                                                getDuration(),
+                                                listWorkOut.isEmpty? '00' : '10',
                                                 TextList().durationUnit),
                                           ),
                                           Expanded(
@@ -191,7 +178,7 @@ class _HomePageState extends State<HomePage> {
                                             child: buildShowStat(
                                                 TextList().avgSpeedText,
                                                 Icons.av_timer_outlined,
-                                                TextList().avgSpeedDisplay,
+                                                listWorkOut.isEmpty? '0.00' : '0.34',
                                                 TextList().speedUnitKM),
                                           ),
                                         ],
@@ -210,7 +197,6 @@ class _HomePageState extends State<HomePage> {
                                 color: Theme.of(context).primaryColor,
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: Text(''),
                             ),
                           ),
                         ],

@@ -54,8 +54,6 @@ class _StartCountDownState extends State<StartCountDown> {
     Timer(Duration(seconds: 3), () async {
       Navigator.of(context).pushReplacementNamed('/startWorkout');
       await WorkOutService().start();
-      var weatherData = await weather.getLocationWeather();
-      WeatherModel().updateUI(weatherData);
     });
   }
 

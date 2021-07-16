@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/weathermodel.dart';
@@ -9,11 +10,8 @@ import 'package:sprint/model/workout.dart';
 import 'package:sprint/services/workout_service.dart';
 import 'package:sprint/style/color.dart';
 import 'package:sprint/style/text_style.dart';
-import 'package:sprint/widget/build_button.dart';
-import 'package:sprint/widget/test.dart';
 import 'package:sprint/widget/text_section.dart';
-import 'package:sprint/widget/workout_appBar.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:sprint/widget/time_counting.dart';
 
 class StartWorkout extends StatefulWidget {
   const StartWorkout({Key? key}) : super(key: key);
@@ -31,68 +29,45 @@ class _StartWorkoutState extends State<StartWorkout> {
 
   late AnimationController controller;
 
-  late String displayTime;
-  late int secTime;
-
-  Duration duration = Duration();
-  late Stopwatch _stopwatch;
-  Timer? _timer;
+  // late String displayTime;
+  // late int secTime;
 
   @override
   void initState() {
     super.initState();
-    // controller =
-    //     AnimationController(vsync: this, duration: Duration(seconds: 3));
-    // controller.addListener(() {
-    //   setState(() {});
-    // });
-    _stopwatch = Stopwatch();
+
     isVisible = true;
     start();
   }
 
-  void start() {
-    _timer = new Timer.periodic(new Duration(milliseconds: 30), (timer) {
+  Future<void> start() async {
+    timer = new Timer.periodic(new Duration(milliseconds: 30), (timer) {
       setState(() {});
     });
-    _stopwatch.start();
-  }
-
-  void pause() {
-    if (_timer != null) {
-      _timer!.cancel();
-      _stopwatch.stop();
-    }
+    stopwatch.start();
+    var weatherData = await weather.getLocationWeather();
+    updateUI(weatherData);
   }
 
   void resume() {
     if (displayTime != null) {
-      _timer = Timer.periodic(new Duration(milliseconds: 30), (timer) {
+      timer = Timer.periodic(new Duration(milliseconds: 30), (timer) {
         setState(() {});
       });
-      _stopwatch.start();
+      stopwatch.start();
     }
   }
 
-  void addTime() {
-    final addSeconds = 1;
-
-    setState(() {
-      final seconds = duration.inSeconds + addSeconds;
-      duration = Duration(seconds: seconds);
-    });
-  }
-
-  String formatTime(int milliseconds) {
-    var secs = milliseconds ~/ 1000;
-    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
-    var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
-    var seconds = (secs % 60).toString().padLeft(2, '0');
-    displayTime = "$hours:$minutes:$seconds";
-    workOut.secTime = (milliseconds ~/ 1000);
-    return displayTime;
-    // return "$hours:$minutes:$seconds";
-  }
+  // String formatTime(int milliseconds) {
+  //   var secs = milliseconds ~/ 1000;
+  //   var hours = (secs ~/ 3600).toString().padLeft(2, '0');
+  //   var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+  //   var seconds = (secs % 60).toString().padLeft(2, '0');
+  //   displayTime = "$hours:$minutes:$seconds";
+  //   workOut.secTime = (milliseconds ~/ 1000);
+  //   return displayTime;
+  //   // return "$hours:$minutes:$seconds";
+  // }
 
   final double width = 130.0;
   final double height = 130.0;
@@ -129,13 +104,17 @@ class _StartWorkoutState extends State<StartWorkout> {
                                   Theme.of(context).iconTheme.color,
                               radius: 50,
                               //weather icon
-                              child: Icon(Icons.thermostat_outlined),
+                              child: SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: Image.network(weatherPNG),
+                              ),
                             ),
                           ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
-                              WeatherModel().tempDisplay,
+                              tempDisplay,
                               style: Style.headline2,
                             ),
                           ),
@@ -230,7 +209,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                       ),
                       Container(
                         child: TimeDisplay(
-                          formatTime(_stopwatch.elapsedMilliseconds),
+                          formatTime(stopwatch.elapsedMilliseconds),
                           TextList().timeText,
                         ),
                       ),
@@ -282,7 +261,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                       ),
                       Container(
                         child: TimeDisplay(
-                          formatTime(_stopwatch.elapsedMilliseconds),
+                          formatTime(stopwatch.elapsedMilliseconds),
                           TextList().timeText,
                         ),
                       ),
@@ -334,7 +313,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                       ),
                       Container(
                         child: TimeDisplay(
-                          formatTime(_stopwatch.elapsedMilliseconds),
+                          formatTime(stopwatch.elapsedMilliseconds),
                           TextList().timeText,
                         ),
                       ),
@@ -342,7 +321,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                     ] else ...[
                       Container(
                         child: FocusTimeDisplay(
-                          formatTime(_stopwatch.elapsedMilliseconds),
+                          formatTime(stopwatch.elapsedMilliseconds),
                           TextList().timeText,
                         ),
                       ),
@@ -382,12 +361,17 @@ class _StartWorkoutState extends State<StartWorkout> {
                         ],
                       ),
                       Container(
-                        child: TextSection(
-                          TextList().distanceDisplay,
-                          TextList().distanceText,
-                          (distIndex == 0)
-                              ? TextList().distanceUnitMiles
-                              : TextList().distanceUnitKM,
+                        child: Column(
+                          children: [
+                            Container(),
+                            TextSection(
+                              TextList().distanceDisplay,
+                              TextList().distanceText,
+                              (distIndex == 0)
+                                  ? TextList().distanceUnitMiles
+                                  : TextList().distanceUnitKM,
+                            ),
+                          ],
                         ),
                       ),
                     ]
@@ -520,10 +504,12 @@ class _StartWorkoutState extends State<StartWorkout> {
                           ),
                           Text(
                             'Tap to Pause',
-                            style: TextStyle(fontFamily: AntonioName,
+                            style: TextStyle(
+                              fontFamily: AntonioName,
                               fontWeight: FontWeight.w400,
                               fontSize: regularTextSize,
-                              color: SprintColors.white.withOpacity(0.3),),
+                              color: SprintColors.white.withOpacity(0.3),
+                            ),
                           ),
                         ],
                       ),
@@ -547,7 +533,7 @@ class _StartWorkoutState extends State<StartWorkout> {
       child: RaisedButton(
         onPressed: () async {
           Navigator.of(context).pushNamed('/summary');
-          _stopwatch
+          stopwatch
             ..stop()
             ..reset();
           await WorkOutService().stop(displayTime);

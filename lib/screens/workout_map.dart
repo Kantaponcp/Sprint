@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/services/workout_service.dart';
 import 'package:sprint/style/color.dart';
@@ -8,6 +12,7 @@ import 'package:sprint/widget/build_button.dart';
 import 'package:sprint/widget/map.dart';
 import 'package:sprint/widget/text_section.dart';
 import 'package:sprint/widget/workout_appBar.dart';
+import 'package:sprint/widget/time_counting.dart';
 
 class WorkoutMap extends StatefulWidget {
   const WorkoutMap({Key? key}) : super(key: key);
@@ -17,13 +22,21 @@ class WorkoutMap extends StatefulWidget {
 }
 
 class _WorkoutMapState extends State<WorkoutMap> {
-
   @override
   void initState() {
     super.initState();
-    setState(() {
+    start();
+  }
 
-    });
+  void start() {
+    if (chosenValue == 'Time') {
+      timer = Timer.periodic(new Duration(milliseconds: 30), (timer) {
+        setState(() {});
+      });
+    } else {
+      setState(() {
+      });
+    }
   }
 
   @override
@@ -55,13 +68,45 @@ class _WorkoutMapState extends State<WorkoutMap> {
                 Expanded(
                   flex: 6,
                   child: Container(
-                    alignment: Alignment.center,
-                    child: FocusDisplay(
-                      TextList().currentSpeedDisplay!,
-                      TextList().currentSpeedText,
-                      TextList().speedUnitKM,
-                    ),
-                  ),
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (chosenValue == 'Speed') ...[
+                            FocusDisplay(
+                              TextList().currentSpeedDisplay!,
+                              TextList().currentSpeedText,
+                              (distIndex == 0)
+                                  ? TextList().speedUnitKM
+                                  : TextList().speedUnitMiles,
+                            ),
+                          ] else if (chosenValue == 'Distance') ...[
+                            FocusDisplay(
+                              TextList().distanceDisplay,
+                              TextList().distanceText,
+                              (distIndex == 0)
+                                  ? TextList().distanceUnitMiles
+                                  : TextList().distanceUnitKM,
+                            ),
+                          ] else if (chosenValue == 'Average Speed') ...[
+                            FocusDisplay(
+                              TextList().avgSpeedDisplay,
+                              TextList().avgSpeedText,
+                              (distIndex == 0)
+                                  ? TextList().speedUnitMiles
+                                  : TextList().speedUnitKM,
+                            ),
+                          ] else ...[
+                            FocusTimeDisplay(
+                              formatTime(stopwatch.elapsedMilliseconds),
+                              TextList().timeText,
+                            ),
+                          ]
+                        ],
+                      )
+                      //----Condition 1------------------------------------------
+
+                      ),
                 ),
                 Expanded(
                   flex: 6,
@@ -80,10 +125,12 @@ class _WorkoutMapState extends State<WorkoutMap> {
                             ),
                             Text(
                               'Tap to Pause',
-                              style: TextStyle(fontFamily: AntonioName,
+                              style: TextStyle(
+                                fontFamily: AntonioName,
                                 fontWeight: FontWeight.w400,
                                 fontSize: regularTextSize,
-                                color: SprintColors.white.withOpacity(0.3),),
+                                color: SprintColors.white.withOpacity(0.3),
+                              ),
                             ),
                           ],
                         ),

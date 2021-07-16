@@ -26,11 +26,29 @@ class TextList {
   String totalDistance = workOut.totalDistance.toStringAsFixed(2);
   String totalDistanceMiles = workOut.totalDistanceMiles.toStringAsFixed(2);
   String summaryAvgSpeed = workOut.avgSpeed.toStringAsFixed(2);
-  // String summaryAvgSpeed = workOut.avgSpeed.toString();
   String kilometer = 'Kilometer';
   String mile = 'Mile';
   String celsius = 'Celsius';
   String fahrenheit = 'Fahrenheit';
+
+  // listWorkOut.isEmpty? String homeTotalDistance = listWorkOut[1].totalDistance.toStringAsFixed(2);
+
+  // String homeSpeed = listWorkOut[1].avgSpeed.toStringAsFixed(2);
+
+  getDuration() {
+    final duration = listWorkOut[1].secTime;
+    var seconds = duration ~/ 1000;
+    var hours = (seconds ~/ 3600).toString().padLeft(2, '0');
+    var minutes = (seconds ~/ 60).toString().padLeft(2, '0');
+    if(hours == '00'){
+      String? totalTime = '$minutes';
+      return totalTime;
+    } else {
+      String? totalTime = '$hours:$minutes';
+      return totalTime;
+    }
+  }
+
 
   //unit
   String distanceUnitKM = 'Km';

@@ -6,7 +6,7 @@ import 'package:geocoding/geocoding.dart';
 
 class WorkOutService {
   Future<void> start() async {
-    workOut.workoutId = 'workOut01';
+    // workOut.workoutId = 'workOut01';
     workOut.newObject();
     workOut.startTime = DateTime.now();
     workOut.date = DateTime.now();
@@ -14,7 +14,6 @@ class WorkOutService {
         desiredAccuracy: LocationAccuracy.high);
     workOut.startPoint.latitude = position.latitude;
     workOut.startPoint.longitude = position.longitude;
-    workOut.currentSpeed = 0.0;
     workOut.avgSpeed = 0.0;
     isStopped = false;
     isPressed = true;
@@ -49,8 +48,8 @@ class WorkOutService {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     isStopped = false;
-    workOut.currentPoint.latitude = position.latitude;
-    workOut.currentPoint.longitude = position.longitude;
+    workOut.previousPoint.latitude = position.latitude;
+    workOut.previousPoint.longitude = position.longitude;
     loopCalStat();
     //resume timecounting
   }
@@ -79,6 +78,7 @@ class WorkOutService {
     avgSpeed();
     totalDistance();
     getListPoint();
+    getAddressName();
     // checkCurrentLocation();
   }
 
@@ -109,16 +109,16 @@ class WorkOutService {
     workOut.currentPoint.latitude = position.latitude;
     workOut.currentPoint.longitude = position.longitude;
     // checkCurrentLocation();
-    workOut.totalDistance = Geolocator.distanceBetween(
-            workOut.startPoint.latitude!,
-            workOut.startPoint.longitude!,
+    workOut.totalDistance += Geolocator.distanceBetween(
+            workOut.previousPoint.latitude!,
+            workOut.previousPoint.longitude!,
             workOut.currentPoint.latitude!,
             workOut.currentPoint.longitude!) /
         1000;
     // workOut.totalDistance += workOut.totalDistance;
   }
 
-  Future<void> convertToMile() async {
+  Future<void> convertDistToMile() async {
     workOut.totalDistanceMiles = (workOut.totalDistance / 1.609344);
   }
 
@@ -140,15 +140,17 @@ class WorkOutService {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     mapPoint.add(LatLng(position.latitude, position.longitude));
-    // print(mapPointLat.length);
-    // print(mapPointLng.length);
     print(mapPoint.length);
   }
 
   Future<void> getAddressName() async{
     List<Placemark> placemarks = await placemarkFromCoordinates(workOut.currentPoint.latitude as double,workOut.currentPoint.longitude as double);
     Placemark place = placemarks[0];
-    // workOut.addressName = "${place.locality},${place.country}";
-    workOut.addressName = place.country;
+    if(place.subLocality == null) {
+      workOut.addressName = place.country;
+    }else{
+      workOut.addressName = "${place.subLocality}, ${place.country}";
+    }
+    // workOut.addressName = place.country;
   }
 }
