@@ -15,21 +15,21 @@ class SummaryPage extends StatefulWidget {
 }
 
 class _SummaryPageState extends State<SummaryPage> {
-  getCurrentDate() {
-    return DateFormat('dd MMM yyyy').format(workOut.date!);
-  }
-
-  getStartTime() {
-    return DateFormat('jm').format(workOut.startTime!);
-  }
-
-  getEndTime() {
-    return DateFormat('jm').format(workOut.stopTime!);
-  }
+  // getCurrentDate() {
+  //   return DateFormat('dd MMM yyyy').format(workOut.date!);
+  // }
+  //
+  // getStartTime() {
+  //   return DateFormat('jm').format(workOut.startTime!);
+  // }
+  //
+  // getEndTime() {
+  //   return DateFormat('jm').format(workOut.stopTime!);
+  // }
 
   getTotalTime() {
-    final startTime = workOut.startTime!;
-    final endTime = workOut.stopTime!;
+    final startTime = workout.startTime!;
+    final endTime = workout.stopTime!;
     final diff = endTime.difference(startTime).inMilliseconds;
     var secs = diff ~/ 1000;
     var hours = (secs ~/ 3600).toString().padLeft(2, '0');
@@ -41,95 +41,55 @@ class _SummaryPageState extends State<SummaryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Theme.of(context).backgroundColor,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: Text('WORKOUT#4', style: Style.headline1),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                child: Column(
-                  children: [
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(),
-                          Container(
-                            alignment: Alignment.centerRight,
-                            child: buildHaveIcon(
-                                Icons.date_range_outlined, getCurrentDate()),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            TextList().addressName,
-                            // 'Bangkae, Bangkok',
-                            style: Style.headline3,
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Container(
-                              alignment: Alignment.centerRight,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.center,
-                                    child: Icon(
-                                      Icons.schedule_outlined,
-                                      color: Theme.of(context).iconTheme.color,
-                                      size: 25,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      getStartTime() + ' - ' + getEndTime(),
-                                      style: Style.headline3,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Container(
+            color: Theme.of(context).backgroundColor,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10,
                 ),
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Container(
-                child: MapWidget(),
-              ),
-            ),
-            Expanded(
-              flex: 5,
-              child: SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: Text('WORKOUT#4', style: Style.headline1),
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(),
+                      Container(
+                        alignment: Alignment.center,
+                        child: buildHaveIcon(
+                            Icons.date_range_outlined, TextList().getDate()),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 10, 10, 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        TextList().addressName,
+                        // 'Bangkae, Bangkok',
+                        style: Style.bodyText1,
+                      ),
+                      buildHaveIcon(Icons.schedule_outlined, TextList().getStartTime() + ' - ' + TextList().getEndTime(),),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 250,
+                  child: MapWidget(),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 20, 0, 20),
                   child: Column(
                     children: [
                       buildShowStat(
@@ -150,7 +110,7 @@ class _SummaryPageState extends State<SummaryPage> {
                       buildShowStat(
                           TextList().sumMovingText,
                           Icon(Icons.timer_outlined),
-                          TextList().totalMovingTime!,
+                          TextList().totalMovingTime,
                           TextList().durationUnit),
                       buildShowStat(
                           TextList().duration,
@@ -161,28 +121,29 @@ class _SummaryPageState extends State<SummaryPage> {
                     ],
                   ),
                 ),
-              ),
+
+              ],
             ),
-            Expanded(
-              flex: 1,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, '/home');
-                },
-                child: Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  color: Color(0xFFFF0000),
-                  alignment: Alignment.center,
-                  child: Text(
-                    'BACK',
-                    textAlign: TextAlign.center,
-                    style: Style.button,
-                  ),
+          ),
+        ),
+        bottomNavigationBar: Container(
+            height: 80,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushReplacementNamed(context, '/home');
+              },
+              child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                color: Color(0xFFFF0000),
+                alignment: Alignment.center,
+                child: Text(
+                  'BACK',
+                  textAlign: TextAlign.center,
+                  style: Style.button,
                 ),
               ),
             ),
-          ],
         ),
       ),
     );
@@ -256,25 +217,28 @@ class _SummaryPageState extends State<SummaryPage> {
     IconData icon,
     String text,
   ) {
-    return Row(
-      children: [
-        Container(
-          alignment: Alignment.center,
-          child: Icon(
-            icon,
-            color: Theme.of(context).iconTheme.color,
-            size: 25,
+    return Container(
+      alignment: Alignment.centerRight,
+      child: Row(
+        children: [
+          Container(
+            alignment: Alignment.center,
+            child: Icon(
+              icon,
+              color: Theme.of(context).iconTheme.color,
+              size: 25,
+            ),
           ),
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-          alignment: Alignment.centerLeft,
-          child: Text(
-            text,
-            style: Style.headline3,
+          Container(
+            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+            // alignment: Alignment.centerLeft,
+            child: Text(
+              text,
+              style: Style.headline3,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -10,8 +10,8 @@ class SettingPreferences {
   static final mySetting = Setting(
     isDarkMode: false,
     priority: 'Speed',
-    // tapOne: TapSelectedValue(firstOption: true, secondOption: false),
-    // tapTwo: TapSelectedValue(firstOption: true, secondOption: false),
+    distanceIndex: 0,
+    tempIndex: 0,
   );
 
   static Future init() async =>

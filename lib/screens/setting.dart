@@ -11,7 +11,7 @@ import 'package:sprint/style/theme.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sprint/utils/user_setting.dart';
+import 'package:sprint/utils/setting_preferences.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key key}) : super(key: key);
@@ -37,245 +37,241 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void initState() {
     super.initState();
-      setting = SettingPreferences.getSetting();
+    setting = SettingPreferences.getSetting();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(
-          'Settings',
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: mediumTextSize,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-        actions: [
-          Container(
-            width: 40,
-            height: 40,
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(right: 20),
-            child: CircleAvatar(
-              backgroundColor: Theme.of(context).accentColor,
-              foregroundColor: Theme.of(context).iconTheme.color,
-              radius: 50,
-              child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/home');
-                  SettingPreferences.setSetting(setting);
-                  print(isKM);
-                  print(isCel);
-                },
-                icon: Icon(Icons.close),
-              ),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          foregroundColor: Theme.of(context).colorScheme.primary,
+          title: Text(
+            'Settings',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: mediumTextSize,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
-        ],
-      ),
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(
-              flex: 2,
-              child: Container(
-                padding: EdgeInsets.fromLTRB(20, 50, 20, 10),
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Display',
-                        style: Style.headline3,
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Expanded(
-                          //     flex: 6,
-                          //     child: buildOption(
-                          //         settings.isDarkMode
-                          //             ? Icons.light_mode_outlined
-                          //             : Icons.dark_mode,
-                          //         'Dark Mode')),
-                          // Expanded(
-                          //   flex: 1,
-                          //   child: Text(settings.isDarkMode ? 'Off' : 'On'),
-                          // ),
-                          Expanded(
-                            flex: 12,
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 10),
-                              alignment: Alignment.center,
-                              child: changeThemeSwitch(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Container(
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Unit',
-                        style: Style.headline3,
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                      child: Column(
-                        children: [
-                          Container(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 7,
-                                  child: buildOption(
-                                      Icons.directions_bike, 'Distance'),
-                                ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(),
-                                ),
-                              ],
-                            ),
-                          ),
-                          buildTab(
-                              TextList().kilometer +
-                                  ' (' +
-                                  TextList().distanceUnitKM +
-                                  ')',
-                              TextList().mile +
-                                  ' (' +
-                                  TextList().distanceUnitMiles +
-                                  ')',
-                              isOneSelected,
-                              'tapOne'),
-                          Container(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 7,
-                                  child: buildOption(
-                                      Icons.thermostat, 'Temperature'),
-                                ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(),
-                                ),
-                              ],
-                            ),
-                          ),
-                          buildTab(
-                              TextList().celsius +
-                                  ' (' +
-                                  TextList().tempUnitCel +
-                                  ')',
-                              TextList().fahrenheit +
-                                  ' (' +
-                                  TextList().tempUnitF +
-                                  ')',
-                              isTwoSelected,
-                              'tapTwo'),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Container(
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Priority',
-                        style: Style.headline3,
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Theme.of(context).accentColor),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: setting.priority,
-                          //elevation: 5,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: regularTextSize,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          items: <String>[
-                            'Speed',
-                            'Distance',
-                            'Average Speed',
-                            'Time',
-                          ].map<DropdownMenuItem<String>>(
-                              (String priorityValue) {
-                            return DropdownMenuItem<String>(
-                              value: priorityValue,
-                              child: Text(
-                                priorityValue,
-                                style: TextStyle(
-                                  fontFamily: AntonioName,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: regularTextSize,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          // hint: Text(
-                          //   "Please choose a priority display",
-                          //   style: TextStyle(
-                          //     fontWeight: FontWeight.w700,
-                          //     fontSize: regularTextSize,
-                          //     color: Theme.of(context).colorScheme.primary,
-                          //   ),
-                          // ),
-                          onChanged: (priority) {
-                            setting = setting.copy(priority: priority);
-                            setState(() {
-                              chosenValue = setting.priority;
-                              // SettingPreferences.setSetting(settings);
-                            });
-                          },
-                          dropdownColor: Theme.of(context).accentColor,
-                        ),
-                      ),
-                    ),
-                  ],
+          actions: [
+            Container(
+              width: 40,
+              height: 40,
+              alignment: Alignment.centerRight,
+              margin: EdgeInsets.only(right: 20),
+              child: CircleAvatar(
+                backgroundColor: Theme.of(context).accentColor,
+                foregroundColor: Theme.of(context).iconTheme.color,
+                radius: 50,
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/home');
+                    SettingPreferences.setSetting(setting);
+                    print(isKM);
+                    print(isCel);
+                  },
+                  icon: Icon(Icons.close),
                 ),
               ),
             ),
           ],
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Display',
+                          style: Style.headline3,
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Expanded(
+                            //     flex: 6,
+                            //     child: buildOption(
+                            //         settings.isDarkMode
+                            //             ? Icons.light_mode_outlined
+                            //             : Icons.dark_mode,
+                            //         'Dark Mode')),
+                            // Expanded(
+                            //   flex: 1,
+                            //   child: Text(settings.isDarkMode ? 'Off' : 'On'),
+                            // ),
+                            Expanded(
+                              flex: 12,
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 10),
+                                alignment: Alignment.center,
+                                child: changeThemeSwitch(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Unit',
+                          style: Style.headline3,
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Column(
+                          children: [
+                            Container(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 7,
+                                    child: buildOption(
+                                        Icons.directions_bike, 'Distance'),
+                                  ),
+                                  Expanded(
+                                    flex: 4,
+                                    child: Container(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            buildTab(
+                                TextList().kilometer +
+                                    ' (' +
+                                    TextList().distanceUnitKM +
+                                    ')',
+                                TextList().mile +
+                                    ' (' +
+                                    TextList().distanceUnitMiles +
+                                    ')',
+                                isOneSelected,
+                                isKM, setting.distanceIndex,),
+                            Container(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 7,
+                                    child: buildOption(
+                                        Icons.thermostat, 'Temperature'),
+                                  ),
+                                  Expanded(
+                                    flex: 4,
+                                    child: Container(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            buildTab(
+                                TextList().celsius +
+                                    ' (' +
+                                    TextList().tempUnitCel +
+                                    ')',
+                                TextList().fahrenheit +
+                                    ' (' +
+                                    TextList().tempUnitF +
+                                    ')',
+                                isTwoSelected,
+                                isCel, setting.tempIndex,),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Priority',
+                          style: Style.headline3,
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Theme.of(context).accentColor),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: setting.priority,
+                            //elevation: 5,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: regularTextSize,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            items: <String>[
+                              'Speed',
+                              'Distance',
+                              'Average Speed',
+                              'Time',
+                            ].map<DropdownMenuItem<String>>(
+                                (String priorityValue) {
+                              return DropdownMenuItem<String>(
+                                value: priorityValue,
+                                child: Text(
+                                  priorityValue,
+                                  style: TextStyle(
+                                    fontFamily: AntonioName,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: regularTextSize,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            // hint: Text(
+                            //   "Please choose a priority display",
+                            //   style: TextStyle(
+                            //     fontWeight: FontWeight.w700,
+                            //     fontSize: regularTextSize,
+                            //     color: Theme.of(context).colorScheme.primary,
+                            //   ),
+                            // ),
+                            onChanged: (priority) {
+                              setting = setting.copy(priority: priority);
+                              setState(() {
+                                chosenValue = setting.priority;
+                                // SettingPreferences.setSetting(settings);
+                              });
+                            },
+                            dropdownColor: Theme.of(context).accentColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -336,8 +332,14 @@ class _SettingPageState extends State<SettingPage> {
   List<bool> isOneSelected = [true, false];
   List<bool> isTwoSelected = [true, false];
 
-  Widget buildTab(
-      String tab1, String tab2, List<bool> isSelected, String tap) {
+  Widget buildTab(String tab1, String tab2, List<bool> isSelected, bool tap, int index) {
+    if(index == 0) {
+      isSelected[0] = false;
+      isSelected[1] = true;
+    } else {
+      isSelected[0] = true;
+      isSelected[1] = false;
+    }
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
       child: Container(
@@ -393,12 +395,22 @@ class _SettingPageState extends State<SettingPage> {
                 //     isSelected[index] = false;
                 //   }
                 // }
-                if(isSelected[0]){
+                if (isSelected[0]) {
                   isSelected[0] = false;
                   isSelected[1] = true;
-                }else{
+                  if(isSelected == isOneSelected) {
+                    setting = setting.copy(distanceIndex: 0);
+                  } else {
+                    setting = setting.copy(tempIndex: 0);
+                  }
+                } else {
                   isSelected[0] = true;
                   isSelected[1] = false;
+                  if(isSelected == isOneSelected) {
+                    setting = setting.copy(distanceIndex: 1);
+                  } else {
+                    setting = setting.copy(tempIndex: 1);
+                  }
                 }
               });
             },

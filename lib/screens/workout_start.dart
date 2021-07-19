@@ -10,6 +10,7 @@ import 'package:sprint/model/workout.dart';
 import 'package:sprint/services/workout_service.dart';
 import 'package:sprint/style/color.dart';
 import 'package:sprint/style/text_style.dart';
+import 'package:sprint/utils/setting_preferences.dart';
 import 'package:sprint/widget/text_section.dart';
 import 'package:sprint/widget/time_counting.dart';
 
@@ -22,9 +23,7 @@ class StartWorkout extends StatefulWidget {
 
 class _StartWorkoutState extends State<StartWorkout> {
   bool isPressed = false;
-  bool isTapped = false;
   bool isVisible = true;
-  bool isGestureVisible = true;
   bool isPauseVisible = true;
 
   late AnimationController controller;
@@ -35,8 +34,7 @@ class _StartWorkoutState extends State<StartWorkout> {
   @override
   void initState() {
     super.initState();
-
-    isVisible = true;
+    isTapped = false;
     start();
   }
 
@@ -63,18 +61,18 @@ class _StartWorkoutState extends State<StartWorkout> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child:
-      Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Container(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 30,
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
+    Setting setting = SettingPreferences.getSetting();
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
+        body: Container(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                height: 50,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -111,7 +109,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
-                              (tempIndex == 0)
+                              (setting.tempIndex == 1)
                                   ? TextList().tempUnitCel
                                   : TextList().tempUnitF,
                               style: Style.headline2,
@@ -130,8 +128,11 @@ class _StartWorkoutState extends State<StartWorkout> {
                         foregroundColor: Colors.white,
                         radius: 50,
                         child: IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamed('/workoutMap');
+                          onPressed: () async {
+                           await Navigator.of(context).pushNamed('/workoutMap');
+                           setState(() {
+
+                           });
                           },
                           icon: Icon(Icons.map_outlined),
                         ),
@@ -140,244 +141,268 @@ class _StartWorkoutState extends State<StartWorkout> {
                   ],
                 ),
               ),
-            ),
-            Expanded(
-              flex: 6,
-              child: Container(
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //condition 1-----------------------------------------------
-                    if (chosenValue == 'Speed') ...[
-                      Container(
-                        child: FocusDisplay(
-                          TextList().currentSpeedDisplay!,
-                          TextList().currentSpeedText,
-                          (distIndex == 0)
-                              ? TextList().speedUnitKM
-                              : TextList().speedUnitMiles,
+              Expanded(
+                flex: 6,
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      //condition 1-----------------------------------------------
+                      if (setting.priority == 'Speed') ...[
+                        Container(
+                          child: FocusDisplay(
+                            (setting.distanceIndex == 1)
+                                ? TextList().currentSpeedDisplay!
+                                : TextList().currentSpeedDisplayMi!,
+                            TextList().currentSpeedText,
+                            (setting.distanceIndex == 1)
+                                ? TextList().speedUnitKM
+                                : TextList().speedUnitMiles,
+                          ),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                TextSection(
-                                  TextList().distanceDisplay,
-                                  TextList().distanceText,
-                                  (distIndex == 0)
-                                      ? TextList().distanceUnitKM
-                                      : TextList().distanceUnitMiles,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                TextSection(
-                                  TextList().avgSpeedDisplay,
-                                  TextList().avgSpeedText,
-                                  (distIndex == 0)
-                                      ? TextList().speedUnitKM
-                                      : TextList().speedUnitMiles,
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        child: TimeDisplay(
-                          formatTime(stopwatch.elapsedMilliseconds),
-                          TextList().timeText,
-                        ),
-                      ),
-                      //condition 2-----------------------------------------------
-                    ] else if (chosenValue == 'Distance') ...[
-                      Container(
-                        child: FocusDisplay(
-                          TextList().distanceDisplay,
-                          TextList().distanceText,
-                          (distIndex == 0)
-                              ? TextList().distanceUnitMiles
-                              : TextList().distanceUnitKM,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                TextSection(
-                                  TextList().currentSpeedDisplay!,
-                                  TextList().currentSpeedText,
-                                  (distIndex == 0)
-                                      ? TextList().speedUnitMiles
-                                      : TextList().speedUnitKM,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                TextSection(
-                                  TextList().avgSpeedDisplay,
-                                  TextList().avgSpeedText,
-                                  (distIndex == 0)
-                                      ? TextList().speedUnitMiles
-                                      : TextList().speedUnitKM,
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        child: TimeDisplay(
-                          formatTime(stopwatch.elapsedMilliseconds),
-                          TextList().timeText,
-                        ),
-                      ),
-                      //condition 3-----------------------------------------------
-                    ] else if (chosenValue == 'Average Speed') ...[
-                      Container(
-                        child: FocusDisplay(
-                          TextList().avgSpeedDisplay,
-                          TextList().avgSpeedText,
-                          (distIndex == 0)
-                              ? TextList().speedUnitMiles
-                              : TextList().speedUnitKM,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                TextSection(
-                                  TextList().currentSpeedDisplay!,
-                                  TextList().currentSpeedText,
-                                  (distIndex == 0)
-                                      ? TextList().speedUnitMiles
-                                      : TextList().speedUnitKM,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                TextSection(
-                                  TextList().distanceDisplay,
-                                  TextList().distanceText,
-                                  (distIndex == 0)
-                                      ? TextList().distanceUnitMiles
-                                      : TextList().distanceUnitKM,
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        child: TimeDisplay(
-                          formatTime(stopwatch.elapsedMilliseconds),
-                          TextList().timeText,
-                        ),
-                      ),
-                      //condition 4-----------------------------------------------
-                    ] else ...[
-                      Container(
-                        child: FocusTimeDisplay(
-                          formatTime(stopwatch.elapsedMilliseconds),
-                          TextList().timeText,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                TextSection(
-                                  TextList().currentSpeedDisplay!,
-                                  TextList().currentSpeedText,
-                                  (distIndex == 0)
-                                      ? TextList().speedUnitMiles
-                                      : TextList().speedUnitKM,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                TextSection(
-                                  TextList().avgSpeedDisplay,
-                                  TextList().avgSpeedText,
-                                  (distIndex == 0)
-                                      ? TextList().speedUnitMiles
-                                      : TextList().speedUnitKM,
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        child: Column(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Container(),
-                            TextSection(
-                              TextList().distanceDisplay,
-                              TextList().distanceText,
-                              (distIndex == 0)
-                                  ? TextList().distanceUnitMiles
-                                  : TextList().distanceUnitKM,
+                            Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextSection(
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().distanceDisplay
+                                        : TextList().totalDistanceMiles,
+                                    TextList().distanceText,
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().distanceUnitKM
+                                        : TextList().distanceUnitMiles,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextSection(
+                                    TextList().avgSpeedDisplay,
+                                    TextList().avgSpeedText,
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().speedUnitKM
+                                        : TextList().speedUnitMiles,
+                                  )
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ]
-                  ],
+                        Container(
+                          child: TimeDisplay(
+                            formatTime(stopwatch.elapsedMilliseconds),
+                            TextList().timeText,
+                          ),
+                        ),
+                        //condition 2-----------------------------------------------
+                      ] else if (setting.priority == 'Distance') ...[
+                        Container(
+                          child: FocusDisplay(
+                            (setting.distanceIndex == 1)
+                                ? TextList().distanceDisplay
+                                : TextList().totalDistanceMiles,
+                            TextList().distanceText,
+                            (setting.distanceIndex == 1)
+                                ? TextList().distanceUnitKM
+                                : TextList().distanceUnitMiles,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextSection(
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().currentSpeedDisplay!
+                                        : TextList().currentSpeedDisplayMi!,
+                                    TextList().currentSpeedText,
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().speedUnitKM
+                                        : TextList().speedUnitMiles,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextSection(
+                                    TextList().avgSpeedDisplay,
+                                    TextList().avgSpeedText,
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().speedUnitKM
+                                        : TextList().speedUnitMiles,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          child: TimeDisplay(
+                            formatTime(stopwatch.elapsedMilliseconds),
+                            TextList().timeText,
+                          ),
+                        ),
+                        //condition 3-----------------------------------------------
+                      ] else if (setting.priority == 'Average Speed') ...[
+                        Container(
+                          child: FocusDisplay(
+                            TextList().avgSpeedDisplay,
+                            TextList().avgSpeedText,
+                            (setting.distanceIndex == 1)
+                                ? TextList().speedUnitKM
+                                : TextList().speedUnitMiles,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextSection(
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().currentSpeedDisplay!
+                                        : TextList().currentSpeedDisplayMi!,
+                                    TextList().currentSpeedText,
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().speedUnitKM
+                                        : TextList().speedUnitMiles,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextSection(
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().distanceDisplay
+                                        : TextList().totalDistanceMiles,
+                                    TextList().distanceText,
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().distanceUnitKM
+                                        : TextList().distanceUnitMiles,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          child: TimeDisplay(
+                            formatTime(stopwatch.elapsedMilliseconds),
+                            TextList().timeText,
+                          ),
+                        ),
+                        //condition 4-----------------------------------------------
+                      ] else ...[
+                        Container(
+                          child: FocusTimeDisplay(
+                            formatTime(stopwatch.elapsedMilliseconds),
+                            TextList().timeText,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextSection(
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().currentSpeedDisplay!
+                                        : TextList().currentSpeedDisplayMi!,
+                                    TextList().currentSpeedText,
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().speedUnitKM
+                                        : TextList().speedUnitMiles,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextSection(
+                                    TextList().avgSpeedDisplay,
+                                    TextList().avgSpeedText,
+                                    (setting.distanceIndex == 1)
+                                        ? TextList().speedUnitKM
+                                        : TextList().speedUnitMiles,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          child: Column(
+                            children: [
+                              Container(),
+                              TextSection(
+                                (setting.distanceIndex == 1)
+                                    ? TextList().distanceDisplay
+                                    : TextList().totalDistanceMiles,
+                                TextList().distanceText,
+                                (setting.distanceIndex == 1)
+                                    ? TextList().distanceUnitKM
+                                    : TextList().distanceUnitMiles,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ]
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 5,
-              child: Container(
-                child: pauseWidget(),
-              ),
-            )
-          ],
+              Expanded(
+                flex: 5,
+                child: Container(
+                  child: pauseWidget(),
+                ),
+              )
+            ],
+          ),
         ),
-      ),),
+      ),
     );
   }
 
@@ -498,7 +523,10 @@ class _StartWorkoutState extends State<StartWorkout> {
                               fontFamily: AntonioName,
                               fontWeight: FontWeight.w400,
                               fontSize: regularTextSize,
-                              color: SprintColors.white.withOpacity(0.3),
+                              color: Theme.of(context)
+                                  .iconTheme
+                                  .color!
+                                  .withOpacity(0.3),
                             ),
                           ),
                         ],
@@ -507,8 +535,8 @@ class _StartWorkoutState extends State<StartWorkout> {
                     onTap: () async {
                       pause();
                       await WorkOutService().pause(displayTime);
+                      isTapped = true;
                       setState(() {
-                        isTapped = true;
                       });
                     },
                   ),

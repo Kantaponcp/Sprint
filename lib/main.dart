@@ -15,7 +15,7 @@ import 'package:sprint/style/color.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/style/theme.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
-import 'package:sprint/utils/user_setting.dart';
+import 'package:sprint/utils/setting_preferences.dart';
 import 'package:sprint/widget/chang_theme_switch.dart';
 
 Future main() async {

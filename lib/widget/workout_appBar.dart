@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/text_list.dart';
+import 'package:sprint/model/workout.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/model/weathermodel.dart';
+import 'package:sprint/utils/setting_preferences.dart';
+import 'package:sprint/widget/time_counting.dart';
 
 class WorkoutAppBar extends StatefulWidget implements PreferredSizeWidget{
   WorkoutAppBar({
@@ -17,6 +20,8 @@ class WorkoutAppBar extends StatefulWidget implements PreferredSizeWidget{
 }
 
 class _WorkoutAppBarState extends State<WorkoutAppBar> {
+
+  Setting setting = SettingPreferences.getSetting();
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -40,7 +45,11 @@ class _WorkoutAppBarState extends State<WorkoutAppBar> {
                 foregroundColor: Colors.white,
                 radius: 50,
                 //weather icon
-                child: Icon(Icons.thermostat_outlined),
+                child: SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: Image.network(weatherPNG),
+                ),
               ),
             ),
             Padding(
@@ -53,7 +62,7 @@ class _WorkoutAppBarState extends State<WorkoutAppBar> {
             Padding(
               padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
               child: Text(
-                (tempIndex == 0)
+                (setting.tempIndex == 1)
                     ? TextList().tempUnitCel
                     : TextList().tempUnitF,
                 style: Style.TempAppBarStyle,
@@ -70,7 +79,7 @@ class _WorkoutAppBarState extends State<WorkoutAppBar> {
           margin: EdgeInsets.only(right: 20),
           child: CircleAvatar(
             backgroundColor: Theme.of(context).accentColor,
-            foregroundColor: Colors.white,
+            foregroundColor: Theme.of(context).iconTheme.color,
             radius: 50,
             child: IconButton(
               onPressed: () {

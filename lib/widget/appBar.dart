@@ -4,7 +4,7 @@ import 'package:sprint/style/text_style.dart';
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   HomeAppBar({
     Key? key,
-  })  : preferredSize = Size.fromHeight(100),
+  })  : preferredSize = Size.fromHeight(70),
         super(key: key);
 
   final Size preferredSize;

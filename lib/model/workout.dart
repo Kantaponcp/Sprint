@@ -2,18 +2,17 @@ import 'dart:convert';
 import 'package:latlong2/latlong.dart';
 import 'package:intl/intl.dart';
 
-WorkOut workOut = new WorkOut(
+Workout workout = new Workout(
   startPoint: new GeoPoint(),
   endPoint: new GeoPoint(),
   previousPoint: new GeoPoint(),
   currentPoint: new GeoPoint(),
 );
 var mapPoint = List<LatLng>.empty(growable: true);
-var listWorkOut = List<WorkOut>.empty(growable: true);
+var listWorkOut = List<Workout>.empty(growable: true);
 // WorkOut workOut = new WorkOut();
 
-class WorkOut {
-  int? workOutId;
+class Workout {
   DateTime? startTime;
   DateTime? stopTime;
   DateTime? date;
@@ -31,8 +30,7 @@ class WorkOut {
   GeoPoint previousPoint;
   GeoPoint currentPoint;
 
-  WorkOut({
-    this.workOutId,
+  Workout({
     this.startTime,
     this.stopTime,
     this.date,
@@ -52,39 +50,17 @@ class WorkOut {
   });
 
   void newObject() {
-    workOut = new WorkOut(
+    workout = new Workout(
       startPoint: new GeoPoint(),
       endPoint: new GeoPoint(),
       previousPoint: new GeoPoint(),
       currentPoint: new GeoPoint(),
     );
     mapPoint = new List<LatLng>.empty(growable: true);
-    listWorkOut.add(workOut);
+    listWorkOut.add(workout);
     for (int i = 0; i < listWorkOut.length; i++) {}
     // workOut = new WorkOut();
   }
-
-// static Map<String, dynamic> toMap(WorkOut workout) => {
-//   'workoutId': workout.workoutId,
-//   'startTime' : workout.startTime,
-//   'stopTime' : workout.stopTime,
-//   'totalMovingTime' : workout.totalMovingTime,
-//   'secTime' : workout.secTime,
-//   'avgSpeed' : workout.avgSpeed,
-//   'totalDistance' : workout.totalDistance,
-//   'totalDistanceMiles' : workout.totalDistanceMiles,
-//   'currentSpeed' : workout.currentSpeed,
-//   'startPoint' : workout.startPoint,
-//   'endPoint' : workout.endPoint,
-//   'previousPoint' : workout.previousPoint,
-//   'currentPoint' : workout.currentPoint,
-// };
-// static String encode(List<WorkOut> workouts) => json.encode(
-//   workouts
-//       .map<Map<String, dynamic>>((workout) => WorkOut.toMap(workout))
-//       .toList(),
-// );
-
 }
 
 class GeoPoint {
@@ -97,47 +73,72 @@ class GeoPoint {
   });
 }
 
-class TapSelectedValue {
-  bool firstOption;
-  bool secondOption;
+class ListWorkout {
+  final int workoutId;
+  final Workout workout;
 
-  TapSelectedValue({
-    required this.firstOption,
-    required this.secondOption,
+  const ListWorkout({
+    required this.workoutId,
+    required this.workout,
   });
-}
 
-var tapOneSelectedValue = List<bool>.empty(growable: true);
-var tapTwoSelectedValue = List<bool>.empty(growable: true);
-// List<PolylinePoint> mapPoint = [
-//   PolylinePoint(longitude: workOut.currentPoint.longitude, latitude: workOut.currentPoint.latitude),
-// ];
+  ListWorkout copy({
+    int? workoutId,
+    Workout? workout,
+  }) =>
+      ListWorkout(
+        workoutId: workoutId ?? this.workoutId,
+        workout: workout ?? this.workout,
+      );
+
+  static ListWorkout fromJson(Map<String, dynamic> json) => ListWorkout(
+        workoutId: json['workoutId'],
+        workout: json['workout'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'workoutId': workoutId,
+        'workout': workout,
+      };
+}
 
 class Setting {
   final bool isDarkMode;
   final String priority;
+  final int distanceIndex;
+  final int tempIndex;
 
   const Setting({
     required this.isDarkMode,
     required this.priority,
+    required this.distanceIndex,
+    required this.tempIndex,
   });
 
   Setting copy({
     bool? isDarkMode,
     String? priority,
+    int? distanceIndex,
+    int? tempIndex,
   }) =>
       Setting(
         isDarkMode: isDarkMode ?? this.isDarkMode,
         priority: priority ?? this.priority,
+        distanceIndex: distanceIndex ?? this.distanceIndex,
+        tempIndex: tempIndex ?? this.tempIndex,
       );
 
   static Setting fromJson(Map<String, dynamic> json) => Setting(
         isDarkMode: json['isDarkMode'],
         priority: json['priority'],
+        distanceIndex: json['distanceIndex'],
+        tempIndex: json['tempIndex'],
       );
 
   Map<String, dynamic> toJson() => {
         'isDarkMode': isDarkMode,
         'priority': priority,
+        'distanceIndex': distanceIndex,
+        'tempIndex': tempIndex,
       };
 }

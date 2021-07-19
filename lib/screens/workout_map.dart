@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/text_list.dart';
+import 'package:sprint/model/weathermodel.dart';
+import 'package:sprint/model/workout.dart';
 import 'package:sprint/services/workout_service.dart';
 import 'package:sprint/style/color.dart';
 import 'package:sprint/style/text_style.dart';
+import 'package:sprint/utils/setting_preferences.dart';
 import 'package:sprint/widget/build_button.dart';
 import 'package:sprint/widget/map.dart';
 import 'package:sprint/widget/text_section.dart';
@@ -22,26 +25,30 @@ class WorkoutMap extends StatefulWidget {
 }
 
 class _WorkoutMapState extends State<WorkoutMap> {
+  Setting setting = SettingPreferences.getSetting();
+
   @override
   void initState() {
     super.initState();
     start();
+    setState(() {});
   }
 
   void start() {
-    if (chosenValue == 'Time') {
-      timer = Timer.periodic(new Duration(milliseconds: 30), (timer) {
-        setState(() {});
-      });
-    } else {
-      setState(() {
-      });
-    }
+    timer = Timer.periodic(
+          new Duration(milliseconds: 30), (timer) => setState(() {}));
   }
+
+  // @override
+  // void dispose() {
+  //   timer!.cancel();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     double mapHeight = (MediaQuery.of(context).size.height) / 1.7;
+    bool isGestureVisible = true;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -72,27 +79,27 @@ class _WorkoutMapState extends State<WorkoutMap> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          if (chosenValue == 'Speed') ...[
+                          if (setting.priority == 'Speed') ...[
                             FocusDisplay(
                               TextList().currentSpeedDisplay!,
                               TextList().currentSpeedText,
-                              (distIndex == 0)
+                              (setting.distanceIndex == 0)
                                   ? TextList().speedUnitKM
                                   : TextList().speedUnitMiles,
                             ),
-                          ] else if (chosenValue == 'Distance') ...[
+                          ] else if (setting.priority == 'Distance') ...[
                             FocusDisplay(
                               TextList().distanceDisplay,
                               TextList().distanceText,
-                              (distIndex == 0)
+                              (setting.distanceIndex == 0)
                                   ? TextList().distanceUnitMiles
                                   : TextList().distanceUnitKM,
                             ),
-                          ] else if (chosenValue == 'Average Speed') ...[
+                          ] else if (setting.priority == 'Average Speed') ...[
                             FocusDisplay(
                               TextList().avgSpeedDisplay,
                               TextList().avgSpeedText,
-                              (distIndex == 0)
+                              (setting.distanceIndex == 0)
                                   ? TextList().speedUnitMiles
                                   : TextList().speedUnitKM,
                             ),
@@ -110,40 +117,55 @@ class _WorkoutMapState extends State<WorkoutMap> {
                 ),
                 Expanded(
                   flex: 6,
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: InkWell(
-                      child: Visibility(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.touch_app_outlined),
-                              color: Colors.white.withOpacity(0.3),
-                              iconSize: 80,
-                            ),
-                            Text(
-                              'Tap to Pause',
-                              style: TextStyle(
-                                fontFamily: AntonioName,
-                                fontWeight: FontWeight.w400,
-                                fontSize: regularTextSize,
-                                color: SprintColors.white.withOpacity(0.3),
+                  child: isTapped
+                      ? Center(
+                          child: Text(
+                            'Go Back To Resume',
+                            style: Style.bodyText1,
+                          ),
+                        )
+                      : SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          child: InkWell(
+                            child: Visibility(
+                              visible: isGestureVisible,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(Icons.touch_app_outlined),
+                                    color: Theme.of(context)
+                                        .iconTheme
+                                        .color!
+                                        .withOpacity(0.3),
+                                    iconSize: 80,
+                                  ),
+                                  Text(
+                                    'Tap to Pause',
+                                    style: TextStyle(
+                                      fontFamily: AntonioName,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: regularTextSize,
+                                      color: Theme.of(context)
+                                          .iconTheme
+                                          .color!
+                                          .withOpacity(0.3),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
+                            onTap: () async {
+                              pause();
+                              await WorkOutService().pause(displayTime);
+                              isTapped = true;
+                              setState(() {
+                              });
+                            },
+                          ),
                         ),
-                      ),
-                      onTap: () async {
-                        // pause();
-                        // await WorkOutService().pause(displayTime);
-                        // setState(() {
-                        //   isTapped = true;
-                        // });
-                      },
-                    ),
-                  ),
                 ),
               ],
             ),

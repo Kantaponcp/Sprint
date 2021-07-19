@@ -22,7 +22,7 @@ String formatTime(int milliseconds) {
   var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
   var seconds = (secs % 60).toString().padLeft(2, '0');
   displayTime = "$hours:$minutes:$seconds";
-  workOut.secTime = (milliseconds ~/ 1000);
+  workout.secTime = (milliseconds ~/ 1000);
   return displayTime;
   // return "$hours:$minutes:$seconds";
 }
