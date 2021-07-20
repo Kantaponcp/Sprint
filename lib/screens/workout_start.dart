@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sprint/model/check_gps.dart';
 import 'package:sprint/model/global_variable.dart';
+import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/weathermodel.dart';
 import 'package:sprint/model/workout.dart';
@@ -11,10 +13,13 @@ import 'package:sprint/services/workout_service.dart';
 import 'package:sprint/style/color.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/utils/setting_preferences.dart';
+import 'package:sprint/utils/workout_preferences.dart';
 import 'package:sprint/widget/text_section.dart';
 import 'package:sprint/widget/time_counting.dart';
+import 'package:uuid/uuid.dart';
 
 class StartWorkout extends StatefulWidget {
+
   const StartWorkout({Key? key}) : super(key: key);
 
   @override
@@ -30,12 +35,23 @@ class _StartWorkoutState extends State<StartWorkout> {
 
   // late String displayTime;
   // late int secTime;
+  // late ListWorkout listWorkout;
+  // late List<ListWorkout> list;
 
   @override
   void initState() {
     super.initState();
+    checkGpsHelper().checkGps();
     isTapped = false;
     start();
+    // final workoutId = Uuid().v4();
+    // print('workoutId: $workoutId');
+    //
+    // listWorkout = widget.workoutId == null
+    //     ? ListWorkout(workoutId: workoutId)
+    //     : WorkoutPreferences.getWorkout(widget.workoutId);
+
+    // list = WorkoutPreferences.getWorkouts();
   }
 
   Future<void> start() async {
@@ -62,6 +78,11 @@ class _StartWorkoutState extends State<StartWorkout> {
   @override
   Widget build(BuildContext context) {
     Setting setting = SettingPreferences.getSetting();
+
+    final tempUnitCheck = setting.tempIndex;
+    final distUnitCheck = setting.distanceIndex;
+    final priorityDisplayCheck = setting.priority;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
@@ -109,7 +130,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
-                              (setting.tempIndex == 1)
+                              (tempUnitCheck == 1)
                                   ? TextList().tempUnitCel
                                   : TextList().tempUnitF,
                               style: Style.headline2,
@@ -129,10 +150,9 @@ class _StartWorkoutState extends State<StartWorkout> {
                         radius: 50,
                         child: IconButton(
                           onPressed: () async {
-                           await Navigator.of(context).pushNamed('/workoutMap');
-                           setState(() {
-
-                           });
+                            await Navigator.of(context)
+                                .pushNamed('/workoutMap');
+                            setState(() {});
                           },
                           icon: Icon(Icons.map_outlined),
                         ),
@@ -152,14 +172,14 @@ class _StartWorkoutState extends State<StartWorkout> {
                         height: 10,
                       ),
                       //condition 1-----------------------------------------------
-                      if (setting.priority == 'Speed') ...[
+                      if (priorityDisplayCheck == 'Speed') ...[
                         Container(
                           child: FocusDisplay(
-                            (setting.distanceIndex == 1)
+                            (distUnitCheck == 1)
                                 ? TextList().currentSpeedDisplay!
                                 : TextList().currentSpeedDisplayMi!,
                             TextList().currentSpeedText,
-                            (setting.distanceIndex == 1)
+                            (distUnitCheck == 1)
                                 ? TextList().speedUnitKM
                                 : TextList().speedUnitMiles,
                           ),
@@ -174,11 +194,11 @@ class _StartWorkoutState extends State<StartWorkout> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   TextSection(
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().distanceDisplay
                                         : TextList().totalDistanceMiles,
                                     TextList().distanceText,
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().distanceUnitKM
                                         : TextList().distanceUnitMiles,
                                   ),
@@ -194,7 +214,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                                   TextSection(
                                     TextList().avgSpeedDisplay,
                                     TextList().avgSpeedText,
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().speedUnitKM
                                         : TextList().speedUnitMiles,
                                   )
@@ -210,14 +230,14 @@ class _StartWorkoutState extends State<StartWorkout> {
                           ),
                         ),
                         //condition 2-----------------------------------------------
-                      ] else if (setting.priority == 'Distance') ...[
+                      ] else if (priorityDisplayCheck == 'Distance') ...[
                         Container(
                           child: FocusDisplay(
-                            (setting.distanceIndex == 1)
+                            (distUnitCheck == 1)
                                 ? TextList().distanceDisplay
                                 : TextList().totalDistanceMiles,
                             TextList().distanceText,
-                            (setting.distanceIndex == 1)
+                            (distUnitCheck == 1)
                                 ? TextList().distanceUnitKM
                                 : TextList().distanceUnitMiles,
                           ),
@@ -232,11 +252,11 @@ class _StartWorkoutState extends State<StartWorkout> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   TextSection(
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().currentSpeedDisplay!
                                         : TextList().currentSpeedDisplayMi!,
                                     TextList().currentSpeedText,
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().speedUnitKM
                                         : TextList().speedUnitMiles,
                                   ),
@@ -252,7 +272,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                                   TextSection(
                                     TextList().avgSpeedDisplay,
                                     TextList().avgSpeedText,
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().speedUnitKM
                                         : TextList().speedUnitMiles,
                                   )
@@ -268,12 +288,12 @@ class _StartWorkoutState extends State<StartWorkout> {
                           ),
                         ),
                         //condition 3-----------------------------------------------
-                      ] else if (setting.priority == 'Average Speed') ...[
+                      ] else if (priorityDisplayCheck == 'Average Speed') ...[
                         Container(
                           child: FocusDisplay(
                             TextList().avgSpeedDisplay,
                             TextList().avgSpeedText,
-                            (setting.distanceIndex == 1)
+                            (distUnitCheck == 1)
                                 ? TextList().speedUnitKM
                                 : TextList().speedUnitMiles,
                           ),
@@ -288,11 +308,11 @@ class _StartWorkoutState extends State<StartWorkout> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   TextSection(
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().currentSpeedDisplay!
                                         : TextList().currentSpeedDisplayMi!,
                                     TextList().currentSpeedText,
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().speedUnitKM
                                         : TextList().speedUnitMiles,
                                   ),
@@ -306,11 +326,11 @@ class _StartWorkoutState extends State<StartWorkout> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   TextSection(
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().distanceDisplay
                                         : TextList().totalDistanceMiles,
                                     TextList().distanceText,
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().distanceUnitKM
                                         : TextList().distanceUnitMiles,
                                   )
@@ -343,11 +363,11 @@ class _StartWorkoutState extends State<StartWorkout> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   TextSection(
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().currentSpeedDisplay!
                                         : TextList().currentSpeedDisplayMi!,
                                     TextList().currentSpeedText,
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().speedUnitKM
                                         : TextList().speedUnitMiles,
                                   ),
@@ -363,7 +383,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                                   TextSection(
                                     TextList().avgSpeedDisplay,
                                     TextList().avgSpeedText,
-                                    (setting.distanceIndex == 1)
+                                    (distUnitCheck == 1)
                                         ? TextList().speedUnitKM
                                         : TextList().speedUnitMiles,
                                   )
@@ -377,11 +397,11 @@ class _StartWorkoutState extends State<StartWorkout> {
                             children: [
                               Container(),
                               TextSection(
-                                (setting.distanceIndex == 1)
+                                (distUnitCheck == 1)
                                     ? TextList().distanceDisplay
                                     : TextList().totalDistanceMiles,
                                 TextList().distanceText,
-                                (setting.distanceIndex == 1)
+                                (distUnitCheck == 1)
                                     ? TextList().distanceUnitKM
                                     : TextList().distanceUnitMiles,
                               ),
@@ -405,13 +425,6 @@ class _StartWorkoutState extends State<StartWorkout> {
       ),
     );
   }
-
-  // Widget buildTime() {
-  //   String twodigits(int n) => n.toString().padLeft(2, '0');
-  //   final hours = twodigits(duration.inHours);
-  //   final minutes = twodigits(duration.inMinutes.remainder(60));
-  //   final seconds = twodigits(duration.inMinutes.remainder(60));
-  // }
 
   Widget pauseWidget() => Stack(
         children: [
@@ -536,8 +549,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                       pause();
                       await WorkOutService().pause(displayTime);
                       isTapped = true;
-                      setState(() {
-                      });
+                      setState(() {});
                     },
                   ),
                 ),
@@ -550,7 +562,7 @@ class _StartWorkoutState extends State<StartWorkout> {
       height: height,
       child: RaisedButton(
         onPressed: () async {
-          Navigator.of(context).pushNamed('/summary');
+          Navigator.of(context).pushReplacementNamed('/summary');
           stopwatch
             ..stop()
             ..reset();

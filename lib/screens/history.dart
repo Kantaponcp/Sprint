@@ -1,20 +1,39 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/workout.dart';
+import 'package:sprint/screens/history_detail.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/utils/setting_preferences.dart';
+import 'package:sprint/utils/workout_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({Key? key}) : super(key: key);
+  const HistoryPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _HistoryPageState createState() => _HistoryPageState();
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  // late ListWorkout listWorkout;
+  // late List<ListWorkout> list;
   Setting setting = SettingPreferences.getSetting();
+
+  @override
+  void initState() {
+    super.initState();
+    // final workoutId = Uuid().v4();
+    // print('workoutId: $workoutId');
+    //
+    // listWorkout = widget.workoutId == null
+    //     ? ListWorkout(workoutId: workoutId)
+    //     : WorkoutPreferences.getWorkout(widget.workoutId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +78,7 @@ class _HistoryPageState extends State<HistoryPage> {
             children: [
               Padding(
                 padding: EdgeInsets.all(10),
-                child: listWorkOut.isEmpty
+                child: (listWorkout.isEmpty)
                     ? Container(
                         width: MediaQuery.of(context).size.width,
                         height: 150,
@@ -78,7 +97,7 @@ class _HistoryPageState extends State<HistoryPage> {
                       )
                     : ListView.builder(
                         shrinkWrap: true,
-                        itemCount: listWorkOut.length,
+                        itemCount: listWorkout.length,
                         itemBuilder: (context, index) {
                           return buildCard(index);
                         }),
@@ -90,8 +109,12 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
+
+
   Widget buildCard(int index) {
-    var duration = listWorkOut[index].secTime;
+    var duration = listWorkout[index].secTime;
+    final distUnitCheck = setting.distanceIndex;
+    final priorityDisplayCheck = setting.priority;
 
     getDuration() {
       var seconds = duration;
@@ -114,7 +137,11 @@ class _HistoryPageState extends State<HistoryPage> {
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+            return HistoryDetail(index: index);
+          }));
+        },
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -147,7 +174,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 alignment: Alignment.centerRight,
                                 child: Text(
                                   DateFormat('dd MMM yyyy')
-                                      .format(listWorkOut[index].date!),
+                                      .format(listWorkout[index].date!),
                                   style: Style.bodyText1,
                                 ),
                               ),
@@ -156,10 +183,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                 alignment: Alignment.centerRight,
                                 child: Text(
                                   DateFormat('jm').format(
-                                          listWorkOut[index].startTime!) +
+                                          listWorkout[index].startTime!) +
                                       ' - ' +
                                       DateFormat('jm')
-                                          .format(listWorkOut[index].stopTime!),
+                                          .format(listWorkout[index].stopTime!),
                                   style: Style.bodyText1,
                                 ),
                               ),
@@ -174,7 +201,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    listWorkOut[index].addressName!,
+                    listWorkout[index].addressName!,
                     style: Style.HistorySmallTextStyle,
                   ),
                 ),
@@ -186,8 +213,16 @@ class _HistoryPageState extends State<HistoryPage> {
                         flex: 4,
                         child: buildShowStat(
                           Icons.directions_bike_outlined,
-                          listWorkOut[index].totalDistance.toStringAsFixed(2),
-                          TextList().distanceUnitKM,
+                          (distUnitCheck == 1)
+                              ? listWorkout[index]
+                                  .totalDistance
+                                  .toStringAsFixed(2)
+                              : listWorkout[index]
+                                  .totalDistanceMiles
+                                  .toStringAsFixed(2),
+                          (distUnitCheck == 1)
+                              ? TextList().distanceUnitKM
+                              : TextList().distanceUnitMiles,
                         ),
                       ),
                       Expanded(
@@ -202,8 +237,10 @@ class _HistoryPageState extends State<HistoryPage> {
                         flex: 4,
                         child: buildShowStat(
                           Icons.av_timer_outlined,
-                          listWorkOut[index].avgSpeed.toStringAsFixed(2),
-                          TextList().speedUnitKM,
+                          listWorkout[index].avgSpeed.toStringAsFixed(2),
+                          (distUnitCheck == 1)
+                              ? TextList().speedUnitKM
+                              : TextList().speedUnitMiles,
                         ),
                       ),
                     ],
@@ -253,9 +290,12 @@ class _HistoryPageState extends State<HistoryPage> {
           Container(
             // padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
             alignment: Alignment.bottomRight,
-            child: Text(
-              unit,
-              style: Style.HomeSmallBodyStyle,
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Text(
+                unit,
+                style: Style.HomeSmallBodyStyle,
+              ),
             ),
           ),
         ],

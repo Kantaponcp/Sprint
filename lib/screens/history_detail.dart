@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sprint/model/list_workout.dart';
@@ -7,28 +6,21 @@ import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/workout.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/utils/setting_preferences.dart';
-import 'package:sprint/widget/build_button.dart';
 import 'package:sprint/widget/map.dart';
-import 'package:intl/intl.dart';
 
-class SummaryPage extends StatefulWidget {
+class HistoryDetail extends StatefulWidget {
+  final int index;
+
+  const HistoryDetail({
+    Key? key,
+    required this.index,
+  }) : super(key: key);
+
   @override
-  _SummaryPageState createState() => _SummaryPageState();
+  _HistoryDetailState createState() => _HistoryDetailState();
 }
 
-class _SummaryPageState extends State<SummaryPage> {
-  // getCurrentDate() {
-  //   return DateFormat('dd MMM yyyy').format(workOut.date!);
-  // }
-  //
-  // getStartTime() {
-  //   return DateFormat('jm').format(workOut.startTime!);
-  // }
-  //
-  // getEndTime() {
-  //   return DateFormat('jm').format(workOut.stopTime!);
-  // }
-
+class _HistoryDetailState extends State<HistoryDetail> {
   getTotalTime() {
     final startTime = workout.startTime!;
     final endTime = workout.stopTime!;
@@ -41,10 +33,24 @@ class _SummaryPageState extends State<SummaryPage> {
     return totalTime;
   }
 
+  getDate() {
+    return DateFormat('dd MMM yyyy').format(listWorkout[widget.index].date!);
+  }
+
+  getStartTime() {
+    return DateFormat('jm').format(listWorkout[widget.index].startTime!);
+  }
+
+  getEndTime() {
+    return DateFormat('jm').format(listWorkout[widget.index].stopTime!);
+  }
+
   Setting setting = SettingPreferences.getSetting();
 
   @override
   Widget build(BuildContext context) {
+    final distUnitCheck = setting.distanceIndex;
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -68,8 +74,8 @@ class _SummaryPageState extends State<SummaryPage> {
                       Container(),
                       Container(
                         alignment: Alignment.center,
-                        child: buildHaveIcon(
-                            Icons.date_range_outlined, TextList().getDate()),
+                        child:
+                            buildHaveIcon(Icons.date_range_outlined, getDate()),
                       ),
                     ],
                   ),
@@ -80,11 +86,14 @@ class _SummaryPageState extends State<SummaryPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        TextList().addressName,
+                        listWorkout[widget.index].addressName!,
                         // 'Bangkae, Bangkok',
                         style: Style.bodyText1,
                       ),
-                      buildHaveIcon(Icons.schedule_outlined, TextList().getStartTime() + ' - ' + TextList().getEndTime(),),
+                      buildHaveIcon(
+                        Icons.schedule_outlined,
+                        getStartTime() + ' - ' + getEndTime(),
+                      ),
                     ],
                   ),
                 ),
@@ -97,57 +106,76 @@ class _SummaryPageState extends State<SummaryPage> {
                   child: Column(
                     children: [
                       buildShowStat(
-                          TextList().distanceText,
-                          Icon(Icons.directions_bike_outlined),
-                          TextList().distanceDisplay,
-                          TextList().distanceUnitKM),
+                        TextList().distanceText,
+                        Icon(Icons.directions_bike_outlined),
+                        (distUnitCheck == 1)
+                            ? listWorkout[widget.index]
+                                .totalDistance
+                                .toStringAsFixed(2)
+                            : listWorkout[widget.index]
+                                .totalDistanceMiles
+                                .toStringAsFixed(2),
+                        (distUnitCheck == 1)
+                            ? TextList().distanceUnitKM
+                            : TextList().distanceUnitMiles,
+                      ),
                       buildShowStat(
-                          TextList().sumAvgSpeedText,
-                          Icon(Icons.shutter_speed_outlined),
-                          TextList().avgSpeedDisplay,
-                          TextList().speedUnitKM),
+                        TextList().sumAvgSpeedText,
+                        Icon(Icons.shutter_speed_outlined),
+                        (distUnitCheck == 1)
+                            ? listWorkout[widget.index]
+                                .avgSpeed
+                                .toStringAsFixed(2)
+                            : listWorkout[widget.index]
+                                .avgSpeedMi
+                                .toStringAsFixed(2),
+                        (distUnitCheck == 1)
+                            ? TextList().speedUnitKM
+                            : TextList().speedUnitMiles,
+                      ),
                       buildShowStat(
-                          TextList().sumMaxSpeedText,
-                          Icon(Icons.speed_outlined),
-                          TextList().summaryMaxSpeed,
-                          TextList().speedUnitKM),
+                        TextList().sumMaxSpeedText,
+                        Icon(Icons.speed_outlined),
+                        listWorkout[widget.index].maxSpeed.toStringAsFixed(2),
+                        (distUnitCheck == 1)
+                            ? TextList().speedUnitKM
+                            : TextList().speedUnitMiles,
+                      ),
                       buildShowStat(
                           TextList().sumMovingText,
                           Icon(Icons.timer_outlined),
-                          TextList().totalMovingTime,
+                          listWorkout[widget.index].totalMovingTime!,
                           TextList().durationUnit),
                       buildShowStat(
                           TextList().duration,
                           Icon(Icons.schedule_outlined),
                           getTotalTime(),
-                          // '1.30',
                           TextList().durationUnit),
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
         ),
         bottomNavigationBar: Container(
-            height: 80,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pushReplacementNamed(context, '/home');
-              },
-              child: Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: Color(0xFFFF0000),
-                alignment: Alignment.center,
-                child: Text(
-                  'HOME',
-                  textAlign: TextAlign.center,
-                  style: Style.button,
-                ),
+          height: 80,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              color: Color(0xFFFF0000),
+              alignment: Alignment.center,
+              child: Text(
+                'BACK',
+                textAlign: TextAlign.center,
+                style: Style.button,
               ),
             ),
+          ),
         ),
       ),
     );

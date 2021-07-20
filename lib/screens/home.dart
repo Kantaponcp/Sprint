@@ -2,19 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sprint/model/global_variable.dart';
+import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/workout.dart';
-import 'package:sprint/services/workout_service.dart';
-import 'package:sprint/style/color.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/utils/setting_preferences.dart';
+import 'package:sprint/utils/workout_preferences.dart';
 import 'package:sprint/widget/appBar.dart';
-import 'package:sprint/widget/build_button.dart';
 import 'package:sprint/widget/drawer.dart';
-import 'package:sprint/widget/text_section.dart';
-import 'package:sprint/widget/time_counting.dart';
+import 'package:uuid/uuid.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,11 +20,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Setting setting = SettingPreferences.getSetting();
+  // late ListWorkout listWorkout;
+  // late List<ListWorkout> list;
+
+  @override
+  void initState() {
+    super.initState();
+    //
+    // listWorkout = WorkoutPreferences.getWorkout();
+    // setting = SettingPreferences.getSetting();
+  }
 
   @override
   Widget build(BuildContext context) {
     final double appbarWidth = MediaQuery.of(context).size.width;
     final double appbarHeight = 70;
+
+    final distUnitCheck = setting.distanceIndex;
 
     return SafeArea(
       child: Scaffold(
@@ -91,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Padding(
                               padding: EdgeInsets.all(10),
-                              child: listWorkOut.isEmpty
+                              child: listWorkout.isEmpty
                                   ? Container(
                                       width: MediaQuery.of(context).size.width,
                                       height: 150,
@@ -174,14 +183,13 @@ class _HomePageState extends State<HomePage> {
                                                       TextList().distanceText,
                                                       Icons
                                                           .directions_bike_outlined,
-                                                      listWorkOut.isEmpty
+                                                      listWorkout.isEmpty
                                                           ? '--'
-                                                          : listWorkOut.last
+                                                          : listWorkout.last
                                                               .totalDistance
                                                               .toStringAsFixed(
                                                                   2),
-                                                      (setting.distanceIndex ==
-                                                              1)
+                                                      (distUnitCheck == 1)
                                                           ? TextList()
                                                               .distanceUnitKM
                                                           : TextList()
@@ -193,14 +201,13 @@ class _HomePageState extends State<HomePage> {
                                                     child: buildShowStat(
                                                       TextList().duration,
                                                       Icons.timer_outlined,
-                                                      listWorkOut.isEmpty
+                                                      listWorkout.isEmpty
                                                           ? '--'
                                                           : TextList()
-                                                              .getDuration(
-                                                                  listWorkOut
-                                                                      .last
-                                                                      .secTime),
-                                                      (listWorkOut.last
+                                                              .getDuration(listWorkout
+                                                                  .last
+                                                                  .secTime),
+                                                      (listWorkout.last
                                                                   .secTime <
                                                               60)
                                                           ? 'Sec'
@@ -213,13 +220,13 @@ class _HomePageState extends State<HomePage> {
                                                     child: buildShowStat(
                                                       TextList().avgSpeedText,
                                                       Icons.av_timer_outlined,
-                                                      listWorkOut.isEmpty
+                                                      listWorkout.isEmpty
                                                           ? '--'
-                                                          : listWorkOut
-                                                              .last.avgSpeed
+                                                          : listWorkout.last
+                                                              .avgSpeed
                                                               .toStringAsFixed(
                                                                   2),
-                                                      (setting.distanceIndex == 1)
+                                                      (distUnitCheck == 1)
                                                           ? TextList()
                                                               .speedUnitKM
                                                           : TextList()
@@ -264,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                           child: GestureDetector(
                             onTap: () async {
                               Navigator.of(context)
-                                  .pushNamed('/startCountdown');
+                                  .pushReplacementNamed('/startCountdown');
                               print('press');
                               print(distIndex);
                               print(tempIndex);

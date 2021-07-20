@@ -2,36 +2,37 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:sprint/model/global_variable.dart';
+import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/text_list.dart';
-import 'package:sprint/model/weathermodel.dart';
-import 'package:sprint/model/workout.dart';
 import 'package:sprint/services/workout_service.dart';
-import 'package:sprint/style/color.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/utils/setting_preferences.dart';
-import 'package:sprint/widget/build_button.dart';
+import 'package:sprint/utils/workout_preferences.dart';
 import 'package:sprint/widget/map.dart';
 import 'package:sprint/widget/text_section.dart';
 import 'package:sprint/widget/workout_appBar.dart';
 import 'package:sprint/widget/time_counting.dart';
 
 class WorkoutMap extends StatefulWidget {
-  const WorkoutMap({Key? key}) : super(key: key);
+  const WorkoutMap({Key? key,}) : super(key: key);
 
   @override
   _WorkoutMapState createState() => _WorkoutMapState();
 }
 
 class _WorkoutMapState extends State<WorkoutMap> {
-  Setting setting = SettingPreferences.getSetting();
+  // late ListWorkout listWorkout;
+  // late List<ListWorkout> list;
+  late Setting setting;
 
   @override
   void initState() {
     super.initState();
     start();
     setState(() {});
+    // list = WorkoutPreferences.getWorkouts();
+    setting = SettingPreferences.getSetting();
   }
 
   void start() {
@@ -49,6 +50,10 @@ class _WorkoutMapState extends State<WorkoutMap> {
   Widget build(BuildContext context) {
     double mapHeight = (MediaQuery.of(context).size.height) / 1.7;
     bool isGestureVisible = true;
+
+    final tempUnitCheck = setting.tempIndex;
+    final distUnitCheck = setting.distanceIndex;
+    final priorityDisplayCheck = setting.priority;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -79,27 +84,27 @@ class _WorkoutMapState extends State<WorkoutMap> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          if (setting.priority == 'Speed') ...[
+                          if (priorityDisplayCheck == 'Speed') ...[
                             FocusDisplay(
                               TextList().currentSpeedDisplay!,
                               TextList().currentSpeedText,
-                              (setting.distanceIndex == 0)
+                              (distUnitCheck == 0)
                                   ? TextList().speedUnitKM
                                   : TextList().speedUnitMiles,
                             ),
-                          ] else if (setting.priority == 'Distance') ...[
+                          ] else if (priorityDisplayCheck == 'Distance') ...[
                             FocusDisplay(
                               TextList().distanceDisplay,
                               TextList().distanceText,
-                              (setting.distanceIndex == 0)
+                              (distUnitCheck == 0)
                                   ? TextList().distanceUnitMiles
                                   : TextList().distanceUnitKM,
                             ),
-                          ] else if (setting.priority == 'Average Speed') ...[
+                          ] else if (priorityDisplayCheck == 'Average Speed') ...[
                             FocusDisplay(
                               TextList().avgSpeedDisplay,
                               TextList().avgSpeedText,
-                              (setting.distanceIndex == 0)
+                              (distUnitCheck == 0)
                                   ? TextList().speedUnitMiles
                                   : TextList().speedUnitKM,
                             ),

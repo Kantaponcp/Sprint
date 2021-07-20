@@ -1,17 +1,15 @@
 // @dart=2.9
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/global_variable.dart';
-import 'package:sprint/model/workout.dart';
 import 'package:sprint/style/color.dart';
-import 'package:sprint/style/theme.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprint/utils/setting_preferences.dart';
+import 'package:sprint/utils/workout_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key key}) : super(key: key);
@@ -20,23 +18,32 @@ class SettingPage extends StatefulWidget {
   _SettingPageState createState() => _SettingPageState();
 }
 
-class Priority {
-  final int id;
-  final String title;
-
-  Priority(
-    this.id,
-    this.title,
-  );
-}
+// class Priority {
+//   final int id;
+//   final String title;
+//
+//   Priority(
+//     this.id,
+//     this.title,
+//   );
+// }
 
 class _SettingPageState extends State<SettingPage> {
   bool switchValue = true;
+
+  // ListWorkout listWorkout;
+  // List<ListWorkout> list;
   Setting setting;
 
   @override
   void initState() {
     super.initState();
+    // final workoutId = Uuid().v4();
+    // print('workoutId: $workoutId');
+    //
+    // listWorkout = widget.workoutId == null ? ListWorkout(workoutId: workoutId) : WorkoutPreferences.getWorkout(widget.workoutId);
+    //
+    // list = WorkoutPreferences.getWorkouts();
     setting = SettingPreferences.getSetting();
   }
 
@@ -70,10 +77,9 @@ class _SettingPageState extends State<SettingPage> {
                 radius: 50,
                 child: IconButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/home');
+                    Navigator.of(context).pop();
+                    // WorkoutPreferences.setWorkout(listWorkout);
                     SettingPreferences.setSetting(setting);
-                    print(isKM);
-                    print(isCel);
                   },
                   icon: Icon(Icons.close),
                 ),
@@ -104,13 +110,32 @@ class _SettingPageState extends State<SettingPage> {
                             // Expanded(
                             //     flex: 6,
                             //     child: buildOption(
-                            //         settings.isDarkMode
+                            //         setting.isDarkMode
                             //             ? Icons.light_mode_outlined
                             //             : Icons.dark_mode,
                             //         'Dark Mode')),
                             // Expanded(
                             //   flex: 1,
-                            //   child: Text(settings.isDarkMode ? 'Off' : 'On'),
+                            //   child: Text(setting.isDarkMode ? 'Off' : 'On'),
+                            // ),
+                            // Expanded(
+                            //   flex: 4,
+                            //   child: Container(
+                            //     margin: EdgeInsets.only(bottom: 10),
+                            //     alignment: Alignment.center,
+                            //     child: Transform.scale(
+                            //       scale: 1.3,
+                            //       child: CupertinoSwitch(
+                            //         value: setting.isDarkMode,
+                            //         activeColor: Theme.of(context).primaryColor,
+                            //         onChanged: (value) {
+                            //             setting =
+                            //                 setting.copy(isDarkMode: value);
+                            //             setState(() {});
+                            //         },
+                            //       ),
+                            //     ),
+                            //   ),
                             // ),
                             Expanded(
                               flex: 12,
@@ -157,16 +182,18 @@ class _SettingPageState extends State<SettingPage> {
                               ),
                             ),
                             buildTab(
-                                TextList().kilometer +
-                                    ' (' +
-                                    TextList().distanceUnitKM +
-                                    ')',
-                                TextList().mile +
-                                    ' (' +
-                                    TextList().distanceUnitMiles +
-                                    ')',
-                                isOneSelected,
-                                isKM, setting.distanceIndex,),
+                              TextList().kilometer +
+                                  ' (' +
+                                  TextList().distanceUnitKM +
+                                  ')',
+                              TextList().mile +
+                                  ' (' +
+                                  TextList().distanceUnitMiles +
+                                  ')',
+                              isOneSelected,
+                              isKM,
+                              setting.distanceIndex,
+                            ),
                             Container(
                               child: Row(
                                 children: [
@@ -183,16 +210,18 @@ class _SettingPageState extends State<SettingPage> {
                               ),
                             ),
                             buildTab(
-                                TextList().celsius +
-                                    ' (' +
-                                    TextList().tempUnitCel +
-                                    ')',
-                                TextList().fahrenheit +
-                                    ' (' +
-                                    TextList().tempUnitF +
-                                    ')',
-                                isTwoSelected,
-                                isCel, setting.tempIndex,),
+                              TextList().celsius +
+                                  ' (' +
+                                  TextList().tempUnitCel +
+                                  ')',
+                              TextList().fahrenheit +
+                                  ' (' +
+                                  TextList().tempUnitF +
+                                  ')',
+                              isTwoSelected,
+                              isCel,
+                              setting.tempIndex,
+                            ),
                           ],
                         ),
                       ),
@@ -257,7 +286,9 @@ class _SettingPageState extends State<SettingPage> {
                             // ),
                             onChanged: (priority) {
                               setting = setting.copy(priority: priority);
+                              SettingPreferences.setSetting(setting);
                               setState(() {
+                                // listWorkout = listWorkout.copy(setting: setting);
                                 chosenValue = setting.priority;
                                 // SettingPreferences.setSetting(settings);
                               });
@@ -277,6 +308,16 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  Widget buildIOSSwitch(bool value, ValueChanged<bool> onChanged) =>
+      Transform.scale(
+        scale: 1.3,
+        child: CupertinoSwitch(
+          value: value,
+          activeColor: Theme.of(context).primaryColor,
+          onChanged: onChanged,
+        ),
+      );
+
   Widget changeThemeSwitch() {
     return SwitchSettingsTile(
       title: 'Dark Mode',
@@ -293,7 +334,10 @@ class _SettingPageState extends State<SettingPage> {
         ),
       ),
       settingKey: keyDarkMode,
-      onChange: (_) {},
+      onChange: (_) {
+        setting = setting.copy(isDarkMode: _);
+        SettingPreferences.setSetting(setting);
+      },
     );
   }
 
@@ -332,8 +376,9 @@ class _SettingPageState extends State<SettingPage> {
   List<bool> isOneSelected = [true, false];
   List<bool> isTwoSelected = [true, false];
 
-  Widget buildTab(String tab1, String tab2, List<bool> isSelected, bool tap, int index) {
-    if(index == 0) {
+  Widget buildTab(
+      String tab1, String tab2, List<bool> isSelected, bool tap, int index) {
+    if (index == 0) {
       isSelected[0] = false;
       isSelected[1] = true;
     } else {
@@ -398,7 +443,7 @@ class _SettingPageState extends State<SettingPage> {
                 if (isSelected[0]) {
                   isSelected[0] = false;
                   isSelected[1] = true;
-                  if(isSelected == isOneSelected) {
+                  if (isSelected == isOneSelected) {
                     setting = setting.copy(distanceIndex: 0);
                   } else {
                     setting = setting.copy(tempIndex: 0);
@@ -406,12 +451,13 @@ class _SettingPageState extends State<SettingPage> {
                 } else {
                   isSelected[0] = true;
                   isSelected[1] = false;
-                  if(isSelected == isOneSelected) {
+                  if (isSelected == isOneSelected) {
                     setting = setting.copy(distanceIndex: 1);
                   } else {
                     setting = setting.copy(tempIndex: 1);
                   }
                 }
+                SettingPreferences.setSetting(setting);
               });
             },
           ),

@@ -8,9 +8,9 @@ Workout workout = new Workout(
   previousPoint: new GeoPoint(),
   currentPoint: new GeoPoint(),
 );
+
 var mapPoint = List<LatLng>.empty(growable: true);
-var listWorkOut = List<Workout>.empty(growable: true);
-// WorkOut workOut = new WorkOut();
+var listWorkout = List<Workout>.empty(growable: true);
 
 class Workout {
   DateTime? startTime;
@@ -20,6 +20,7 @@ class Workout {
   String? totalMovingTime;
   int secTime;
   double avgSpeed;
+  double avgSpeedMi;
   double maxSpeed;
   double totalDistance;
   double totalDistanceMiles;
@@ -37,17 +38,97 @@ class Workout {
     this.addressName,
     this.totalMovingTime,
     this.secTime = 0,
-    this.avgSpeed = 0,
+    this.avgSpeed = 0.0,
+    this.avgSpeedMi = 0.0,
     this.maxSpeed = 0.0,
     this.totalDistance = 0.0,
     this.totalDistanceMiles = 0.0,
-    this.currentSpeed = 0,
-    this.currentSpeedMiles = 0,
+    this.currentSpeed = 0.0,
+    this.currentSpeedMiles = 0.0,
     required this.startPoint,
     required this.endPoint,
     required this.previousPoint,
     required this.currentPoint,
   });
+
+  // Workout copy({
+  //   DateTime? startTime,
+  //   DateTime? stopTime,
+  //   DateTime? date,
+  //   String? addressName,
+  //   String? totalMovingTime,
+  //   int? secTime,
+  //   double? avgSpeed,
+  //   double? avgSpeedMi,
+  //   double? maxSpeed,
+  //   double? totalDistance,
+  //   double? totalDistanceMiles,
+  //   double? currentSpeed,
+  //   double? currentSpeedMiles,
+  //   GeoPoint? startPoint,
+  //   GeoPoint? endPoint,
+  //   GeoPoint? previousPoint,
+  //   GeoPoint? currentPoint,
+  // }) =>
+  //     Workout(
+  //       startTime: startTime ?? this.startTime,
+  //       stopTime: stopTime ?? this.stopTime,
+  //       date: date ?? this.date,
+  //       addressName: addressName ?? this.addressName,
+  //       totalMovingTime: totalMovingTime ?? this.totalMovingTime,
+  //       secTime: secTime ?? this.secTime,
+  //       avgSpeed: avgSpeed ?? this.avgSpeed,
+  //       avgSpeedMi: avgSpeedMi ?? this.avgSpeedMi,
+  //       maxSpeed: maxSpeed ?? this.maxSpeed,
+  //       totalDistance: totalDistance ?? this.totalDistance,
+  //       totalDistanceMiles: totalDistanceMiles ?? this.totalDistanceMiles,
+  //       currentSpeed: currentSpeed ?? this.currentSpeed,
+  //       currentSpeedMiles: currentSpeedMiles ?? this.currentSpeedMiles,
+  //       startPoint: startPoint ?? this.startPoint,
+  //       endPoint: endPoint ?? this.endPoint,
+  //       previousPoint: previousPoint ?? this.previousPoint,
+  //       currentPoint: currentPoint ?? this.currentPoint,
+  //     );
+  //
+  // static Workout fromJson(Map<String, dynamic> json) => Workout(
+  //       startTime: DateTime.tryParse(json['startTime']),
+  //       stopTime: DateTime.tryParse(json['stopTime']),
+  //       date: DateTime.tryParse(json['date']),
+  //       addressName: json['addressName'],
+  //       totalMovingTime: json['totalMovingTime'],
+  //       secTime: json['secTime'],
+  //       avgSpeed: json['avgSpeed'],
+  //   avgSpeedMi: json['avgSpeedMi'],
+  //       maxSpeed: json['maxSpeed'],
+  //       totalDistance: json['totalDistance'],
+  //       totalDistanceMiles: json['totalDistanceMiles'],
+  //       currentSpeed: json['currentSpeed'],
+  //       currentSpeedMiles: json['currentSpeedMiles'],
+  //       startPoint: json['startPoint'],
+  //       endPoint: json['endPoint'],
+  //       previousPoint: json['previousPoint'],
+  //       currentPoint: json['currentPoint'],
+  //     );
+  //
+  // Map<String, dynamic> toJson() => {
+  //       'startTime': startTime,
+  //       'stopTime': stopTime,
+  //       'date': date,
+  //       'addressName': addressName,
+  //       'totalMovingTime': totalMovingTime,
+  //       'secTime': secTime,
+  //       'avgSpeed': avgSpeed,
+  //   'avgSpeedMi': avgSpeedMi,
+  //       'maxSpeed': maxSpeed,
+  //       'totalDistance': totalDistance,
+  //       'totalDistanceMiles': totalDistanceMiles,
+  //       'currentSpeed': currentSpeed,
+  //       'currentSpeedMiles': currentSpeedMiles,
+  //       'startPoint': startPoint,
+  //       'endPoint': endPoint,
+  //       'previousPoint': previousPoint,
+  //       'currentPoint': currentPoint,
+  //     };
 
   void newObject() {
     workout = new Workout(
@@ -57,8 +138,7 @@ class Workout {
       currentPoint: new GeoPoint(),
     );
     mapPoint = new List<LatLng>.empty(growable: true);
-    listWorkOut.add(workout);
-    for (int i = 0; i < listWorkOut.length; i++) {}
+    listWorkout.add(workout);
     // workOut = new WorkOut();
   }
 }
@@ -71,74 +151,4 @@ class GeoPoint {
     this.latitude,
     this.longitude,
   });
-}
-
-class ListWorkout {
-  final int workoutId;
-  final Workout workout;
-
-  const ListWorkout({
-    required this.workoutId,
-    required this.workout,
-  });
-
-  ListWorkout copy({
-    int? workoutId,
-    Workout? workout,
-  }) =>
-      ListWorkout(
-        workoutId: workoutId ?? this.workoutId,
-        workout: workout ?? this.workout,
-      );
-
-  static ListWorkout fromJson(Map<String, dynamic> json) => ListWorkout(
-        workoutId: json['workoutId'],
-        workout: json['workout'],
-      );
-
-  Map<String, dynamic> toJson() => {
-        'workoutId': workoutId,
-        'workout': workout,
-      };
-}
-
-class Setting {
-  final bool isDarkMode;
-  final String priority;
-  final int distanceIndex;
-  final int tempIndex;
-
-  const Setting({
-    required this.isDarkMode,
-    required this.priority,
-    required this.distanceIndex,
-    required this.tempIndex,
-  });
-
-  Setting copy({
-    bool? isDarkMode,
-    String? priority,
-    int? distanceIndex,
-    int? tempIndex,
-  }) =>
-      Setting(
-        isDarkMode: isDarkMode ?? this.isDarkMode,
-        priority: priority ?? this.priority,
-        distanceIndex: distanceIndex ?? this.distanceIndex,
-        tempIndex: tempIndex ?? this.tempIndex,
-      );
-
-  static Setting fromJson(Map<String, dynamic> json) => Setting(
-        isDarkMode: json['isDarkMode'],
-        priority: json['priority'],
-        distanceIndex: json['distanceIndex'],
-        tempIndex: json['tempIndex'],
-      );
-
-  Map<String, dynamic> toJson() => {
-        'isDarkMode': isDarkMode,
-        'priority': priority,
-        'distanceIndex': distanceIndex,
-        'tempIndex': tempIndex,
-      };
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sprint/model/global_variable.dart';
+import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/text_list.dart';
-import 'package:sprint/model/workout.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/model/weathermodel.dart';
 import 'package:sprint/utils/setting_preferences.dart';
-import 'package:sprint/widget/time_counting.dart';
+import 'package:sprint/utils/workout_preferences.dart';
 
 class WorkoutAppBar extends StatefulWidget implements PreferredSizeWidget{
   WorkoutAppBar({
@@ -20,8 +20,8 @@ class WorkoutAppBar extends StatefulWidget implements PreferredSizeWidget{
 }
 
 class _WorkoutAppBarState extends State<WorkoutAppBar> {
-
   Setting setting = SettingPreferences.getSetting();
+
   @override
   Widget build(BuildContext context) {
     return AppBar(

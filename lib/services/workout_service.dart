@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/workout.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sprint/utils/workout_preferences.dart';
@@ -6,7 +7,6 @@ import '../model/global_variable.dart';
 import 'package:geocoding/geocoding.dart';
 
 class WorkOutService {
-  // ListWorkout listWorkout = WorkoutPreferences.getWorkout();
 
   Future<void> start() async {
     // workOut.workoutId = 'workOut01';
@@ -122,6 +122,7 @@ class WorkOutService {
   Future<void> avgSpeed() async {
     if (workout.totalDistance == 0.0) {
       workout.avgSpeed = 0.0;
+      workout.avgSpeedMi = 0.0;
     } else {
       double avgSpeedResult =
           (workout.totalDistance / workout.secTime.toDouble()) * 3600;

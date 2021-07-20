@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/workout.dart';
+import 'package:sprint/utils/workout_preferences.dart';
 
 class SettingPreferences {
   static late SharedPreferences _preferences;

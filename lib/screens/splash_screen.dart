@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:sprint/model/check_gps.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/style/text_style.dart';
 
@@ -16,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    checkGpsHelper().checkGps();
     Timer(Duration(seconds: 3), () {
       Navigator.of(context).pushReplacementNamed('/home');
     });
@@ -36,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
               flex: 9,
               child: Container(
                 child: Image.asset(
-                  'assets/images/logo.png',
+                  'assets/images/logo_1.png',
                   height: 160,
                   width: 160,
                   alignment: Alignment.center,
