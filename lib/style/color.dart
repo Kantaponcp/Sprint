@@ -18,6 +18,8 @@ class SprintColors {
 
   static const black = Color(0xFF252525);
 
+  static const yellow = Color(0xFFFFC700);
+
   // static Color navbar() {
   //   return const Color(0xFFECECEC);
   // }

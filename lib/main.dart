@@ -6,8 +6,8 @@ import 'package:sprint/screens/setting.dart';
 import 'package:sprint/screens/splash_screen.dart';
 import 'package:sprint/screens/start_countdown.dart';
 import 'package:sprint/screens/workout_map.dart';
-import 'package:sprint/screens/workout_summary.dart';
 import 'package:sprint/screens/workout_start.dart';
+import 'package:sprint/screens/workout_summary.dart';
 import 'package:sprint/style/theme.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:sprint/utils/setting_preferences.dart';
@@ -19,7 +19,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Settings.init(cacheProvider: SharePreferenceCache());
   await SettingPreferences.init();
-  // await WorkoutPreferences.init();
+  await WorkoutPreferences.init();
   runApp(MyApp());
 }
 
@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
       cacheKey: keyDarkMode,
       defaultValue: true,
       builder: (_, isDarkMode, __) {
-        final setting = SettingPreferences.getSetting();
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: isDarkMode ? SprintThemes.darkTheme : SprintThemes.lightTheme,

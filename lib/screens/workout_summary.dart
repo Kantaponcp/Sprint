@@ -2,49 +2,55 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/text_list.dart';
-import 'package:sprint/model/workout.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/utils/setting_preferences.dart';
-import 'package:sprint/widget/build_button.dart';
 import 'package:sprint/widget/map.dart';
-import 'package:intl/intl.dart';
 
 class SummaryPage extends StatefulWidget {
+  const SummaryPage({Key? key, }) : super(key: key);
+
   @override
   _SummaryPageState createState() => _SummaryPageState();
 }
 
 class _SummaryPageState extends State<SummaryPage> {
-  // getCurrentDate() {
-  //   return DateFormat('dd MMM yyyy').format(workOut.date!);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  // getTotalTime() {
+  //   final startTime = currentWorkout.startTime;
+  //   final endTime = currentWorkout.stopTime!;
+  //   final diff = endTime.difference(startTime).inMilliseconds;
+  //   var secs = diff ~/ 1000;
+  //   var hours = (secs ~/ 3600).toString().padLeft(2, '0');
+  //   var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+  //   var seconds = (secs % 60).toString().padLeft(2, '0');
+  //   String? totalTime = '$hours:$minutes:$seconds';
+  //   return totalTime;
   // }
-  //
+
   // getStartTime() {
-  //   return DateFormat('jm').format(workOut.startTime!);
+  //   DateTime startTime = currentWorkout.startTime ?? DateTime.now();
+  //   return DateFormat('jm').format(startTime);
   // }
   //
   // getEndTime() {
-  //   return DateFormat('jm').format(workOut.stopTime!);
+  //   DateTime stopTime = currentWorkout.stopTime ?? DateTime.now();
+  //   return DateFormat('jm').format(stopTime);
   // }
-
-  getTotalTime() {
-    final startTime = workout.startTime!;
-    final endTime = workout.stopTime!;
-    final diff = endTime.difference(startTime).inMilliseconds;
-    var secs = diff ~/ 1000;
-    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
-    var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
-    var seconds = (secs % 60).toString().padLeft(2, '0');
-    String? totalTime = '$hours:$minutes:$seconds';
-    return totalTime;
-  }
 
   Setting setting = SettingPreferences.getSetting();
 
   @override
   Widget build(BuildContext context) {
+    final distUnitCheck = setting.distanceIndex == 0;
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -58,7 +64,7 @@ class _SummaryPageState extends State<SummaryPage> {
                 Container(
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: Text('CYCLING# ', style: Style.headline1),
+                  child: Text(currentWorkout.workoutId, style: Style.headline1),
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -67,9 +73,9 @@ class _SummaryPageState extends State<SummaryPage> {
                     children: [
                       Container(),
                       Container(
-                        alignment: Alignment.center,
-                        child: buildHaveIcon(
-                            Icons.date_range_outlined, TextList().getDate()),
+                        // alignment: Alignment.center,
+                        child:
+                            buildHaveIcon(Icons.date_range_outlined, currentWorkout.date),
                       ),
                     ],
                   ),
@@ -80,11 +86,14 @@ class _SummaryPageState extends State<SummaryPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        TextList().addressName,
+                        currentWorkout.addressName,
                         // 'Bangkae, Bangkok',
                         style: Style.bodyText1,
                       ),
-                      buildHaveIcon(Icons.schedule_outlined, TextList().getStartTime() + ' - ' + TextList().getEndTime(),),
+                      buildHaveIcon(
+                        Icons.schedule_outlined,
+                        currentWorkout.startTime + ' - ' + currentWorkout.stopTime,
+                      ),
                     ],
                   ),
                 ),
@@ -97,57 +106,75 @@ class _SummaryPageState extends State<SummaryPage> {
                   child: Column(
                     children: [
                       buildShowStat(
-                          TextList().distanceText,
-                          Icon(Icons.directions_bike_outlined),
-                          TextList().distanceDisplay,
-                          TextList().distanceUnitKM),
+                        TextList().distanceText,
+                        Icon(Icons.directions_bike_outlined),
+                        (distUnitCheck)
+                            ? currentWorkout.totalDistance
+                                .toStringAsFixed(2)
+                            : currentWorkout.totalDistanceMiles
+                                .toStringAsFixed(2),
+                        (distUnitCheck)
+                            ? TextList().distanceUnitKM
+                            : TextList().distanceUnitMiles,
+                      ),
                       buildShowStat(
-                          TextList().sumAvgSpeedText,
-                          Icon(Icons.shutter_speed_outlined),
-                          TextList().avgSpeedDisplay,
-                          TextList().speedUnitKM),
+                        TextList().sumAvgSpeedText,
+                        Icon(Icons.shutter_speed_outlined),
+                        currentWorkout.avgSpeed.toStringAsFixed(2),
+                        (distUnitCheck)
+                            ? TextList().speedUnitKM
+                            : TextList().speedUnitMiles,
+                      ),
                       buildShowStat(
-                          TextList().sumMaxSpeedText,
-                          Icon(Icons.speed_outlined),
-                          TextList().summaryMaxSpeed,
-                          TextList().speedUnitKM),
+                        TextList().sumMaxSpeedText,
+                        Icon(Icons.speed_outlined),
+                        (distUnitCheck)
+                            ? currentWorkout.maxSpeed
+                            .toStringAsFixed(2)
+                            : currentWorkout.maxSpeedMi
+                            .toStringAsFixed(2),
+                        (distUnitCheck)
+                            ? TextList().speedUnitKM
+                            : TextList().speedUnitMiles,
+                      ),
                       buildShowStat(
-                          TextList().sumMovingText,
-                          Icon(Icons.timer_outlined),
-                          TextList().totalMovingTime,
-                          TextList().durationUnit),
+                        TextList().sumMovingText,
+                        Icon(Icons.timer_outlined),
+                        currentWorkout.totalMovingTime,
+                        TextList().durationUnit,
+                      ),
                       buildShowStat(
-                          TextList().duration,
-                          Icon(Icons.schedule_outlined),
-                          getTotalTime(),
-                          // '1.30',
-                          TextList().durationUnit),
+                        TextList().duration,
+                        Icon(Icons.schedule_outlined),
+                        '00.37.48',
+                        // '1.30',
+                        TextList().durationUnit,
+                      ),
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
         ),
         bottomNavigationBar: Container(
-            height: 80,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pushReplacementNamed(context, '/home');
-              },
-              child: Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: Color(0xFFFF0000),
-                alignment: Alignment.center,
-                child: Text(
-                  'HOME',
-                  textAlign: TextAlign.center,
-                  style: Style.button,
-                ),
+          height: 80,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed('/home');
+            },
+            child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              color: Color(0xFFFF0000),
+              alignment: Alignment.center,
+              child: Text(
+                'HOME',
+                textAlign: TextAlign.center,
+                style: Style.button,
               ),
             ),
+          ),
         ),
       ),
     );

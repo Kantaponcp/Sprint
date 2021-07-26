@@ -26,8 +26,11 @@ class _MainDrawerState extends State<MainDrawer> {
         buildMenuItem(
             text: 'Setting',
             icon: Icons.settings_outlined,
-            onClicked: () {
-              Navigator.of(context).pushNamed('/setting');
+            onClicked: () async {
+              await Navigator.of(context).pushNamed('/setting');
+              setState(() {
+
+              });
             }),
       ],
     )

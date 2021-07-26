@@ -1,19 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/workout.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/utils/setting_preferences.dart';
+import 'package:sprint/utils/workout_preferences.dart';
 import 'package:sprint/widget/map.dart';
 
 class HistoryDetail extends StatefulWidget {
-  final int index;
+  final int workoutIndex;
 
   const HistoryDetail({
     Key? key,
-    required this.index,
+    required this.workoutIndex,
   }) : super(key: key);
 
   @override
@@ -21,29 +23,31 @@ class HistoryDetail extends StatefulWidget {
 }
 
 class _HistoryDetailState extends State<HistoryDetail> {
-  getTotalTime() {
-    final startTime = workout.startTime!;
-    final endTime = workout.stopTime!;
-    final diff = endTime.difference(startTime).inMilliseconds;
-    var secs = diff ~/ 1000;
-    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
-    var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
-    var seconds = (secs % 60).toString().padLeft(2, '0');
-    String? totalTime = '$hours:$minutes:$seconds';
-    return totalTime;
+
+  @override
+  void initState() {
+    super.initState();
   }
 
-  getDate() {
-    return DateFormat('dd MMM yyyy').format(listWorkout[widget.index].date!);
-  }
-
-  getStartTime() {
-    return DateFormat('jm').format(listWorkout[widget.index].startTime!);
-  }
-
-  getEndTime() {
-    return DateFormat('jm').format(listWorkout[widget.index].stopTime!);
-  }
+  // getTotalTime() {
+  //   final startTime = listWorkout.workouts[widget.workoutIndex].startTime!;
+  //   final endTime = listWorkout.workouts[widget.workoutIndex].stopTime!;
+  //   final diff = endTime.difference(startTime).inMilliseconds;
+  //   var secs = diff ~/ 1000;
+  //   var hours = (secs ~/ 3600).toString().padLeft(2, '0');
+  //   var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+  //   var seconds = (secs % 60).toString().padLeft(2, '0');
+  //   String? totalTime = '$hours:$minutes:$seconds';
+  //   return totalTime;
+  // }
+  //
+  // getStartTime() {
+  //   return DateFormat('jm').format(listWorkout.workouts[widget.workoutIndex].startTime!);
+  // }
+  //
+  // getEndTime() {
+  //   return DateFormat('jm').format(listWorkout.workouts[widget.workoutIndex].stopTime!);
+  // }
 
   Setting setting = SettingPreferences.getSetting();
 
@@ -75,7 +79,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       Container(
                         alignment: Alignment.center,
                         child:
-                            buildHaveIcon(Icons.date_range_outlined, getDate()),
+                            buildHaveIcon(Icons.date_range_outlined, listWorkout.workouts[widget.workoutIndex].date),
                       ),
                     ],
                   ),
@@ -86,13 +90,13 @@ class _HistoryDetailState extends State<HistoryDetail> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        listWorkout[widget.index].addressName!,
+                        listWorkout.workouts[widget.workoutIndex].addressName,
                         // 'Bangkae, Bangkok',
                         style: Style.bodyText1,
                       ),
                       buildHaveIcon(
                         Icons.schedule_outlined,
-                        getStartTime() + ' - ' + getEndTime(),
+                        listWorkout.workouts[widget.workoutIndex].startTime + ' - ' + listWorkout.workouts[widget.workoutIndex].stopTime,
                       ),
                     ],
                   ),
@@ -109,10 +113,10 @@ class _HistoryDetailState extends State<HistoryDetail> {
                         TextList().distanceText,
                         Icon(Icons.directions_bike_outlined),
                         (distUnitCheck == 1)
-                            ? listWorkout[widget.index]
+                            ? listWorkout.workouts[widget.workoutIndex]
                                 .totalDistance
                                 .toStringAsFixed(2)
-                            : listWorkout[widget.index]
+                            : listWorkout.workouts[widget.workoutIndex]
                                 .totalDistanceMiles
                                 .toStringAsFixed(2),
                         (distUnitCheck == 1)
@@ -122,13 +126,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       buildShowStat(
                         TextList().sumAvgSpeedText,
                         Icon(Icons.shutter_speed_outlined),
-                        (distUnitCheck == 1)
-                            ? listWorkout[widget.index]
-                                .avgSpeed
-                                .toStringAsFixed(2)
-                            : listWorkout[widget.index]
-                                .avgSpeedMi
-                                .toStringAsFixed(2),
+                        listWorkout.workouts[widget.workoutIndex].avgSpeed.toStringAsFixed(2),
                         (distUnitCheck == 1)
                             ? TextList().speedUnitKM
                             : TextList().speedUnitMiles,
@@ -136,7 +134,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       buildShowStat(
                         TextList().sumMaxSpeedText,
                         Icon(Icons.speed_outlined),
-                        listWorkout[widget.index].maxSpeed.toStringAsFixed(2),
+                        listWorkout.workouts[widget.workoutIndex].maxSpeed.toStringAsFixed(2),
                         (distUnitCheck == 1)
                             ? TextList().speedUnitKM
                             : TextList().speedUnitMiles,
@@ -144,12 +142,12 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       buildShowStat(
                           TextList().sumMovingText,
                           Icon(Icons.timer_outlined),
-                          listWorkout[widget.index].totalMovingTime!,
+                          listWorkout.workouts[widget.workoutIndex].totalMovingTime,
                           TextList().durationUnit),
                       buildShowStat(
                           TextList().duration,
                           Icon(Icons.schedule_outlined),
-                          getTotalTime(),
+                          '00.37.48',
                           TextList().durationUnit),
                     ],
                   ),

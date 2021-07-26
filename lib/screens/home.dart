@@ -2,16 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/text_list.dart';
 import 'package:sprint/model/workout.dart';
+import 'package:sprint/screens/start_countdown.dart';
+import 'package:sprint/style/color.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/utils/setting_preferences.dart';
 import 'package:sprint/utils/workout_preferences.dart';
 import 'package:sprint/widget/appBar.dart';
 import 'package:sprint/widget/drawer.dart';
-import 'package:uuid/uuid.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,15 +22,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Setting setting = SettingPreferences.getSetting();
-  // late ListWorkout listWorkout;
-  // late List<ListWorkout> list;
 
   @override
   void initState() {
     super.initState();
-    //
-    // listWorkout = WorkoutPreferences.getWorkout();
-    // setting = SettingPreferences.getSetting();
   }
 
   @override
@@ -37,6 +34,31 @@ class _HomePageState extends State<HomePage> {
     final double appbarHeight = 70;
 
     final distUnitCheck = setting.distanceIndex;
+
+    getDuration() {
+      final duration = listWorkout.workouts.last.secTime;
+      var seconds = duration;
+      var hours = (seconds ~/ 3600).toString().padLeft(2, '0');
+      var minutes = ((seconds ~/ 60) % 60).toString().padLeft(2, '0');
+      if (duration < 60) {
+        String? totalTime = '$seconds';
+        return totalTime;
+      } else if (duration < 3600) {
+        String? totalTime = '0.$minutes';
+        return totalTime;
+      } else {
+        String? totalTime = '$hours.$minutes';
+        return totalTime;
+      }
+    }
+
+    // getStartTime() {
+    //   return DateFormat('jm').format(listWorkout.workouts.last.startTime!);
+    // }
+    //
+    // getEndTime() {
+    //   return DateFormat('jm').format(listWorkout.workouts.last.stopTime!);
+    // }
 
     return SafeArea(
       child: Scaffold(
@@ -56,22 +78,17 @@ class _HomePageState extends State<HomePage> {
               child: Container(
                 width: appbarWidth - 50,
                 height: appbarHeight,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.only(bottomRight: Radius.circular(30)),
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    padding: EdgeInsets.only(bottom: 10),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'SPRINT',
-                      style: Style.HomeHeaderStyle,
-                    ),
-                  ),
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.only(bottomRight: Radius.circular(30)),
+                  color: Theme.of(context).primaryColor,
                 ),
+                padding: EdgeInsets.fromLTRB(20, 5, 0, 5),
+                alignment: Alignment.centerLeft,
+                  child: Image.asset(
+                    'assets/images/app_name.png',
+                    fit: BoxFit.cover,
+                  ),
               ),
             ),
             // Positioned(
@@ -89,7 +106,7 @@ class _HomePageState extends State<HomePage> {
             // ),
             Positioned(
               child: Container(
-                margin: EdgeInsets.symmetric(vertical: appbarHeight),
+                margin: EdgeInsets.fromLTRB(15, appbarHeight, 15, 15),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -99,25 +116,130 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.all(10),
-                              child: listWorkout.isEmpty
-                                  ? Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 150,
-                                      child: Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        color: Theme.of(context).cardColor,
-                                        child: Center(
-                                          child: Text(
-                                            'No workout',
-                                            style: Style.bodyText1,
-                                          ),
+                              padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                              child: listWorkout.workouts.isEmpty
+                                  ? Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      elevation: 0,
+                                      color: Theme.of(context).cardColor,
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  10, 10, 10, 0),
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                'Last Workout',
+                                                style: Style.headline2,
+                                                textAlign: TextAlign.left,
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  10, 10, 10, 0),
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                DateFormat('dd MMM yyyy')
+                                                    .format(DateTime.now()),
+                                                style: Style.HomeSmallBodyStyle,
+                                                textAlign: TextAlign.right,
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  10, 10, 10, 0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    'Address: ' +
+                                                        noWorkoutAddress,
+                                                    style: Style
+                                                        .HomeSmallBodyStyle,
+                                                  ),
+                                                  Text(
+                                                    DateFormat('kk:mm:ss')
+                                                        .format(DateTime.now()),
+                                                    style: Style
+                                                        .HomeSmallBodyStyle,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  10, 10, 10, 10),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Expanded(
+                                                    flex: 4,
+                                                    child: buildShowStat(
+                                                      TextList().distanceText,
+                                                      Icons
+                                                          .directions_bike_outlined,
+                                                      '--',
+                                                      (distUnitCheck == 0)
+                                                          ? TextList()
+                                                              .distanceUnitKM
+                                                          : TextList()
+                                                              .distanceUnitMiles,
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 4,
+                                                    child: buildShowStat(
+                                                      TextList().duration,
+                                                      Icons.timer_outlined,
+                                                      '--',
+                                                      TextList().durationUnit,
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 4,
+                                                    child: buildShowStat(
+                                                      TextList().avgSpeedText,
+                                                      Icons.av_timer_outlined,
+                                                      '--',
+                                                      (distUnitCheck == 0)
+                                                          ? TextList()
+                                                              .speedUnitKM
+                                                          : TextList()
+                                                              .speedUnitMiles,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     )
+                                  // Container(
+                                  //         width: MediaQuery.of(context).size.width,
+                                  //         height: 150,
+                                  //         child: Card(
+                                  //           shape: RoundedRectangleBorder(
+                                  //             borderRadius:
+                                  //                 BorderRadius.circular(20),
+                                  //           ),
+                                  //           color: Theme.of(context).cardColor,
+                                  //           child: Center(
+                                  //             child: Text(
+                                  //               'No workout',
+                                  //               style: Style.headline2,
+                                  //             ),
+                                  //           ),
+                                  //         ),
+                                  //       )
                                   : Card(
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(30),
@@ -143,7 +265,10 @@ class _HomePageState extends State<HomePage> {
                                                   10, 10, 10, 0),
                                               alignment: Alignment.centerRight,
                                               child: Text(
-                                                '24 Jan 2021',
+                                                listWorkout.workouts.isEmpty
+                                                    ? 'Date: --'
+                                                    : listWorkout
+                                                        .workouts.last.date,
                                                 style: Style.HomeSmallBodyStyle,
                                                 textAlign: TextAlign.right,
                                               ),
@@ -157,12 +282,17 @@ class _HomePageState extends State<HomePage> {
                                                         .spaceBetween,
                                                 children: [
                                                   Text(
-                                                    'Bangkae, Bangkok',
+                                                    listWorkout.workouts.last
+                                                        .addressName,
                                                     style: Style
                                                         .HomeSmallBodyStyle,
                                                   ),
                                                   Text(
-                                                    '14 PM' + ' - ' + '16 PM',
+                                                    listWorkout.workouts.last
+                                                            .startTime +
+                                                        ' - ' +
+                                                        listWorkout.workouts
+                                                            .last.stopTime,
                                                     style: Style
                                                         .HomeSmallBodyStyle,
                                                   ),
@@ -183,13 +313,16 @@ class _HomePageState extends State<HomePage> {
                                                       TextList().distanceText,
                                                       Icons
                                                           .directions_bike_outlined,
-                                                      listWorkout.isEmpty
+                                                      listWorkout
+                                                              .workouts.isEmpty
                                                           ? '--'
-                                                          : listWorkout.last
+                                                          : listWorkout
+                                                              .workouts
+                                                              .last
                                                               .totalDistance
                                                               .toStringAsFixed(
                                                                   2),
-                                                      (distUnitCheck == 1)
+                                                      (distUnitCheck == 0)
                                                           ? TextList()
                                                               .distanceUnitKM
                                                           : TextList()
@@ -201,13 +334,11 @@ class _HomePageState extends State<HomePage> {
                                                     child: buildShowStat(
                                                       TextList().duration,
                                                       Icons.timer_outlined,
-                                                      listWorkout.isEmpty
+                                                      listWorkout
+                                                              .workouts.isEmpty
                                                           ? '--'
-                                                          : TextList()
-                                                              .getDuration(listWorkout
-                                                                  .last
-                                                                  .secTime),
-                                                      (listWorkout.last
+                                                          : getDuration(),
+                                                      (listWorkout.workouts.last
                                                                   .secTime <
                                                               60)
                                                           ? 'Sec'
@@ -220,13 +351,14 @@ class _HomePageState extends State<HomePage> {
                                                     child: buildShowStat(
                                                       TextList().avgSpeedText,
                                                       Icons.av_timer_outlined,
-                                                      listWorkout.isEmpty
+                                                      listWorkout
+                                                              .workouts.isEmpty
                                                           ? '--'
-                                                          : listWorkout.last
-                                                              .avgSpeed
+                                                          : listWorkout.workouts
+                                                              .last.avgSpeed
                                                               .toStringAsFixed(
                                                                   2),
-                                                      (distUnitCheck == 1)
+                                                      (distUnitCheck == 0)
                                                           ? TextList()
                                                               .speedUnitKM
                                                           : TextList()
@@ -242,7 +374,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: Image.asset(
@@ -270,11 +402,10 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: GestureDetector(
                             onTap: () async {
-                              Navigator.of(context)
-                                  .pushReplacementNamed('/startCountdown');
-                              print('press');
-                              print(distIndex);
-                              print(tempIndex);
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => StartCountDown()));
+                              print('Press GO');
                               // await WorkOutService().checkCurrentLocation();
                             },
                             child: Container(
@@ -292,6 +423,38 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
+                        // Container(
+                        //   width: 130,
+                        //   height: 130,
+                        //   // margin: EdgeInsets.all(10),
+                        //   decoration: BoxDecoration(
+                        //     color: Theme.of(context).primaryColor,
+                        //     shape: BoxShape.circle,
+                        //     gradient: LinearGradient(colors: [SprintColors.orange, SprintColors.yellow],
+                        //       begin: Alignment.topLeft,
+                        //       end: Alignment.bottomRight,
+                        //     ),
+                        //     boxShadow: [
+                        //       BoxShadow(
+                        //         color: Color(0xFFFD7E18).withOpacity(0.5),
+                        //         blurRadius: 50.0,
+                        //         spreadRadius: 1.0,
+                        //         offset: Offset(
+                        //           1.0,
+                        //           1.0,
+                        //         ),
+                        //       ),
+                        //     ]
+                        //   ),
+                        //   child: FlatButton(
+                        //     onPressed: () {},
+                        //     padding: EdgeInsets.all(0.0),
+                        //     child: Text(
+                        //           'GO',
+                        //           style: Style.button,
+                        //         ),
+                        //   ),
+                        //   ),
                       ),
                     ),
                   ],

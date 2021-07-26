@@ -30,20 +30,11 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   bool switchValue = true;
-
-  // ListWorkout listWorkout;
-  // List<ListWorkout> list;
   Setting setting;
 
   @override
   void initState() {
     super.initState();
-    // final workoutId = Uuid().v4();
-    // print('workoutId: $workoutId');
-    //
-    // listWorkout = widget.workoutId == null ? ListWorkout(workoutId: workoutId) : WorkoutPreferences.getWorkout(widget.workoutId);
-    //
-    // list = WorkoutPreferences.getWorkouts();
     setting = SettingPreferences.getSetting();
   }
 
@@ -80,6 +71,9 @@ class _SettingPageState extends State<SettingPage> {
                     Navigator.of(context).pop();
                     // WorkoutPreferences.setWorkout(listWorkout);
                     SettingPreferences.setSetting(setting);
+                    setState(() {
+
+                    });
                   },
                   icon: Icon(Icons.close),
                 ),
@@ -378,7 +372,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget buildTab(
       String tab1, String tab2, List<bool> isSelected, bool tap, int index) {
-    if (index == 0) {
+    if (index == 1) {
       isSelected[0] = false;
       isSelected[1] = true;
     } else {
@@ -444,17 +438,17 @@ class _SettingPageState extends State<SettingPage> {
                   isSelected[0] = false;
                   isSelected[1] = true;
                   if (isSelected == isOneSelected) {
-                    setting = setting.copy(distanceIndex: 0);
+                    setting = setting.copy(distanceIndex: 1);
                   } else {
-                    setting = setting.copy(tempIndex: 0);
+                    setting = setting.copy(tempIndex: 1);
                   }
                 } else {
                   isSelected[0] = true;
                   isSelected[1] = false;
                   if (isSelected == isOneSelected) {
-                    setting = setting.copy(distanceIndex: 1);
+                    setting = setting.copy(distanceIndex: 0);
                   } else {
-                    setting = setting.copy(tempIndex: 1);
+                    setting = setting.copy(tempIndex: 0);
                   }
                 }
                 SettingPreferences.setSetting(setting);

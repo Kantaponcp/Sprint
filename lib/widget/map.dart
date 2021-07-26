@@ -4,25 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:sprint/model/global_variable.dart';
+import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/workout.dart';
 import 'package:sprint/style/color.dart';
 import 'package:location/location.dart';
+import 'package:sprint/utils/workout_preferences.dart';
 
 class MapWidget extends StatefulWidget {
-  // const ({Key? key}) : super(key: key);
+  // final int? workoutIndex;
+
+  const MapWidget({Key? key,}) : super(key: key);
 
   @override
   _MapWidgetState createState() => _MapWidgetState();
 }
 
-class _MapWidgetState extends State<MapWidget>{
+class _MapWidgetState extends State<MapWidget> {
   @override
   void initState() {
     super.initState();
     mapController = MapController();
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   late final MapController mapController;
@@ -31,20 +34,34 @@ class _MapWidgetState extends State<MapWidget>{
 
   @override
   Widget build(BuildContext context) {
+    // List<LatLng> currentLatLng;
+    // var currentLatLng = (widget.workoutIndex == null)
+    //     ? LatLng(
+    //         currentWorkout.mapPoints.last.latitude,
+    //         currentWorkout.mapPoints.last.longitude,
+    //       )
+    //     : LatLng(
+    //         listWorkout.workouts[widget.workoutIndex!].mapPoints.last.latitude,
+    //         listWorkout.workouts[widget.workoutIndex!].mapPoints.last.longitude,
+    //       );
+    var currentLatLng = LatLng(
+      currentWorkout.mapPoints.last.latitude,
+      currentWorkout.mapPoints.last.longitude,
+    );
 
-    LatLng currentLatLng;
-    currentLatLng =
-          LatLng(mapPoint.last.latitude, mapPoint.last.longitude);
 
-    double? markerLatitude = workout.currentPoint.latitude;
-    double? markerLongitude = workout.currentPoint.longitude;
+    double? markerLatitude = currentWorkout.currentPoint.latitude;
+    double? markerLongitude = currentWorkout.currentPoint.longitude;
 
-    var point = <LatLng>[];
+    var points = <LatLng>[
+      LatLng(currentWorkout.mapPoints.last.latitude, currentWorkout.mapPoints.last.latitude,)
+
+    ];
 
     return FlutterMap(
       mapController: mapController,
       options: new MapOptions(
-        center: LatLng(currentLatLng.latitude, currentLatLng.longitude),
+        center: currentLatLng,
         minZoom: 15.0,
         interactiveFlags: interActiveFlags,
       ),
@@ -56,21 +73,27 @@ class _MapWidgetState extends State<MapWidget>{
           new Marker(
               width: 45.0,
               height: 45.0,
-              point: new LatLng(currentLatLng.latitude, currentLatLng.longitude),
+              point: currentLatLng,
               builder: (context) => new Container(
-                child: IconButton(
-                  icon: Icon(Icons.location_on),
-                  color: Colors.red,
-                  iconSize: 45.0,
-                  onPressed: () {
-                    print('Marker tapped');
-                  },
-                ),
-              ))
+                    child: IconButton(
+                      icon: Icon(Icons.location_on),
+                      color: Colors.red,
+                      iconSize: 30.0,
+                      onPressed: () {
+                        print('Marker tapped');
+                      },
+                    ),
+                  ))
         ]),
         PolylineLayerOptions(
           polylines: [
-            Polyline(points: mapPoint, strokeWidth: 5.0, color: SprintColors.red),
+            Polyline(
+                points: points,
+                // (widget.workoutIndex == null)
+                //     ? currentWorkout.mapPoints
+                //     : listWorkout.workouts[widget.workoutIndex!].mapPoints,
+                strokeWidth: 5.0,
+                color: SprintColors.red),
           ],
         )
       ],

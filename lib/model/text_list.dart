@@ -1,20 +1,25 @@
 import 'package:intl/intl.dart';
+import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/workout.dart';
+import 'package:sprint/utils/workout_preferences.dart';
+
+import 'global_variable.dart';
 
 class TextList {
+
   String version = '1.0.0';
 
   //Main display
   String timeCountingDisplay = '00:00:00';
   String timeText = 'TIME';
-  String distanceDisplay = workout.totalDistance.toStringAsFixed(2);
-  String distanceDisplayMi = workout.totalDistanceMiles.toStringAsFixed(2);
+  String distanceDisplay = currentWorkout.totalDistance.toStringAsFixed(2);
+  String distanceDisplayMi = currentWorkout.totalDistanceMiles.toStringAsFixed(2);
   String distanceText = 'DISTANCE';
-  String? currentSpeedDisplay = workout.currentSpeed.toStringAsFixed(2);
-  String? currentSpeedDisplayMi = workout.currentSpeedMiles.toStringAsFixed(2);
+  String? currentSpeedDisplay = currentWorkout.currentSpeed.toStringAsFixed(2);
+  String? currentSpeedDisplayMi = currentWorkout.currentSpeedMiles.toStringAsFixed(2);
   String currentSpeedNull = '0';
   String currentSpeedText = 'SPEED';
-  String avgSpeedDisplay = workout.avgSpeed.toStringAsFixed(2);
+  String avgSpeedDisplay = currentWorkout.avgSpeed.toStringAsFixed(2);
 
   // String avgSpeedDisplayMi = workOut.a.toStringAsFixed(2);
   String avgSpeedText = 'AVG.SPEED';
@@ -25,13 +30,13 @@ class TextList {
   String sumAvgSpeedText = 'AVERAGE SPEED';
   String sumMaxSpeedText = 'MAX SPEED';
   String sumMovingText = 'MOVING TIME';
-  String addressName = workout.addressName ?? 'NO ADDRESS';
-  String totalMovingTime = workout.totalMovingTime ?? '0.00';
-  String? summarySpeed = workout.currentSpeed.toString();
-  String summaryMaxSpeed = workout.maxSpeed.toStringAsFixed(2);
-  String totalDistance = workout.totalDistance.toStringAsFixed(2);
-  String totalDistanceMiles = workout.totalDistanceMiles.toStringAsFixed(2);
-  String summaryAvgSpeed = workout.avgSpeed.toStringAsFixed(2);
+  String addressName = currentWorkout.addressName;
+  String totalMovingTime = currentWorkout.totalMovingTime;
+  String? summarySpeed = currentWorkout.currentSpeed.toString();
+  String summaryMaxSpeed = currentWorkout.maxSpeed.toStringAsFixed(2);
+  String totalDistance = currentWorkout.totalDistance.toStringAsFixed(2);
+  String totalDistanceMiles = currentWorkout.totalDistanceMiles.toStringAsFixed(2);
+  String summaryAvgSpeed = currentWorkout.avgSpeed.toStringAsFixed(2);
   String kilometer = 'Kilometer';
   String mile = 'Mile';
   String celsius = 'Celsius';
@@ -67,17 +72,4 @@ class TextList {
   String durationUnit = 'Hr';
   String tempUnitCel = '°C';
   String tempUnitF = '°F';
-
-  getDate() {
-    DateTime? date = workout.date;
-    return DateFormat('dd MMM yyyy').format(date!);
-  }
-
-  getStartTime() {
-    return DateFormat('jm').format(workout.startTime!);
-  }
-
-  getEndTime() {
-    return DateFormat('jm').format(workout.stopTime!);
-  }
 }

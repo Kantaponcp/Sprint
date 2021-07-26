@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/workout.dart';
 import 'package:latlong2/latlong.dart';
@@ -6,64 +11,76 @@ import 'package:sprint/utils/workout_preferences.dart';
 import '../model/global_variable.dart';
 import 'package:geocoding/geocoding.dart';
 
-class WorkOutService {
+class WorkoutService {
+  // late Workout workout;
 
   Future<void> start() async {
-    // workOut.workoutId = 'workOut01';
-    workout.newObject();
-    workout.startTime = DateTime.now();
-    workout.date = DateTime.now();
+    // int num = listWorkout.workouts.last.number;
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    workout.startPoint.latitude = position.latitude;
-    workout.startPoint.longitude = position.longitude;
-    workout.avgSpeed = 0.0;
+            desiredAccuracy: LocationAccuracy.high);
+    currentWorkout = new Workout(
+      number: (listWorkout.workouts.isNotEmpty) ? listWorkout.workouts.last.number + 1 : currentWorkout.number + 1,
+      workoutId: 'CYCLING# ' + currentWorkout.number.toString(),
+      date: DateFormat('dd MMM yyyy').format(DateTime.now()),
+      startTime: DateFormat('jm').format(DateTime.now()),
+      startPoint: GeoPoint(latitude: position.latitude,longitude: position.longitude),
+      endPoint: GeoPoint(),
+      currentPoint: GeoPoint(),
+      previousPoint: GeoPoint(latitude: position.latitude,longitude: position.longitude),
+      avgSpeed: 0.0,
+      currentSpeed: 0.0,
+      currentSpeedMiles: 0.0,
+      totalDistance: 0.0,
+      totalDistanceMiles: 0.0
+    );
+    listWorkout.workouts.add(currentWorkout);
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.setString('listWorkout', jsonEncode(listWorkout));
+    // currentWorkout.mapPoints.add(currentMapPoint);
     isStopped = false;
     isPressed = true;
     loopCalStat();
-    // listWorkout = listWorkout.copy(workoutId: 1,workout: workout);
-    // WorkoutPreferences.setWorkout(listWorkout);
-    print(workout.startPoint.latitude);
-    print(workout.startPoint.longitude);
   }
 
-  Future<void> stop(String totalWorkOutTime) async {
-    workout.stopTime = DateTime.now();
+  Future<void> stop(String totalMovingTime) async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    workout.endPoint.latitude = position.latitude;
-    workout.endPoint.longitude = position.longitude;
-    workout.totalMovingTime = totalWorkOutTime;
+    currentWorkout.stopTime = DateFormat('jm').format(DateTime.now());
+    currentWorkout.endPoint.latitude = position.latitude;
+    currentWorkout.endPoint.longitude = position.longitude;
+    currentWorkout.totalMovingTime = totalMovingTime;
+    ///ToDo Set...
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('listWorkout', jsonEncode(listWorkout));
+    print('Answer: $json');
     isStopped = true;
-    // listWorkout = listWorkout.copy(workout: workout);
-    // WorkoutPreferences.setWorkout(listWorkout);
   }
 
-  Future<void> pause(String totalWorkOutTime) async {
+  Future<void> pause(String totalMovingTime) async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     isStopped = true;
-    workout.stopTime = DateTime.now();
-    workout.endPoint.latitude = position.latitude;
-    workout.endPoint.longitude = position.longitude;
-    workout.totalMovingTime = totalWorkOutTime;
-    workout.currentSpeed = 0;
+    currentWorkout.stopTime = DateFormat('jm').format(DateTime.now());
+    currentWorkout.endPoint.latitude = position.latitude;
+    currentWorkout.endPoint.longitude = position.longitude;
+    currentWorkout.totalMovingTime = totalMovingTime;
     //stop timecounting
   }
 
   double pauseDistance = 0;
 
-  Future<void> resume(String _totalWorkOutTime) async {
+  Future<void> resume(String totalMovingTime) async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     isStopped = false;
-    workout.previousPoint.latitude = position.latitude;
-    workout.previousPoint.longitude = position.longitude;
+    currentWorkout.previousPoint.latitude = position.latitude;
+    currentWorkout.previousPoint.longitude = position.longitude;
     pauseDistance = Geolocator.distanceBetween(
-        workout.endPoint.latitude!,
-        workout.endPoint.longitude!,
-        workout.previousPoint.latitude!,
-        workout.previousPoint.longitude!)/1000;
+        currentWorkout.endPoint.latitude,
+        currentWorkout.endPoint.longitude,
+        currentWorkout.previousPoint.latitude,
+        currentWorkout.previousPoint.longitude) /
+        1000;
     loopCalStat();
     //resume timecounting
   }
@@ -71,16 +88,15 @@ class WorkOutService {
   Future<void> loopCalStat() async {
     //TODO
     calStat();
-    workout.previousPoint.latitude = workout.currentPoint.latitude;
-    workout.previousPoint.longitude = workout.currentPoint.longitude;
-    // workOut.secTime = secTimeForCal;
-    double? avg = workout.avgSpeed;
-    int? sec = workout.secTime;
-    double dis = workout.totalDistance;
-    double dism = workout.totalDistanceMiles;
-    double s = workout.currentSpeed;
-    double mis = workout.currentSpeedMiles;
-    double ms = workout.maxSpeed;
+    currentWorkout.previousPoint.latitude = currentWorkout.currentPoint.latitude;
+    currentWorkout.previousPoint.longitude = currentWorkout.currentPoint.longitude;
+    double? avg = currentWorkout.avgSpeed;
+    int? sec = currentWorkout.secTime;
+    double dis = currentWorkout.totalDistance;
+    double dism = currentWorkout.totalDistanceMiles;
+    double s = currentWorkout.currentSpeed;
+    double mis = currentWorkout.currentSpeedMiles;
+    double ms = currentWorkout.maxSpeed;
     print('this is sec $sec');
     print('this is avgSpeed $avg');
     print('this is distance $dis');
@@ -89,7 +105,6 @@ class WorkOutService {
     print('this is currentSpeed $s');
     print('this is milesSpeed $mis');
     print('this is maxSpeed $ms');
-
     if (!isStopped) {
       Future.delayed(Duration(seconds: 1), () {
         loopCalStat();
@@ -109,76 +124,86 @@ class WorkOutService {
 
   Future<void> currentSpeed() async {
     Geolocator.getPositionStream(
-        forceAndroidLocationManager: true,
-        intervalDuration: Duration(seconds: 3),
-        distanceFilter: 2,
-        desiredAccuracy: LocationAccuracy.bestForNavigation)
+            forceAndroidLocationManager: true,
+            intervalDuration: Duration(seconds: 3),
+            distanceFilter: 2,
+            desiredAccuracy: LocationAccuracy.bestForNavigation)
         .listen((position) {
-      workout.currentSpeed = ((position.speed *18)/5);
-      workout.currentSpeedMiles = position.speed *2.2369362920544;
+      currentWorkout.currentSpeed = ((position.speed *18)/5);
+      currentWorkout.currentSpeedMiles = position.speed *2.2369362920544;
     });
   }
 
   Future<void> avgSpeed() async {
-    if (workout.totalDistance == 0.0) {
-      workout.avgSpeed = 0.0;
-      workout.avgSpeedMi = 0.0;
+    if (currentWorkout.totalDistance == 0.0) {
+      currentWorkout.avgSpeed = 0.0;
     } else {
-      double avgSpeedResult =
-          (workout.totalDistance / workout.secTime.toDouble()) * 3600;
-      workout.avgSpeed = avgSpeedResult;
+      double avgSpeedResult = (currentWorkout.totalDistance /
+          currentWorkout.secTime.toDouble()) *
+          3600;
+      currentWorkout.avgSpeed = avgSpeedResult;
     }
   }
 
-  Future<void> maxSpeed() async{
-    if(workout.currentSpeed >= workout.maxSpeed){
-      workout.maxSpeed = workout.currentSpeed;
-    }else{
-      workout.maxSpeed = workout.maxSpeed;
+  Future<void> maxSpeed() async {
+    if (currentWorkout.currentSpeed >= currentWorkout.maxSpeed ||
+        currentWorkout.currentSpeedMiles >= currentWorkout.maxSpeedMi) {
+      currentWorkout.maxSpeed = currentWorkout.currentSpeed;
+      currentWorkout.maxSpeedMi = currentWorkout.currentSpeedMiles;
+    } else {
+      currentWorkout.maxSpeed = currentWorkout.maxSpeed;
+      currentWorkout.maxSpeedMi = currentWorkout.maxSpeedMi;
     }
   }
 
   Future<void> totalDistance() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    workout.currentPoint.latitude = position.latitude;
-    workout.currentPoint.longitude = position.longitude;
+    currentWorkout.currentPoint.latitude = position.latitude;
+    currentWorkout.currentPoint.longitude = position.longitude;
     // checkCurrentLocation();
-    workout.totalDistance += Geolocator.distanceBetween(
-        workout.previousPoint.latitude!,
-        workout.previousPoint.longitude!,
-        workout.currentPoint.latitude!,
-        workout.currentPoint.longitude!) /
+    currentWorkout.totalDistance += Geolocator.distanceBetween(
+        currentWorkout.previousPoint.latitude,
+        currentWorkout.previousPoint.longitude,
+        currentWorkout.currentPoint.latitude,
+        currentWorkout.currentPoint.longitude) /
         1000;
-    workout.totalDistance = workout.totalDistance - pauseDistance;
-    // workOut.totalDistance += workOut.totalDistance;
-    workout.totalDistanceMiles = (workout.totalDistance / 1.609344);
-    pauseDistance = 0;
+    currentWorkout.totalDistance = currentWorkout.totalDistance - pauseDistance;
+    currentWorkout.totalDistanceMiles = (currentWorkout.totalDistance / 1.609344);
+    pauseDistance = 0.0;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('listWorkout', jsonEncode(listWorkout));
   }
 
   Future<void> checkCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    workout.currentPoint.latitude = position.latitude;
-    workout.currentPoint.longitude = position.longitude;
+    currentWorkout.currentPoint.latitude = position.latitude;
+    currentWorkout.currentPoint.longitude = position.longitude;
   }
 
   Future<void> getListPoint() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    mapPoint.add(LatLng(position.latitude, position.longitude));
-    print(mapPoint.length);
+    // mapPoint.add(LatLng(position.latitude, position.longitude));
+    currentWorkout.mapPoints.add(LatLng(position.latitude, position.longitude));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('currentWorkout', jsonEncode(currentWorkout));
+    print(currentWorkout.mapPoints.length);
   }
 
-  Future<void> getAddressName() async{
-    List<Placemark> placemarks = await placemarkFromCoordinates(workout.currentPoint.latitude as double,workout.currentPoint.longitude as double);
-    Placemark place = placemarks[0];
-    if(place.subLocality == null) {
-      workout.addressName = place.country;
-    }else{
-      workout.addressName = "${place.subLocality}, ${place.country}";
+  Future<void> getAddressName() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemark =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark place = placemark[0];
+    noWorkoutAddress =  "${place.subLocality}, ${place.country}";
+    if (place.subLocality == null) {
+      currentWorkout.addressName = place.country!;
+    } else {
+      currentWorkout.addressName = "${place.subLocality}, ${place.country}";
     }
-    // workOut.addressName = place.country;
-  }
 
+  }
 }

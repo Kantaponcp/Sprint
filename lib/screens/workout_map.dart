@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sprint/model/global_variable.dart';
 import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/text_list.dart';
+import 'package:sprint/model/workout.dart';
 import 'package:sprint/services/workout_service.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/utils/setting_preferences.dart';
@@ -22,8 +23,6 @@ class WorkoutMap extends StatefulWidget {
 }
 
 class _WorkoutMapState extends State<WorkoutMap> {
-  // late ListWorkout listWorkout;
-  // late List<ListWorkout> list;
   late Setting setting;
 
   @override
@@ -31,7 +30,6 @@ class _WorkoutMapState extends State<WorkoutMap> {
     super.initState();
     start();
     setState(() {});
-    // list = WorkoutPreferences.getWorkouts();
     setting = SettingPreferences.getSetting();
   }
 
@@ -40,11 +38,23 @@ class _WorkoutMapState extends State<WorkoutMap> {
           new Duration(milliseconds: 30), (timer) => setState(() {}));
   }
 
-  // @override
-  // void dispose() {
-  //   timer!.cancel();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    timer!.cancel();
+    super.dispose();
+  }
+
+  String formatTime(int milliseconds) {
+    var secs = milliseconds ~/ 1000;
+    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
+    var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+    var seconds = (secs % 60).toString().padLeft(2, '0');
+    displayTime = "$hours:$minutes:$seconds";
+    int secTime = (milliseconds ~/ 1000);
+    currentWorkout.secTime = secTime;
+    return displayTime;
+    // return "$hours:$minutes:$seconds";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,27 +96,36 @@ class _WorkoutMapState extends State<WorkoutMap> {
                         children: [
                           if (priorityDisplayCheck == 'Speed') ...[
                             FocusDisplay(
-                              TextList().currentSpeedDisplay!,
+                              (distUnitCheck == 1)
+                                  ? currentWorkout.currentSpeed
+                                  .toStringAsFixed(2)
+                                  : currentWorkout.currentSpeedMiles
+                                  .toStringAsFixed(2),
                               TextList().currentSpeedText,
-                              (distUnitCheck == 0)
+                              (distUnitCheck == 1)
                                   ? TextList().speedUnitKM
                                   : TextList().speedUnitMiles,
                             ),
                           ] else if (priorityDisplayCheck == 'Distance') ...[
                             FocusDisplay(
-                              TextList().distanceDisplay,
+                              (distUnitCheck == 1)
+                                  ? currentWorkout.totalDistance
+                                  .toStringAsFixed(2)
+                                  : currentWorkout.totalDistanceMiles
+                                  .toStringAsFixed(2),
                               TextList().distanceText,
-                              (distUnitCheck == 0)
-                                  ? TextList().distanceUnitMiles
-                                  : TextList().distanceUnitKM,
+                              (distUnitCheck == 1)
+                                  ? TextList().distanceUnitKM
+                                  : TextList().distanceUnitMiles,
                             ),
                           ] else if (priorityDisplayCheck == 'Average Speed') ...[
                             FocusDisplay(
-                              TextList().avgSpeedDisplay,
+                              currentWorkout.avgSpeed
+                                  .toStringAsFixed(2),
                               TextList().avgSpeedText,
-                              (distUnitCheck == 0)
-                                  ? TextList().speedUnitMiles
-                                  : TextList().speedUnitKM,
+                              (distUnitCheck == 1)
+                                  ? TextList().speedUnitKM
+                                  : TextList().speedUnitMiles,
                             ),
                           ] else ...[
                             FocusTimeDisplay(
@@ -164,7 +183,7 @@ class _WorkoutMapState extends State<WorkoutMap> {
                             ),
                             onTap: () async {
                               pause();
-                              await WorkOutService().pause(displayTime);
+                              await WorkoutService().pause(displayTime);
                               isTapped = true;
                               setState(() {
                               });
