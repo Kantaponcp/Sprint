@@ -62,7 +62,6 @@ class _WorkoutMapState extends State<WorkoutMap> {
     bool isGestureVisible = true;
 
     final tempUnitCheck = setting.tempIndex;
-    final distUnitCheck = setting.distanceIndex;
     final priorityDisplayCheck = setting.priority;
 
     return Scaffold(
@@ -96,25 +95,25 @@ class _WorkoutMapState extends State<WorkoutMap> {
                         children: [
                           if (priorityDisplayCheck == 'Speed') ...[
                             FocusDisplay(
-                              (distUnitCheck == 1)
+                              (distUnitCheck)
                                   ? currentWorkout.currentSpeed
                                   .toStringAsFixed(2)
                                   : currentWorkout.currentSpeedMiles
                                   .toStringAsFixed(2),
                               TextList().currentSpeedText,
-                              (distUnitCheck == 1)
+                              (distUnitCheck)
                                   ? TextList().speedUnitKM
                                   : TextList().speedUnitMiles,
                             ),
                           ] else if (priorityDisplayCheck == 'Distance') ...[
                             FocusDisplay(
-                              (distUnitCheck == 1)
+                              (distUnitCheck)
                                   ? currentWorkout.totalDistance
                                   .toStringAsFixed(2)
                                   : currentWorkout.totalDistanceMiles
                                   .toStringAsFixed(2),
                               TextList().distanceText,
-                              (distUnitCheck == 1)
+                              (distUnitCheck)
                                   ? TextList().distanceUnitKM
                                   : TextList().distanceUnitMiles,
                             ),
@@ -123,7 +122,7 @@ class _WorkoutMapState extends State<WorkoutMap> {
                               currentWorkout.avgSpeed
                                   .toStringAsFixed(2),
                               TextList().avgSpeedText,
-                              (distUnitCheck == 1)
+                              (distUnitCheck)
                                   ? TextList().speedUnitKM
                                   : TextList().speedUnitMiles,
                             ),

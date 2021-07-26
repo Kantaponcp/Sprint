@@ -130,8 +130,6 @@ class _HistoryPageState extends State<HistoryPage> {
       }
     }
 
-    final calDuration = getDuration(workout.secTime);
-
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -221,7 +219,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         flex: 4,
                         child: buildShowStat(
                           Icons.timer_outlined,
-                          calDuration,
+                          workout.calTime,
                           (duration < 60) ? 'Sec' : TextList().durationUnit,
                         ),
                       ),

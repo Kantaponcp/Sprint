@@ -35,31 +35,6 @@ class _HomePageState extends State<HomePage> {
 
     final distUnitCheck = setting.distanceIndex;
 
-    getDuration() {
-      final duration = listWorkout.workouts.last.secTime;
-      var seconds = duration;
-      var hours = (seconds ~/ 3600).toString().padLeft(2, '0');
-      var minutes = ((seconds ~/ 60) % 60).toString().padLeft(2, '0');
-      if (duration < 60) {
-        String? totalTime = '$seconds';
-        return totalTime;
-      } else if (duration < 3600) {
-        String? totalTime = '0.$minutes';
-        return totalTime;
-      } else {
-        String? totalTime = '$hours.$minutes';
-        return totalTime;
-      }
-    }
-
-    // getStartTime() {
-    //   return DateFormat('jm').format(listWorkout.workouts.last.startTime!);
-    // }
-    //
-    // getEndTime() {
-    //   return DateFormat('jm').format(listWorkout.workouts.last.stopTime!);
-    // }
-
     return SafeArea(
       child: Scaffold(
         endDrawer: MainDrawer(),
@@ -337,7 +312,7 @@ class _HomePageState extends State<HomePage> {
                                                       listWorkout
                                                               .workouts.isEmpty
                                                           ? '--'
-                                                          : getDuration(),
+                                                          : listWorkout.workouts.last.calTime,
                                                       (listWorkout.workouts.last
                                                                   .secTime <
                                                               60)

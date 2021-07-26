@@ -15,8 +15,9 @@ import 'package:sprint/widget/text_section.dart';
 import 'package:sprint/widget/time_counting.dart';
 
 class StartWorkout extends StatefulWidget {
-
-  const StartWorkout({Key? key,}) : super(key: key);
+  const StartWorkout({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _StartWorkoutState createState() => _StartWorkoutState();
@@ -38,10 +39,12 @@ class _StartWorkoutState extends State<StartWorkout> {
   }
 
   Future<void> start() async {
-    timer = new Timer.periodic(new Duration(milliseconds: 30), (timer) {
-      setState(() {});
-    });
     stopwatch.start();
+    timer = new Timer.periodic(new Duration(milliseconds: 30), (timer) {
+      if(mounted) {
+        setState(() {});
+      }
+    });
     var weatherData = await weather.getLocationWeather();
     updateUI(weatherData);
   }
@@ -53,6 +56,11 @@ class _StartWorkoutState extends State<StartWorkout> {
       });
       stopwatch.start();
     }
+  }
+
+  void stop() {
+    timer!.cancel();
+    stopwatch.stop();
   }
 
   String formatTime(int milliseconds) {
@@ -73,7 +81,6 @@ class _StartWorkoutState extends State<StartWorkout> {
   @override
   void dispose() {
     super.dispose();
-    timer!.cancel();
   }
 
   @override
@@ -465,8 +472,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                           child: RaisedButton(
                             onPressed: () async {
                               resume();
-                              await WorkoutService()
-                                  .resume(displayTime);
+                              await WorkoutService().resume(displayTime);
                               isTapped = false;
                             },
                             padding: EdgeInsets.all(5),
@@ -571,8 +577,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                     ),
                     onTap: () async {
                       pause();
-                      await WorkoutService()
-                          .pause(displayTime);
+                      await WorkoutService().pause(displayTime);
                       isTapped = true;
                       setState(() {});
                     },
@@ -592,7 +597,7 @@ class _StartWorkoutState extends State<StartWorkout> {
             ..stop()
             ..reset();
           await WorkoutService().stop(displayTime);
-          dispose();
+          stop();
         },
         padding: EdgeInsets.all(5),
         shape: CircleBorder(

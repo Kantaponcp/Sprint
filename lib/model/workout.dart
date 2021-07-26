@@ -13,6 +13,7 @@ class Workout {
   String addressName;
   String totalMovingTime;
   int secTime;
+  String calTime;
   double avgSpeed;
   double maxSpeedMi;
   double maxSpeed;
@@ -20,11 +21,11 @@ class Workout {
   double totalDistanceMiles;
   double currentSpeed;
   double currentSpeedMiles;
-  GeoPoint startPoint;
-  GeoPoint endPoint;
-  GeoPoint previousPoint;
-  GeoPoint currentPoint;
-  List<LatLng> mapPoints;
+  MapPoint? startPoint;
+  MapPoint? endPoint;
+  MapPoint? previousPoint;
+  MapPoint? currentPoint;
+  List<MapPoint>? mapPoints;
 
   Workout({
     this.workoutId = '',
@@ -35,6 +36,7 @@ class Workout {
     this.addressName = '',
     this.totalMovingTime = '',
     this.secTime = 0,
+    this.calTime = '',
     this.avgSpeed = 0.0,
     this.maxSpeedMi = 0.0,
     this.maxSpeed = 0.0,
@@ -42,18 +44,18 @@ class Workout {
     this.totalDistanceMiles = 0.0,
     this.currentSpeed = 0.0,
     this.currentSpeedMiles = 0.0,
-    required this.startPoint,
-    required this.endPoint,
-    required this.previousPoint,
-    required this.currentPoint,
-    this.mapPoints = const [],
+    this.startPoint,
+    this.endPoint,
+    this.previousPoint,
+    this.currentPoint,
+    this.mapPoints,
   });
 
   factory Workout.fromJson(Map<String, dynamic> json) {
-    var listMapPointFromJson = json['mapPoints'] as List;
-    List<LatLng> mapPointsList = new List<LatLng>.from(listMapPointFromJson);
     // var listMapPointFromJson = json['mapPoints'] as List;
-    // List<MapPoint> mapPointsList = listMapPointFromJson.map((e) => MapPoint.fromJson(e)).toList();
+    // List<LatLng> mapPointsList = new List<LatLng>.from(listMapPointFromJson);
+    var listMapPointFromJson = json['mapPoints'] as List;
+    List<MapPoint> mapPointsList = listMapPointFromJson.map((e) => MapPoint.fromJson(e)).toList();
     return Workout(
       workoutId: json['workoutId'],
       number: json['number'],
@@ -63,6 +65,7 @@ class Workout {
       addressName: json['addressName'],
       totalMovingTime: json['totalMovingTime'],
       secTime: json['secTime'],
+      calTime: json['calTime'],
       avgSpeed: json['avgSpeed'],
       maxSpeedMi: json['maxSpeedMi'],
       maxSpeed: json['maxSpeed'],
@@ -70,10 +73,10 @@ class Workout {
       totalDistanceMiles: json['totalDistanceMiles'],
       currentSpeed: json['currentSpeed'],
       currentSpeedMiles: json['currentSpeedMiles'],
-      startPoint: json['startPoint'],
-      endPoint: json['endPoint'],
-      previousPoint: json['previousPoint'],
-      currentPoint: json['currentPoint'],
+      startPoint: MapPoint.fromJson(json['startPoint']),
+      endPoint: MapPoint.fromJson(json['endPoint']),
+      previousPoint: MapPoint.fromJson(json['previousPoint']),
+      currentPoint: MapPoint.fromJson(json['currentPoint']),
       mapPoints: mapPointsList,
     );
   }
@@ -87,6 +90,7 @@ class Workout {
         'addressName': addressName,
         'totalMovingTime': totalMovingTime,
         'secTime': secTime,
+        'calTime': calTime,
         'avgSpeed': avgSpeed,
         'maxSpeedMi': maxSpeedMi,
         'maxSpeed': maxSpeed,
@@ -112,23 +116,23 @@ class GeoPoint {
   });
 }
 
-// class MapPoint {
-//   double latitude;
-//   double longitude;
-//
-//   MapPoint({
-//     this.latitude = 0.0,
-//     this.longitude = 0.0,
-//   });
-//
-//   factory MapPoint.fromJson(Map<String, dynamic> json) => MapPoint(
-//     latitude: json['latitude'],
-//     longitude: json['longitude'],
-//   );
-//
-//   Map<String, dynamic> toJson() => {
-//     'latitude': latitude,
-//     'longitude': longitude,
-//   };
-//
-// }
+class MapPoint {
+  double latitude;
+  double longitude;
+
+  MapPoint({
+    this.latitude = 0.0,
+    this.longitude = 0.0,
+  });
+
+  factory MapPoint.fromJson(Map<String, dynamic> json) => MapPoint(
+    latitude: json['latitude'],
+    longitude: json['longitude'],
+  );
+
+  Map<String, dynamic> toJson() => {
+    'latitude': latitude,
+    'longitude': longitude,
+  };
+
+}

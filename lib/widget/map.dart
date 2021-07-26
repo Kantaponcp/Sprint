@@ -45,18 +45,15 @@ class _MapWidgetState extends State<MapWidget> {
     //         listWorkout.workouts[widget.workoutIndex!].mapPoints.last.longitude,
     //       );
     var currentLatLng = LatLng(
-      currentWorkout.mapPoints.last.latitude,
-      currentWorkout.mapPoints.last.longitude,
+      currentWorkout.mapPoints!.last.latitude,
+      currentWorkout.mapPoints!.last.longitude,
     );
 
-
-    double? markerLatitude = currentWorkout.currentPoint.latitude;
-    double? markerLongitude = currentWorkout.currentPoint.longitude;
-
-    var points = <LatLng>[
-      LatLng(currentWorkout.mapPoints.last.latitude, currentWorkout.mapPoints.last.latitude,)
-
-    ];
+    List<LatLng> point = currentWorkout.mapPoints!.map((pair) => LatLng(pair.latitude,pair.longitude)).toList();
+    // var points = <LatLng>[
+    //   LatLng(cur, currentWorkout.mapPoints!.last.latitude,)
+    //
+    // ];
 
     return FlutterMap(
       mapController: mapController,
@@ -88,7 +85,7 @@ class _MapWidgetState extends State<MapWidget> {
         PolylineLayerOptions(
           polylines: [
             Polyline(
-                points: points,
+                points: point,
                 // (widget.workoutIndex == null)
                 //     ? currentWorkout.mapPoints
                 //     : listWorkout.workouts[widget.workoutIndex!].mapPoints,

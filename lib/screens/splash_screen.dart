@@ -35,13 +35,20 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   start() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? json = pref.getString('listWorkout') ?? null;
-    if(json != null) {
-      listWorkout = ListWorkout.fromJson(jsonDecode(json));
-    } else {
-      print('No data');
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      String? json = pref.getString('listWorkout') ?? null;
+      if(json != null) {
+        listWorkout = ListWorkout.fromJson(jsonDecode(json));
+        print(jsonDecode(json));
+      } else {
+        print('No data');
+      }
+    } catch(e) {
+      print(e);
+      throw e;
     }
+
   }
 
   @override

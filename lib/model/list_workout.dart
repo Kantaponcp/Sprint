@@ -1,5 +1,6 @@
 import 'package:sprint/model/workout.dart';
 
+
 const int number = 1;
 
 class ListWorkout {
@@ -21,7 +22,6 @@ class ListWorkout {
 
   Map<String, dynamic> toJson() => {
         'workouts': workouts,
-        // 'setting': setting!.toJson(),
       };
 }
 
