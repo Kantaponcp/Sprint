@@ -17,5 +17,4 @@ Setting setting = SettingPreferences.getSetting();
 bool distUnitCheck = setting.distanceIndex == 0;
 ListWorkout listWorkout = new ListWorkout(workouts: []);
 MapPoint currentMapPoint = new MapPoint();
-Workout currentWorkout = new Workout(
-);
+Workout currentWorkout = new Workout();

@@ -43,6 +43,7 @@ dependencies:
   location: ^4.3.0
   uuid: ^3.0.4
   json_serializable: ^4.1.4
+  auto_size_text: ^2.1.0
 
 dev_dependencies:
   flutter_test:

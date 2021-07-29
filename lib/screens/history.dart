@@ -8,7 +8,7 @@ import 'package:sprint/model/workout.dart';
 import 'package:sprint/screens/history_detail.dart';
 import 'package:sprint/style/text_style.dart';
 import 'package:sprint/utils/setting_preferences.dart';
-import 'package:sprint/utils/workout_preferences.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:uuid/uuid.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -107,23 +107,23 @@ class _HistoryPageState extends State<HistoryPage> {
     final distUnitCheck = setting.distanceIndex == 0;
     final priorityDisplayCheck = setting.priority;
 
-    getDuration(int secTime) {
-      final durations = secTime;
-      var seconds = durations;
-      var hours = (seconds ~/ 3600).toString().padLeft(2, '0');
-      var minutes = ((seconds ~/ 60) % 60).toString().padLeft(2, '0');
-      // switch ()
-      if (durations < 60) {
-        String? totalTime = '$seconds';
-        return totalTime;
-      } else if (durations < 3600) {
-        String? totalTime = '0.$minutes';
-        return totalTime;
-      } else {
-        String? totalTime = '$hours.$minutes';
-        return totalTime;
-      }
-    }
+    // getDuration(int secTime) {
+    //   final durations = secTime;
+    //   var seconds = durations;
+    //   var hours = (seconds ~/ 3600).toString().padLeft(2, '0');
+    //   var minutes = ((seconds ~/ 60) % 60).toString().padLeft(2, '0');
+    //   // switch ()
+    //   if (durations < 60) {
+    //     String? totalTime = '$seconds';
+    //     return totalTime;
+    //   } else if (durations < 3600) {
+    //     String? totalTime = '0.$minutes';
+    //     return totalTime;
+    //   } else {
+    //     String? totalTime = '$hours.$minutes';
+    //     return totalTime;
+    //   }
+    // }
 
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -222,7 +222,9 @@ class _HistoryPageState extends State<HistoryPage> {
                         flex: 4,
                         child: buildShowStat(
                           Icons.av_timer_outlined,
-                          workout.avgSpeed.toStringAsFixed(2),
+                            (distUnitCheck)
+                                ? workout.avgSpeed.toStringAsFixed(2)
+                                : workout.avgSpeedMi.toStringAsFixed(2),
                           (distUnitCheck)
                               ? TextList().speedUnitKM
                               : TextList().speedUnitMiles,
@@ -252,7 +254,7 @@ class _HistoryPageState extends State<HistoryPage> {
           Container(
             width: 25,
             height: 25,
-            alignment: Alignment.center,
+            alignment: Alignment.bottomCenter,
             child: CircleAvatar(
               backgroundColor: Theme.of(context).accentColor,
               foregroundColor: Theme.of(context).iconTheme.color,
@@ -266,10 +268,16 @@ class _HistoryPageState extends State<HistoryPage> {
           Container(
             // padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
             alignment: Alignment.centerRight,
-            child: Text(
+            child: AutoSizeText(
               number,
-              style: Style.HomeNumberStyle,
+              style: TextStyle(
+                fontSize: mediumTextSize,
+                  color: HighLightTextColor
+              ),
+              // Style.HomeNumberStyle,
               textAlign: TextAlign.right,
+              minFontSize: 10,
+              maxLines: 2,
             ),
           ),
           Container(
@@ -277,7 +285,7 @@ class _HistoryPageState extends State<HistoryPage> {
             alignment: Alignment.bottomRight,
             child: FittedBox(
               fit: BoxFit.contain,
-              child: Text(
+              child: AutoSizeText(
                 unit,
                 style: Style.HomeSmallBodyStyle,
               ),

@@ -120,7 +120,11 @@ class _SummaryPageState extends State<SummaryPage> {
                       buildShowStat(
                         TextList().sumAvgSpeedText,
                         Icon(Icons.shutter_speed_outlined),
-                        currentWorkout.avgSpeed.toStringAsFixed(2),
+                        (distUnitCheck)
+                            ? currentWorkout.avgSpeed
+                            .toStringAsFixed(2)
+                            : currentWorkout.avgSpeedMi
+                            .toStringAsFixed(2),
                         (distUnitCheck)
                             ? TextList().speedUnitKM
                             : TextList().speedUnitMiles,
@@ -146,7 +150,7 @@ class _SummaryPageState extends State<SummaryPage> {
                       buildShowStat(
                         TextList().duration,
                         Icon(Icons.schedule_outlined),
-                        '00.37.48',
+                        currentWorkout.totalWorkoutTime,
                         // '1.30',
                         TextList().durationUnit,
                       ),

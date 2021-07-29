@@ -53,7 +53,6 @@ class _HistoryDetailState extends State<HistoryDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final distUnitCheck = setting.distanceIndex;
 
     return SafeArea(
       child: Scaffold(
@@ -103,7 +102,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                 ),
                 Container(
                   height: 250,
-                  child: MapWidget(),
+                  child: MapIndexWidget(workoutIndex: widget.workoutIndex,),
                 ),
                 Container(
                   padding: EdgeInsets.fromLTRB(20, 20, 0, 20),
@@ -112,30 +111,42 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       buildShowStat(
                         TextList().distanceText,
                         Icon(Icons.directions_bike_outlined),
-                        (distUnitCheck == 1)
+                        (distUnitCheck)
                             ? listWorkout.workouts[widget.workoutIndex]
                                 .totalDistance
                                 .toStringAsFixed(2)
                             : listWorkout.workouts[widget.workoutIndex]
                                 .totalDistanceMiles
                                 .toStringAsFixed(2),
-                        (distUnitCheck == 1)
+                        (distUnitCheck)
                             ? TextList().distanceUnitKM
                             : TextList().distanceUnitMiles,
                       ),
                       buildShowStat(
                         TextList().sumAvgSpeedText,
                         Icon(Icons.shutter_speed_outlined),
-                        listWorkout.workouts[widget.workoutIndex].avgSpeed.toStringAsFixed(2),
-                        (distUnitCheck == 1)
+                        (distUnitCheck)
+                            ? listWorkout.workouts[widget.workoutIndex]
+                            .avgSpeed
+                            .toStringAsFixed(2)
+                            : listWorkout.workouts[widget.workoutIndex]
+                            .avgSpeedMi
+                            .toStringAsFixed(2),
+                        (distUnitCheck)
                             ? TextList().speedUnitKM
                             : TextList().speedUnitMiles,
                       ),
                       buildShowStat(
                         TextList().sumMaxSpeedText,
                         Icon(Icons.speed_outlined),
-                        listWorkout.workouts[widget.workoutIndex].maxSpeed.toStringAsFixed(2),
-                        (distUnitCheck == 1)
+                        (distUnitCheck)
+                            ? listWorkout.workouts[widget.workoutIndex]
+                            .maxSpeed
+                            .toStringAsFixed(2)
+                            : listWorkout.workouts[widget.workoutIndex]
+                            .maxSpeedMi
+                            .toStringAsFixed(2),
+                        (distUnitCheck)
                             ? TextList().speedUnitKM
                             : TextList().speedUnitMiles,
                       ),
@@ -147,7 +158,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       buildShowStat(
                           TextList().duration,
                           Icon(Icons.schedule_outlined),
-                          '00.37.48',
+                          listWorkout.workouts[widget.workoutIndex].totalWorkoutTime,
                           TextList().durationUnit),
                     ],
                   ),

@@ -4,18 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sprint/model/list_workout.dart';
 import 'package:sprint/model/workout.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:sprint/utils/workout_preferences.dart';
 import '../model/global_variable.dart';
 import 'package:geocoding/geocoding.dart';
 
 class WorkoutService {
   // late Workout workout;
-  late final DateTime startTime;
-  late final DateTime stopTime;
-
   Future<void> start() async {
     // int num = listWorkout.workouts.last.number;
     Position position = await Geolocator.getCurrentPosition(
@@ -30,7 +25,7 @@ class WorkoutService {
       startPoint: new MapPoint(
           latitude: position.latitude, longitude: position.longitude),
       endPoint: new MapPoint(),
-      currentPoint: new MapPoint(),
+      currentPoint: new MapPoint(latitude: position.latitude, longitude: position.longitude),
       previousPoint: new MapPoint(
           latitude: position.latitude, longitude: position.longitude),
       avgSpeed: 0.0,
@@ -39,14 +34,47 @@ class WorkoutService {
       totalDistance: 0.0,
       totalDistanceMiles: 0.0,
       mapPoints: [],
+      startRawTime: DateTime.now(),
+      stopRawTime: DateTime.now(),
     );
-    startTime = DateTime.now();
+    // startRawTime = DateTime.now();
+    // stopRawTime = DateTime.now();
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
     // prefs.setString('listWorkout', jsonEncode(listWorkout));
     // currentWorkout.mapPoints.add(currentMapPoint);
     isStopped = false;
     isPressed = true;
     loopCalStat();
+  }
+
+  String getDurationFormat() {
+    final durations = currentWorkout.secTime;
+    var seconds = durations;
+    var hours = (seconds ~/ 3600).toString().padLeft(2, '0');
+    var minutes = ((seconds ~/ 60) % 60).toString().padLeft(2, '0');
+    // switch ()
+    String result = '';
+    if (durations < 60) {
+      result = '$seconds';
+    } else if (durations < 3600) {
+      result = '0.$minutes';
+    } else {
+      result = '$hours.$minutes';
+    }
+    return result;
+  }
+
+  String getTotalWorkoutTime() {
+    DateTime startTime = currentWorkout.startRawTime!;
+    DateTime stopTime = currentWorkout.stopRawTime!;
+    final diff = stopTime.difference(startTime).inMilliseconds;
+    var secs = diff ~/ 1000;
+    var wHours = (secs ~/ 3600).toString().padLeft(2, '0');
+    var wMinutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+    var wSeconds = (secs % 60).toString().padLeft(2, '0');
+    String result;
+    result = '$wHours:$wMinutes:$wSeconds';
+    return result;
   }
 
   Future<void> stop(String totalMovingTime) async {
@@ -56,8 +84,9 @@ class WorkoutService {
     currentWorkout.endPoint!.latitude = position.latitude;
     currentWorkout.endPoint!.longitude = position.longitude;
     currentWorkout.totalMovingTime = totalMovingTime;
-    stopTime = DateTime.now();
-
+    currentWorkout.stopRawTime = DateTime.now();
+    currentWorkout.calTime = getDurationFormat();
+    currentWorkout.totalWorkoutTime = getTotalWorkoutTime();
 
     ///ToDo Set...
     listWorkout.workouts.add(currentWorkout);
@@ -68,18 +97,8 @@ class WorkoutService {
 
     int sec = currentWorkout.secTime;
     print('this is secTime $sec');
-    final durations = currentWorkout.secTime;
-    var seconds = durations;
-    var hours = (seconds ~/ 3600).toString().padLeft(2, '0');
-    var minutes = ((seconds ~/ 60) % 60).toString().padLeft(2, '0');
-    // switch ()
-    if (durations < 60) {
-      currentWorkout.calTime = '$seconds';
-    } else if (durations < 3600) {
-      currentWorkout.calTime = '0.$minutes';
-    } else {
-      currentWorkout.calTime = '$hours.$minutes';
-    }
+    print('this is WorkoutTime ' + currentWorkout.totalWorkoutTime);
+
   }
 
   Future<void> pause(String totalMovingTime) async {
@@ -90,6 +109,8 @@ class WorkoutService {
     currentWorkout.endPoint!.latitude = position.latitude;
     currentWorkout.endPoint!.longitude = position.longitude;
     currentWorkout.totalMovingTime = totalMovingTime;
+    currentWorkout.stopRawTime = DateTime.now();
+    currentWorkout.totalWorkoutTime = getTotalWorkoutTime();
     //stop timecounting
   }
 
@@ -171,6 +192,7 @@ class WorkoutService {
           (currentWorkout.totalDistance / currentWorkout.secTime.toDouble()) *
               3600;
       currentWorkout.avgSpeed = avgSpeedResult;
+      currentWorkout.avgSpeedMi = avgSpeedResult / 1.609344;
     }
   }
 

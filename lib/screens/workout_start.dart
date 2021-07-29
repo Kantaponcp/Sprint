@@ -226,7 +226,10 @@ class _StartWorkoutState extends State<StartWorkout> {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     TextSection(
-                                      currentWorkout.avgSpeed
+                                      (distUnitCheck)
+                                          ? currentWorkout.avgSpeed
+                                          .toStringAsFixed(2)
+                                          : currentWorkout.avgSpeedMi
                                           .toStringAsFixed(2),
                                       TextList().avgSpeedText,
                                       (distUnitCheck)
@@ -289,7 +292,10 @@ class _StartWorkoutState extends State<StartWorkout> {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     TextSection(
-                                      currentWorkout.avgSpeed
+                                      (distUnitCheck)
+                                          ? currentWorkout.avgSpeed
+                                          .toStringAsFixed(2)
+                                          : currentWorkout.avgSpeedMi
                                           .toStringAsFixed(2),
                                       TextList().avgSpeedText,
                                       (distUnitCheck)
@@ -311,7 +317,11 @@ class _StartWorkoutState extends State<StartWorkout> {
                         ] else if (priorityDisplayCheck == 'Average Speed') ...[
                           Container(
                             child: FocusDisplay(
-                              currentWorkout.avgSpeed.toStringAsFixed(2),
+                              (distUnitCheck)
+                                  ? currentWorkout.avgSpeed
+                                  .toStringAsFixed(2)
+                                  : currentWorkout.avgSpeedMi
+                                  .toStringAsFixed(2),
                               TextList().avgSpeedText,
                               (distUnitCheck)
                                   ? TextList().speedUnitKM
@@ -407,7 +417,10 @@ class _StartWorkoutState extends State<StartWorkout> {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     TextSection(
-                                      currentWorkout.avgSpeed
+                                      (distUnitCheck)
+                                          ? currentWorkout.avgSpeed
+                                          .toStringAsFixed(2)
+                                          : currentWorkout.avgSpeedMi
                                           .toStringAsFixed(2),
                                       TextList().avgSpeedText,
                                       (distUnitCheck)

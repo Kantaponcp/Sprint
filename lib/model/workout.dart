@@ -9,6 +9,8 @@ class Workout {
   int number;
   String startTime;
   String stopTime;
+  DateTime? startRawTime;
+  DateTime? stopRawTime;
   String date;
   String addressName;
   String totalMovingTime;
@@ -16,6 +18,7 @@ class Workout {
   int secTime;
   String calTime;
   double avgSpeed;
+  double avgSpeedMi;
   double maxSpeedMi;
   double maxSpeed;
   double totalDistance;
@@ -33,6 +36,8 @@ class Workout {
     this.number = 1,
     this.startTime = '',
     this.stopTime = '',
+    this.startRawTime,
+    this.stopRawTime,
     this.date = '',
     this.addressName = '',
     this.totalMovingTime = '',
@@ -40,6 +45,7 @@ class Workout {
     this.secTime = 0,
     this.calTime = '',
     this.avgSpeed = 0.0,
+    this.avgSpeedMi = 0.0,
     this.maxSpeedMi = 0.0,
     this.maxSpeed = 0.0,
     this.totalDistance = 0.0,
@@ -57,7 +63,8 @@ class Workout {
     // var listMapPointFromJson = json['mapPoints'] as List;
     // List<LatLng> mapPointsList = new List<LatLng>.from(listMapPointFromJson);
     var listMapPointFromJson = json['mapPoints'] as List;
-    List<MapPoint> mapPointsList = listMapPointFromJson.map((e) => MapPoint.fromJson(e)).toList();
+    List<MapPoint> mapPointsList =
+        listMapPointFromJson.map((e) => MapPoint.fromJson(e)).toList();
     return Workout(
       workoutId: json['workoutId'],
       number: json['number'],
@@ -70,6 +77,7 @@ class Workout {
       secTime: json['secTime'],
       calTime: json['calTime'],
       avgSpeed: json['avgSpeed'],
+      avgSpeedMi: json['avgSpeedMi'],
       maxSpeedMi: json['maxSpeedMi'],
       maxSpeed: json['maxSpeed'],
       totalDistance: json['totalDistance'],
@@ -92,10 +100,11 @@ class Workout {
         'date': date,
         'addressName': addressName,
         'totalMovingTime': totalMovingTime,
-    'totalWorkoutTime': totalWorkoutTime,
+        'totalWorkoutTime': totalWorkoutTime,
         'secTime': secTime,
         'calTime': calTime,
         'avgSpeed': avgSpeed,
+        'avgSpeedMi': avgSpeedMi,
         'maxSpeedMi': maxSpeedMi,
         'maxSpeed': maxSpeed,
         'totalDistance': totalDistance,
@@ -130,13 +139,12 @@ class MapPoint {
   });
 
   factory MapPoint.fromJson(Map<String, dynamic> json) => MapPoint(
-    latitude: json['latitude'],
-    longitude: json['longitude'],
-  );
+        latitude: json['latitude'],
+        longitude: json['longitude'],
+      );
 
   Map<String, dynamic> toJson() => {
-    'latitude': latitude,
-    'longitude': longitude,
-  };
-
+        'latitude': latitude,
+        'longitude': longitude,
+      };
 }

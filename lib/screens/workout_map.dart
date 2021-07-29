@@ -119,7 +119,10 @@ class _WorkoutMapState extends State<WorkoutMap> {
                             ),
                           ] else if (priorityDisplayCheck == 'Average Speed') ...[
                             FocusDisplay(
-                              currentWorkout.avgSpeed
+                              (distUnitCheck)
+                                  ? currentWorkout.avgSpeed
+                                  .toStringAsFixed(2)
+                                  : currentWorkout.avgSpeedMi
                                   .toStringAsFixed(2),
                               TextList().avgSpeedText,
                               (distUnitCheck)
