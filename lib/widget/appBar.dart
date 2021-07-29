@@ -24,22 +24,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
         elevation: 0,
         iconTheme: IconThemeData(color: Theme.of(context).primaryIconTheme.color, size: 40),
         actionsIconTheme: IconThemeData(color: Theme.of(context).primaryIconTheme.color, size: 40),
-        // title: Text(
-        //   'SPRINT',
-        //   style: Style.HomeHeaderStyle,
-        // ),
-        // flexibleSpace: Container(
-        //   color: Theme.of(context).primaryColor,
-        //   // width: 200,
-        // ),
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {},
-        //     icon: Icon(
-        //       Icons.menu_outlined,
-        //     ),
-        //   ),
-        // ],
       ),
     );
   }

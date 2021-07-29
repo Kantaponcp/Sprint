@@ -68,39 +68,34 @@ class _HistoryPageState extends State<HistoryPage> {
           ],
         ),
         body: Container(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: (listWorkout.workouts.isEmpty)
-                    ? Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 150,
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          color: Theme.of(context).cardColor,
-                          child: Center(
-                            child: Text(
-                              'No workout',
-                              style: Style.headline2,
-                            ),
+          padding: EdgeInsets.all(10),
+          child: (listWorkout.workouts.isEmpty)
+                  ? Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 150,
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        color: Theme.of(context).cardColor,
+                        child: Center(
+                          child: Text(
+                            'No workout',
+                            style: Style.headline2,
                           ),
                         ),
-                      )
-                    : ListView.builder(
-                        physics: AlwaysScrollableScrollPhysics(),
-                        controller: _controller,
-                        shrinkWrap: true,
-                        itemCount: listWorkout.workouts.length,
-                        itemBuilder: (context, index) {
-                          final workouts = listWorkout.workouts[index];
-                          return buildCard(workouts, index);
-                        }),
-              ),
-            ],
-          ),
+                      ),
+                    )
+                  : ListView.builder(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      controller: _controller,
+                      shrinkWrap: true,
+                      itemCount: listWorkout.workouts.length,
+                      itemBuilder: (context, index) {
+                        final workouts = listWorkout.workouts[index];
+                        return buildCard(workouts, index);
+                      }),
         ),
       ),
     );

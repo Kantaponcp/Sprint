@@ -19,7 +19,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Settings.init(cacheProvider: SharePreferenceCache());
   await SettingPreferences.init();
-  await WorkoutPreferences.init();
+  // await WorkoutPreferences.init();
   runApp(MyApp());
 }
 

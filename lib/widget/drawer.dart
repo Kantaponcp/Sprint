@@ -34,30 +34,6 @@ class _MainDrawerState extends State<MainDrawer> {
             }),
       ],
     )
-        // Container(
-        //   color: Theme.of(context).backgroundColor,
-        //   alignment: Alignment.centerLeft,
-        //   padding: EdgeInsets.fromLTRB(15, 20, 15, 10),
-        //   child: Column(
-        //     children: [
-        //       SizedBox(
-        //         height: 50,
-        //       ),
-        //       buildMenuItem(
-        //           text: 'History',
-        //           icon: Icons.history_outlined,
-        //           onClicked: () {
-        //             Navigator.of(context).pushNamed('/history');
-        //           }),
-        //       buildMenuItem(
-        //           text: 'Setting',
-        //           icon: Icons.settings_outlined,
-        //           onClicked: () {
-        //             Navigator.of(context).pushNamed('/setting');
-        //           }),
-        //     ],
-        //   ),
-        // ),
         );
   }
 

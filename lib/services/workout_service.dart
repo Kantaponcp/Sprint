@@ -13,20 +13,26 @@ import 'package:geocoding/geocoding.dart';
 
 class WorkoutService {
   // late Workout workout;
+  late final DateTime startTime;
+  late final DateTime stopTime;
 
   Future<void> start() async {
     // int num = listWorkout.workouts.last.number;
     Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.high);
     currentWorkout = new Workout(
-      number: (listWorkout.workouts.isNotEmpty) ? listWorkout.workouts.last.number + 1 : currentWorkout.number + 1,
+      number: (listWorkout.workouts.isNotEmpty)
+          ? listWorkout.workouts.last.number + 1
+          : currentWorkout.number + 1,
       workoutId: 'CYCLING# ' + currentWorkout.number.toString(),
       date: DateFormat('dd MMM yyyy').format(DateTime.now()),
       startTime: DateFormat('jm').format(DateTime.now()),
-      startPoint: new MapPoint(latitude: position.latitude,longitude: position.longitude),
+      startPoint: new MapPoint(
+          latitude: position.latitude, longitude: position.longitude),
       endPoint: new MapPoint(),
       currentPoint: new MapPoint(),
-      previousPoint: new MapPoint(latitude: position.latitude,longitude: position.longitude),
+      previousPoint: new MapPoint(
+          latitude: position.latitude, longitude: position.longitude),
       avgSpeed: 0.0,
       currentSpeed: 0.0,
       currentSpeedMiles: 0.0,
@@ -34,6 +40,7 @@ class WorkoutService {
       totalDistanceMiles: 0.0,
       mapPoints: [],
     );
+    startTime = DateTime.now();
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
     // prefs.setString('listWorkout', jsonEncode(listWorkout));
     // currentWorkout.mapPoints.add(currentMapPoint);
@@ -49,6 +56,9 @@ class WorkoutService {
     currentWorkout.endPoint!.latitude = position.latitude;
     currentWorkout.endPoint!.longitude = position.longitude;
     currentWorkout.totalMovingTime = totalMovingTime;
+    stopTime = DateTime.now();
+
+
     ///ToDo Set...
     listWorkout.workouts.add(currentWorkout);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -57,7 +67,7 @@ class WorkoutService {
     isStopped = true;
 
     int sec = currentWorkout.secTime;
-    print('this is secTime $sec' );
+    print('this is secTime $sec');
     final durations = currentWorkout.secTime;
     var seconds = durations;
     var hours = (seconds ~/ 3600).toString().padLeft(2, '0');
@@ -70,7 +80,6 @@ class WorkoutService {
     } else {
       currentWorkout.calTime = '$hours.$minutes';
     }
-
   }
 
   Future<void> pause(String totalMovingTime) async {
@@ -93,10 +102,10 @@ class WorkoutService {
     currentWorkout.previousPoint!.latitude = position.latitude;
     currentWorkout.previousPoint!.longitude = position.longitude;
     pauseDistance = Geolocator.distanceBetween(
-        currentWorkout.endPoint!.latitude,
-        currentWorkout.endPoint!.longitude,
-        currentWorkout.previousPoint!.latitude,
-        currentWorkout.previousPoint!.longitude) /
+            currentWorkout.endPoint!.latitude,
+            currentWorkout.endPoint!.longitude,
+            currentWorkout.previousPoint!.latitude,
+            currentWorkout.previousPoint!.longitude) /
         1000;
     loopCalStat();
     //resume timecounting
@@ -105,8 +114,11 @@ class WorkoutService {
   Future<void> loopCalStat() async {
     //TODO
     calStat();
-    currentWorkout.previousPoint!.latitude = currentWorkout.currentPoint!.latitude;
-    currentWorkout.previousPoint!.longitude = currentWorkout.currentPoint!.longitude;
+    currentWorkout.previousPoint!.latitude =
+        currentWorkout.currentPoint!.latitude;
+    currentWorkout.previousPoint!.longitude =
+        currentWorkout.currentPoint!.longitude;
+    currentWorkout.secTime = currentWorkout.secTime;
     double? avg = currentWorkout.avgSpeed;
     int? sec = currentWorkout.secTime;
     double dis = currentWorkout.totalDistance;
@@ -146,8 +158,8 @@ class WorkoutService {
             distanceFilter: 2,
             desiredAccuracy: LocationAccuracy.bestForNavigation)
         .listen((position) {
-      currentWorkout.currentSpeed = ((position.speed *18)/5);
-      currentWorkout.currentSpeedMiles = position.speed *2.2369362920544;
+      currentWorkout.currentSpeed = ((position.speed * 18) / 5);
+      currentWorkout.currentSpeedMiles = position.speed * 2.2369362920544;
     });
   }
 
@@ -155,9 +167,9 @@ class WorkoutService {
     if (currentWorkout.totalDistance == 0.0) {
       currentWorkout.avgSpeed = 0.0;
     } else {
-      double avgSpeedResult = (currentWorkout.totalDistance /
-          currentWorkout.secTime.toDouble()) *
-          3600;
+      double avgSpeedResult =
+          (currentWorkout.totalDistance / currentWorkout.secTime.toDouble()) *
+              3600;
       currentWorkout.avgSpeed = avgSpeedResult;
     }
   }
@@ -180,14 +192,15 @@ class WorkoutService {
     currentWorkout.currentPoint!.longitude = position.longitude;
     // checkCurrentLocation();
     currentWorkout.totalDistance += Geolocator.distanceBetween(
-        currentWorkout.previousPoint!.latitude,
-        currentWorkout.previousPoint!.longitude,
-        currentWorkout.currentPoint!.latitude,
-        currentWorkout.currentPoint!.longitude,
-    ) /
+          currentWorkout.previousPoint!.latitude,
+          currentWorkout.previousPoint!.longitude,
+          currentWorkout.currentPoint!.latitude,
+          currentWorkout.currentPoint!.longitude,
+        ) /
         1000;
     currentWorkout.totalDistance = currentWorkout.totalDistance - pauseDistance;
-    currentWorkout.totalDistanceMiles = (currentWorkout.totalDistance / 1.609344);
+    currentWorkout.totalDistanceMiles =
+        (currentWorkout.totalDistance / 1.609344);
     pauseDistance = 0.0;
   }
 
@@ -216,12 +229,11 @@ class WorkoutService {
     List<Placemark> placemark =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark place = placemark[0];
-    noWorkoutAddress =  "${place.subLocality}, ${place.country}";
+    noWorkoutAddress = "${place.subLocality}, ${place.country}";
     if (place.subLocality == null) {
       currentWorkout.addressName = place.country!;
     } else {
       currentWorkout.addressName = "${place.subLocality}, ${place.country}";
     }
-
   }
 }

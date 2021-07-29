@@ -12,6 +12,7 @@ class Workout {
   String date;
   String addressName;
   String totalMovingTime;
+  String totalWorkoutTime;
   int secTime;
   String calTime;
   double avgSpeed;
@@ -35,6 +36,7 @@ class Workout {
     this.date = '',
     this.addressName = '',
     this.totalMovingTime = '',
+    this.totalWorkoutTime = '',
     this.secTime = 0,
     this.calTime = '',
     this.avgSpeed = 0.0,
@@ -64,6 +66,7 @@ class Workout {
       date: json['date'],
       addressName: json['addressName'],
       totalMovingTime: json['totalMovingTime'],
+      totalWorkoutTime: json['totalWorkoutTime'],
       secTime: json['secTime'],
       calTime: json['calTime'],
       avgSpeed: json['avgSpeed'],
@@ -89,6 +92,7 @@ class Workout {
         'date': date,
         'addressName': addressName,
         'totalMovingTime': totalMovingTime,
+    'totalWorkoutTime': totalWorkoutTime,
         'secTime': secTime,
         'calTime': calTime,
         'avgSpeed': avgSpeed,

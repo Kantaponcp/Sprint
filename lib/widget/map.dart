@@ -14,7 +14,9 @@ import 'package:sprint/utils/workout_preferences.dart';
 class MapWidget extends StatefulWidget {
   // final int? workoutIndex;
 
-  const MapWidget({Key? key,}) : super(key: key);
+  const MapWidget({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _MapWidgetState createState() => _MapWidgetState();
@@ -49,7 +51,14 @@ class _MapWidgetState extends State<MapWidget> {
       currentWorkout.mapPoints!.last.longitude,
     );
 
-    List<LatLng> point = currentWorkout.mapPoints!.map((pair) => LatLng(pair.latitude,pair.longitude)).toList();
+    var firstLatLng = LatLng(
+      currentWorkout.mapPoints!.first.latitude,
+      currentWorkout.mapPoints!.first.longitude,
+    );
+
+    List<LatLng> point = currentWorkout.mapPoints!
+        .map((pair) => LatLng(pair.latitude, pair.longitude))
+        .toList();
     // var points = <LatLng>[
     //   LatLng(cur, currentWorkout.mapPoints!.last.latitude,)
     //
@@ -67,17 +76,28 @@ class _MapWidgetState extends State<MapWidget> {
             urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             subdomains: ['a', 'b', 'c']),
         new MarkerLayerOptions(markers: [
+          Marker(
+            point: firstLatLng,
+            builder: (context) => IconButton(
+              icon: Icon(Icons.radio_button_checked_outlined),
+              color: Colors.black,
+              iconSize: 30.0,
+              onPressed: () {
+              },
+            ),
+          ),
           new Marker(
-              width: 45.0,
-              height: 45.0,
+              // width: 45.0,
+              // height: 45.0,
+            rotateAlignment: AlignmentDirectional.centerEnd,
               point: currentLatLng,
               builder: (context) => new Container(
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                     child: IconButton(
                       icon: Icon(Icons.location_on),
                       color: Colors.red,
-                      iconSize: 30.0,
+                      iconSize: 40.0,
                       onPressed: () {
-                        print('Marker tapped');
                       },
                     ),
                   ))
