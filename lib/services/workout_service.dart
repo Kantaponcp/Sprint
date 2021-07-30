@@ -49,7 +49,7 @@ class WorkoutService {
 
   String getDurationFormat() {
     final durations = currentWorkout.secTime;
-    var seconds = durations;
+    var seconds = currentWorkout.secTime;
     var hours = (seconds ~/ 3600).toString().padLeft(2, '0');
     var minutes = ((seconds ~/ 60) % 60).toString().padLeft(2, '0');
     // switch ()

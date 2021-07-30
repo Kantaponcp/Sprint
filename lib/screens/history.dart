@@ -248,6 +248,7 @@ class _HistoryPageState extends State<HistoryPage> {
   ) {
     return Container(
       // alignment: Alignment.center,
+      width: MediaQuery.of(context).size.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -265,30 +266,29 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
             ),
           ),
-          Container(
-            // padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
-            alignment: Alignment.centerRight,
-            child: AutoSizeText(
-              number,
-              style: TextStyle(
-                fontSize: mediumTextSize,
-                  color: HighLightTextColor
+          FittedBox(
+            child: Container(
+              // padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
+              alignment: Alignment.centerRight,
+              child: Text(
+                number,
+                style: TextStyle(
+                  fontSize: mediumTextSize,
+                    color: HighLightTextColor
+                ),
+                // Style.HomeNumberStyle,
+                textAlign: TextAlign.right,
               ),
-              // Style.HomeNumberStyle,
-              textAlign: TextAlign.right,
-              minFontSize: 10,
-              maxLines: 2,
             ),
           ),
-          Container(
-            // padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
-            alignment: Alignment.bottomRight,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: AutoSizeText(
-                unit,
-                style: Style.HomeSmallBodyStyle,
-              ),
+          FittedBox(
+            child: Container(
+              // padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
+              alignment: Alignment.bottomRight,
+                child: Text(
+                  unit,
+                  style: Style.HomeSmallBodyStyle,
+                ),
             ),
           ),
         ],

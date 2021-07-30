@@ -6,6 +6,7 @@ import 'dart:convert';
 WeatherModel weather = WeatherModel();
 int temperature = 0;
 String tempDisplay = '';
+String tempDisplayFahrenheit = '';
 int temperatureFahrenheit = 0;
 String cityName = '';
 String weatherMessage = '';
@@ -17,6 +18,7 @@ void updateUI(dynamic weatherData) {
   if (weatherData == null) {
     //temperature = 0;
     tempDisplay = '--';
+    tempDisplayFahrenheit = '--';
     weatherPNG = 'http://openweathermap.org/img/wn/03d@2x.png';
     //cityName = 'There is an error.';
     // svgBG = SvgPicture.asset('images/404-error.svg');
@@ -26,6 +28,7 @@ void updateUI(dynamic weatherData) {
   temperature = temp.toInt();
   temperatureFahrenheit = ((temperature * 1.8) + 32).toInt();
   tempDisplay = temperature.toString();
+  tempDisplayFahrenheit = tempDisplayFahrenheit.toString();
   var condition = weatherData['weather'][0]['id'];
   weatherPNG = weather.getWeatherPNGNetwork(condition);
   //cityName = weatherData['name'];

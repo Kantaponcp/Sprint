@@ -60,8 +60,6 @@ class _WorkoutMapState extends State<WorkoutMap> {
   Widget build(BuildContext context) {
     double mapHeight = (MediaQuery.of(context).size.height) / 1.7;
     bool isGestureVisible = true;
-
-    final tempUnitCheck = setting.tempIndex;
     final priorityDisplayCheck = setting.priority;
 
     return Scaffold(

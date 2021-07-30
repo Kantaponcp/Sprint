@@ -67,7 +67,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                 Container(
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: Text('CYCLING# ', style: Style.headline1),
+                  child: Text(listWorkout.workouts[widget.workoutIndex].workoutId, style: Style.headline1),
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(10, 10, 10, 0),

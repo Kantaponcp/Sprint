@@ -41,7 +41,7 @@ class _StartWorkoutState extends State<StartWorkout> {
   Future<void> start() async {
     stopwatch.start();
     timer = new Timer.periodic(new Duration(milliseconds: 30), (timer) {
-      if(mounted) {
+      if (mounted) {
         setState(() {});
       }
     });
@@ -87,8 +87,6 @@ class _StartWorkoutState extends State<StartWorkout> {
   Widget build(BuildContext context) {
     Setting setting = SettingPreferences.getSetting();
 
-    final tempUnitCheck = setting.tempIndex == 0;
-    final distUnitCheck = setting.distanceIndex == 0;
     final priorityDisplayCheck = setting.priority;
 
     return SafeArea(
@@ -133,7 +131,9 @@ class _StartWorkoutState extends State<StartWorkout> {
                             Padding(
                               padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               child: Text(
-                                tempDisplay,
+                                (tempUnitCheck)
+                                    ? tempDisplay
+                                    : tempDisplayFahrenheit,
                                 style: Style.headline2,
                               ),
                             ),
@@ -228,9 +228,9 @@ class _StartWorkoutState extends State<StartWorkout> {
                                     TextSection(
                                       (distUnitCheck)
                                           ? currentWorkout.avgSpeed
-                                          .toStringAsFixed(2)
+                                              .toStringAsFixed(2)
                                           : currentWorkout.avgSpeedMi
-                                          .toStringAsFixed(2),
+                                              .toStringAsFixed(2),
                                       TextList().avgSpeedText,
                                       (distUnitCheck)
                                           ? TextList().speedUnitKM
@@ -294,9 +294,9 @@ class _StartWorkoutState extends State<StartWorkout> {
                                     TextSection(
                                       (distUnitCheck)
                                           ? currentWorkout.avgSpeed
-                                          .toStringAsFixed(2)
+                                              .toStringAsFixed(2)
                                           : currentWorkout.avgSpeedMi
-                                          .toStringAsFixed(2),
+                                              .toStringAsFixed(2),
                                       TextList().avgSpeedText,
                                       (distUnitCheck)
                                           ? TextList().speedUnitKM
@@ -318,10 +318,9 @@ class _StartWorkoutState extends State<StartWorkout> {
                           Container(
                             child: FocusDisplay(
                               (distUnitCheck)
-                                  ? currentWorkout.avgSpeed
-                                  .toStringAsFixed(2)
+                                  ? currentWorkout.avgSpeed.toStringAsFixed(2)
                                   : currentWorkout.avgSpeedMi
-                                  .toStringAsFixed(2),
+                                      .toStringAsFixed(2),
                               TextList().avgSpeedText,
                               (distUnitCheck)
                                   ? TextList().speedUnitKM
@@ -419,9 +418,9 @@ class _StartWorkoutState extends State<StartWorkout> {
                                     TextSection(
                                       (distUnitCheck)
                                           ? currentWorkout.avgSpeed
-                                          .toStringAsFixed(2)
+                                              .toStringAsFixed(2)
                                           : currentWorkout.avgSpeedMi
-                                          .toStringAsFixed(2),
+                                              .toStringAsFixed(2),
                                       TextList().avgSpeedText,
                                       (distUnitCheck)
                                           ? TextList().speedUnitKM
@@ -605,12 +604,78 @@ class _StartWorkoutState extends State<StartWorkout> {
       height: height,
       child: RaisedButton(
         onPressed: () async {
-          Navigator.of(context).pushReplacementNamed('/summary');
-          stopwatch
-            ..stop()
-            ..reset();
-          await WorkoutService().stop(displayTime);
-          stop();
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                Widget okButton = Container(
+                  width: 100,
+                  height: 40,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: StadiumBorder(),
+                        primary: Theme.of(context).buttonColor),
+                    child: Text(
+                      "OK",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: regularTextSize,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () async {
+                      Navigator.of(context).pushReplacementNamed('/summary');
+                      stopwatch
+                        ..stop()
+                        ..reset();
+                      await WorkoutService().stop(displayTime);
+                      stop();
+                    },
+                  ),
+                );
+                Widget cancelButton = TextButton(
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: regularTextSize,
+                      color: Colors.red,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                );
+                AlertDialog alert = AlertDialog(
+                  elevation: 0,
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  content: Container(
+                    margin: EdgeInsets.fromLTRB(40, 40, 40, 0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Do you want to stop?',
+                          style: Style.headline2,
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(0, 60, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              cancelButton,
+                              okButton,
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+                return alert;
+              });
         },
         padding: EdgeInsets.all(5),
         shape: CircleBorder(
