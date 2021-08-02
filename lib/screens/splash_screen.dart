@@ -53,43 +53,45 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // SizedBox(
-            //   height: 300,
-            // ),
-            Expanded(
-              flex: 9,
-              child: Container(
-                child: Image.asset(
-                  'assets/images/logo_1.png',
-                  height: 160,
-                  width: 160,
-                  alignment: Alignment.center,
-                ),
-                //  CircularProgressIndicator(
-                //   valueColor: AlwaysStoppedAnimation<Color>(
-                //       Theme.of(context).primaryColor),
-                // ),
-              ),
-            ),
-            // SizedBox(
-            //   height: 220,
-            // ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                child: Text(
-                  'Version '+TextList().version,
-                  style: Style.SplashScreenTextStyle,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // SizedBox(
+              //   height: 300,
+              // ),
+              Expanded(
+                flex: 9,
+                child: Container(
+                  child: Image.asset(
+                    'assets/images/logo_1.png',
+                    height: 160,
+                    width: 160,
+                    alignment: Alignment.center,
+                  ),
+                  //  CircularProgressIndicator(
+                  //   valueColor: AlwaysStoppedAnimation<Color>(
+                  //       Theme.of(context).primaryColor),
+                  // ),
                 ),
               ),
-            ),
-          ],
+              // SizedBox(
+              //   height: 220,
+              // ),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  child: Text(
+                    'Version '+TextList().version,
+                    style: Style.SplashScreenTextStyle,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

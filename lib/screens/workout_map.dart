@@ -62,139 +62,141 @@ class _WorkoutMapState extends State<WorkoutMap> {
     bool isGestureVisible = true;
     final priorityDisplayCheck = setting.priority;
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: WorkoutAppBar(),
-      body: Stack(
-        children: [
-          Container(
-            height: mapHeight,
-            child: MapWidget(),
-          ),
-          Container(
-            height: (MediaQuery.of(context).size.height) / 2,
-            margin: EdgeInsets.only(top: mapHeight - 30),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(30),
-              ),
-              color: Theme.of(context).backgroundColor,
-              // color: Colors.red,
+    return SafeArea(
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: WorkoutAppBar(),
+        body: Stack(
+          children: [
+            Container(
+              height: mapHeight,
+              child: MapWidget(),
             ),
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 6,
-                  child: Container(
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (priorityDisplayCheck == 'Speed') ...[
-                            FocusDisplay(
-                              (distUnitCheck)
-                                  ? currentWorkout.currentSpeed
-                                  .toStringAsFixed(2)
-                                  : currentWorkout.currentSpeedMiles
-                                  .toStringAsFixed(2),
-                              TextList().currentSpeedText,
-                              (distUnitCheck)
-                                  ? TextList().speedUnitKM
-                                  : TextList().speedUnitMiles,
-                            ),
-                          ] else if (priorityDisplayCheck == 'Distance') ...[
-                            FocusDisplay(
-                              (distUnitCheck)
-                                  ? currentWorkout.totalDistance
-                                  .toStringAsFixed(2)
-                                  : currentWorkout.totalDistanceMiles
-                                  .toStringAsFixed(2),
-                              TextList().distanceText,
-                              (distUnitCheck)
-                                  ? TextList().distanceUnitKM
-                                  : TextList().distanceUnitMiles,
-                            ),
-                          ] else if (priorityDisplayCheck == 'Average Speed') ...[
-                            FocusDisplay(
-                              (distUnitCheck)
-                                  ? currentWorkout.avgSpeed
-                                  .toStringAsFixed(2)
-                                  : currentWorkout.avgSpeedMi
-                                  .toStringAsFixed(2),
-                              TextList().avgSpeedText,
-                              (distUnitCheck)
-                                  ? TextList().speedUnitKM
-                                  : TextList().speedUnitMiles,
-                            ),
-                          ] else ...[
-                            FocusTimeDisplay(
-                              formatTime(stopwatch.elapsedMilliseconds),
-                              TextList().timeText,
-                            ),
-                          ]
-                        ],
-                      )
-                      //----Condition 1------------------------------------------
-
-                      ),
+            Container(
+              height: (MediaQuery.of(context).size.height) / 2,
+              margin: EdgeInsets.only(top: mapHeight - 30),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(30),
                 ),
-                Expanded(
-                  flex: 6,
-                  child: isTapped
-                      ? Center(
-                          child: Text(
-                            'Go Back To Resume',
-                            style: Style.bodyText1,
-                          ),
+                color: Theme.of(context).backgroundColor,
+                // color: Colors.red,
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 6,
+                    child: Container(
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (priorityDisplayCheck == 'Speed') ...[
+                              FocusDisplay(
+                                (distUnitCheck)
+                                    ? currentWorkout.currentSpeed
+                                    .toStringAsFixed(2)
+                                    : currentWorkout.currentSpeedMiles
+                                    .toStringAsFixed(2),
+                                TextList().currentSpeedText,
+                                (distUnitCheck)
+                                    ? TextList().speedUnitKM
+                                    : TextList().speedUnitMiles,
+                              ),
+                            ] else if (priorityDisplayCheck == 'Distance') ...[
+                              FocusDisplay(
+                                (distUnitCheck)
+                                    ? currentWorkout.totalDistance
+                                    .toStringAsFixed(2)
+                                    : currentWorkout.totalDistanceMiles
+                                    .toStringAsFixed(2),
+                                TextList().distanceText,
+                                (distUnitCheck)
+                                    ? TextList().distanceUnitKM
+                                    : TextList().distanceUnitMiles,
+                              ),
+                            ] else if (priorityDisplayCheck == 'Average Speed') ...[
+                              FocusDisplay(
+                                (distUnitCheck)
+                                    ? currentWorkout.avgSpeed
+                                    .toStringAsFixed(2)
+                                    : currentWorkout.avgSpeedMi
+                                    .toStringAsFixed(2),
+                                TextList().avgSpeedText,
+                                (distUnitCheck)
+                                    ? TextList().speedUnitKM
+                                    : TextList().speedUnitMiles,
+                              ),
+                            ] else ...[
+                              FocusTimeDisplay(
+                                formatTime(stopwatch.elapsedMilliseconds),
+                                TextList().timeText,
+                              ),
+                            ]
+                          ],
                         )
-                      : SizedBox(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width,
-                          child: InkWell(
-                            child: Visibility(
-                              visible: isGestureVisible,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.touch_app_outlined),
-                                    color: Theme.of(context)
-                                        .iconTheme
-                                        .color!
-                                        .withOpacity(0.3),
-                                    iconSize: 80,
-                                  ),
-                                  Text(
-                                    'Tap to Pause',
-                                    style: TextStyle(
-                                      fontFamily: AntonioName,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: regularTextSize,
+                        //----Condition 1------------------------------------------
+
+                        ),
+                  ),
+                  Expanded(
+                    flex: 6,
+                    child: isTapped
+                        ? Center(
+                            child: Text(
+                              'Go Back To Resume',
+                              style: Style.bodyText1,
+                            ),
+                          )
+                        : SizedBox(
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
+                            child: InkWell(
+                              child: Visibility(
+                                visible: isGestureVisible,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.touch_app_outlined),
                                       color: Theme.of(context)
                                           .iconTheme
                                           .color!
                                           .withOpacity(0.3),
+                                      iconSize: 80,
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      'Tap to Pause',
+                                      style: TextStyle(
+                                        fontFamily: AntonioName,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: regularTextSize,
+                                        color: Theme.of(context)
+                                            .iconTheme
+                                            .color!
+                                            .withOpacity(0.3),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
+                              onTap: () async {
+                                pause();
+                                await WorkoutService().pause(displayTime);
+                                isTapped = true;
+                                setState(() {
+                                });
+                              },
                             ),
-                            onTap: () async {
-                              pause();
-                              await WorkoutService().pause(displayTime);
-                              isTapped = true;
-                              setState(() {
-                              });
-                            },
                           ),
-                        ),
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

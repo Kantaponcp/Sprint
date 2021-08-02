@@ -75,13 +75,15 @@ class _StartCountDownState extends State<StartCountDown> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Container(
-        child: Center(
-          child: Text(
-            "$_start",
-            style: Style.CountTimeTextStyle,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
+        body: Container(
+          child: Center(
+            child: Text(
+              "$_start",
+              style: Style.CountTimeTextStyle,
+            ),
           ),
         ),
       ),
